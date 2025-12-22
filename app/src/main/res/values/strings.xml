@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">blue-vault</string>
+    <string name="don_t_have_an_account_yet_sign_up_now">Don\'t have an account yet? <a href="register">Register</a> now</string>
+    <string name="already_have_an_account_log_in">Already have an account? <a href="login">Log-in</a></string>
 </resources>
