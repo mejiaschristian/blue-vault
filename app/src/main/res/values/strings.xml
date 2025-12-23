@@ -2,4 +2,17 @@
     <string name="app_name">blue-vault</string>
     <string name="don_t_have_an_account_yet_sign_up_now">Don\'t have an account yet? <a href="register">Register</a> now</string>
     <string name="already_have_an_account_log_in">Already have an account? <a href="login">Log-in</a></string>
+    <string name="nu_vault_logo">NU Vault Logo</string>
+    <string name="example_mail_com">example@mail.com</string>
+    <string name="enter_e_mail">Enter E-mail:</string>
+    <string name="register_account">Register Account</string>
+    <string name="nu_vault">NU Vault</string>
+    <string name="enter_nu_id_number">Enter NU ID Number:</string>
+    <string name="ex_2024_1234567">ex. 2024–1234567</string>
+    <string name="create_password">Create Password:</string>
+    <string name="register">REGISTER</string>
+    <string name="log_ex_2024_1234567">ex. 2024–1234567</string>
+    <string name="enter_id_number">Enter ID Number:</string>
+    <string name="enter_password">Enter Password:</string>
+    <string name="log_in">Log In</string>
 </resources>
