@@ -2,4 +2,11 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name ="grey">#7B7B7B</color>
+    
+    <!-- Blue Vault Theme Colors -->
+    <color name="blue_primary">#140958</color>     <!-- Darker Blue -->
+    <color name="blue_secondary">#2510a4</color>   <!-- Lighter Blue -->
+    <color name="blue_dark">#190b71</color>        <!-- Deep Blue -->
+    <color name="blue_surface">#2b13cc</color>     <!-- Very Light Blue for backgrounds -->
 </resources>
