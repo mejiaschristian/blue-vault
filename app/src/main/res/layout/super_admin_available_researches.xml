@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/super_admin_available_researches">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="407dp"
+        android:layout_height="638dp"
+        android:padding="10dp"
+        android:visibility="visible"
+        tools:layout_editor_absoluteY="180dp"
+        tools:listitem="@layout/super_admin_item_research" />
+</androidx.constraintlayout.widget.ConstraintLayout>
