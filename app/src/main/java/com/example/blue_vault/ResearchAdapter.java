@@ -21,7 +21,7 @@ public class ResearchAdapter extends RecyclerView.Adapter<ResearchAdapter.ViewHo
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_research, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.rc_item_research, parent, false);
         return new ViewHolder(view);
     }
 

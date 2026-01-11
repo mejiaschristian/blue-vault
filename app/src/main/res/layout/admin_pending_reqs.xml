@@ -1,45 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/admin_pending_reqs">
+    android:background="@drawable/menu_bg"
+    tools:layout_editor_absoluteX="0dp"
+    tools:layout_editor_absoluteY="0dp">
+
+    <!-- Material Exposed Dropdown Menu -->
 
     <Button
         android:id="@+id/button17"
-        android:layout_width="70dp"
-        android:layout_height="48dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="44dp"
+        android:layout_marginEnd="28dp"
         android:alpha="0"
         android:text="Button"
-        tools:layout_editor_absoluteX="324dp"
-        tools:layout_editor_absoluteY="49dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/menu_dropdown_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="136dp"
+        android:layout_height="41dp"
+        android:hint="Sort By"
+        tools:layout_editor_absoluteX="256dp"
+        tools:layout_editor_absoluteY="161dp">
+
+        <AutoCompleteTextView
+            android:id="@+id/menu_dropdown_text"
+            android:layout_width="135dp"
+            android:layout_height="28dp"
+            android:background="@color/white"
+            android:fontFamily="@font/poppins"
+            android:inputType="none"
+            android:textSize="14sp"
+            tools:layout_editor_absoluteX="256dp"
+            tools:layout_editor_absoluteY="122dp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
+        android:layout_width="377dp"
+        android:layout_height="608dp"
         android:padding="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="652dp"
         android:visibility="visible"
-        tools:layout_editor_absoluteY="194dp"
-        tools:listitem="@layout/admin_item_research" />
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="210dp"
+        tools:listitem="@layout/rc_admin_item_research" />
 
     <Button
         android:id="@+id/button15"
-        android:layout_width="64dp"
-        android:layout_height="45dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="136dp"
         android:alpha="0"
         android:text="Button"
-        tools:layout_editor_absoluteX="3dp"
-        tools:layout_editor_absoluteY="140dp" />
-
-    <Button
-        android:id="@+id/button16"
-        android:layout_width="70dp"
-        android:layout_height="48dp"
-        android:alpha="0"
-        android:text="Button"
-        tools:layout_editor_absoluteX="303dp"
-        tools:layout_editor_absoluteY="140dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Bluevault">
         <activity
-            android:name=".login_main"
+            android:name=".main_login"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,15 +20,22 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".registration_main"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:name=".main_registration"
+            android:exported="true" />
         <activity
-            android:name=".dashboard"
+            android:name=".main_dashboard"
+            android:exported="false" />
+        <activity
+            android:name=".nav_about_us"
+            android:exported="false" />
+        <activity
+            android:name=".nav_pass_change"
+            android:exported="false" />
+        <activity
+            android:name=".nav_contact_info"
+            android:exported="false" />
+        <activity
+            android:name=".profile_view_user"
             android:exported="false" />
         <meta-data
             android:name="preloaded_fonts"

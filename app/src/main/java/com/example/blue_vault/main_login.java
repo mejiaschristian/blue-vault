@@ -10,12 +10,12 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class login_main extends AppCompatActivity {
+public class main_login extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.login_main);
+        setContentView(R.layout.main_login);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.login_main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -25,7 +25,7 @@ public class login_main extends AppCompatActivity {
 
         Button loginBtn = findViewById(R.id.loginBtn);
         loginBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(login_main.this, dashboard.class);
+            Intent intent = new Intent(main_login.this, main_dashboard.class);
             startActivity(intent);
         });
 
@@ -33,7 +33,7 @@ public class login_main extends AppCompatActivity {
         tvSignUp.setText(R.string.don_t_have_an_account_yet_sign_up_now);
 
         tvSignUp.setOnClickListener(v -> {
-            Intent intent = new Intent(login_main.this, registration_main.class);
+            Intent intent = new Intent(main_login.this, main_registration.class);
             startActivity(intent);
         });
     }

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="300dp"
+    android:layout_height="match_parent"
+    android:layout_gravity="start"
+    android:background="#1A1144"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="30dp">
+
+        <TextView
+            android:id="@+id/user_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:layout_toStartOf="@+id/logout_btn"
+            android:fontFamily="@font/poppins"
+            android:text="udarbels@students.nu-dasmaa.edu.ph"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/logout_btn"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:fontFamily="@font/poppins"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:padding="0dp"
+            android:text="LOG OUT"
+            android:textColor="#FFD700"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <!-- Profile & Researches -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/nav_profile"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_bold"
+        android:gravity="start|center_vertical"
+        android:paddingVertical="15dp"
+        android:text="Profile &amp; Researches"
+        android:textAlignment="viewStart"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:icon="@drawable/profile_icon"
+        app:iconPadding="15dp"
+        app:iconSize="40dp"
+        app:iconTint="@null" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#444444" />
+
+    <!-- About us? -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/nav_about"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_bold"
+        android:gravity="start|center_vertical"
+        android:paddingVertical="15dp"
+        android:text="About us?"
+        android:textAlignment="viewStart"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:icon="@drawable/questions_icon"
+        app:iconPadding="15dp"
+        app:iconSize="40dp"
+        app:iconTint="@null" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#444444" />
+
+    <!-- Security -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/nav_security"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_bold"
+        android:gravity="start|center_vertical"
+        android:paddingVertical="15dp"
+        android:text="Security"
+        android:textAlignment="viewStart"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:icon="@drawable/security_icon"
+        app:iconPadding="15dp"
+        app:iconSize="40dp"
+        app:iconTint="@null" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#444444" />
+
+    <!-- Help -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/nav_help"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_bold"
+        android:gravity="start|center_vertical"
+        android:paddingVertical="15dp"
+        android:text="Need help? Contact us"
+        android:textAlignment="viewStart"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:icon="@drawable/support_icon"
+        app:iconPadding="15dp"
+        app:iconSize="40dp"
+        app:iconTint="@null" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#444444" />
+
+</LinearLayout>

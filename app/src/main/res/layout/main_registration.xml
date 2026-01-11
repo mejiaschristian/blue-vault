@@ -2,11 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/login_main"
+    android:id="@+id/registration_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_login"
-    tools:context=".login_main">
+    tools:context=".main_registration">
 
     <LinearLayout
         android:layout_width="0dp"
@@ -23,11 +23,12 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/loginLogo1"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:contentDescription="NU Vault Logo"
+            android:contentDescription="@string/nu_vault_logo"
             android:paddingHorizontal="110dp"
+
             app:srcCompat="@drawable/dog_vault" />
 
         <TextView
@@ -35,7 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins_bold"
-            android:text="NU Vault"
+            android:text="@string/nu_vault"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="48sp"
@@ -45,8 +46,8 @@
             android:id="@+id/textView4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="@string/register_account"
             android:paddingBottom="10dp"
-            android:text="Log-in Account"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="16sp"
@@ -64,17 +65,38 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins"
-                android:text="@string/enter_id_number"
+                android:text="@string/enter_e_mail"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
 
             <EditText
-                android:id="@+id/loginIdNum"
+                android:id="@+id/regEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:fontFamily="@font/poppins"
-                android:hint="@string/log_ex_2024_1234567"
+                android:hint="@string/example_mail_com"
+                android:textColorHint="@color/grey"
+                android:inputType="textEmailAddress"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins"
+                android:text="@string/enter_nu_id_number"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/regIdNum"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:fontFamily="@font/poppins"
+                android:hint="@string/ex_2024_1234567"
                 android:inputType="text"
                 android:textColor="@color/white"
                 android:textColorHint="@color/grey"
@@ -85,12 +107,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins"
-                android:text="@string/enter_password"
+                android:text="@string/create_password"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
 
             <EditText
-                android:id="@+id/loginPassword"
+                android:id="@+id/regPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -100,24 +122,25 @@
                 android:textSize="16sp" />
 
             <Button
-                android:id="@+id/loginBtn"
+                android:id="@+id/regBtn"
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+
                 android:backgroundTint="#2E7D32"
                 android:fontFamily="@font/poppins_bold"
                 android:padding="15dp"
-                android:text="@string/log_in"
+                android:text="@string/register"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvRegisterLink"
+                android:id="@+id/tvLoginLink"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:autoLink="none"
                 android:linksClickable="true"
-                android:text="@string/don_t_have_an_account_yet_sign_up_now"
+                android:text="@string/already_have_an_account_log_in"
                 android:textAlignment="center"
                 android:textColorLink="#1565C0" />
         </LinearLayout>

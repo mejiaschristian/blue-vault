@@ -3,14 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/super_admin_available_researches">
+    android:background="@drawable/menu_bg">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
-        android:layout_width="407dp"
-        android:layout_height="638dp"
+        android:layout_width="match_parent"
+        android:layout_height="636dp"
         android:padding="10dp"
         android:visibility="visible"
-        tools:layout_editor_absoluteY="180dp"
+        tools:layout_editor_absoluteX="21dp"
+        tools:layout_editor_absoluteY="182dp"
         tools:listitem="@layout/super_admin_item_research" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
