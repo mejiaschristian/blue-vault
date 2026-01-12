@@ -58,6 +58,21 @@
         <activity
             android:name=".view_research_user"
             android:exported="false" />
+        <activity
+            android:name=".view_research_super_admin"
+            android:exported="false" />
+        <activity
+            android:name=".super_admin_login"
+            android:exported="false" />
+        <activity
+            android:name=".super_admin_dashboard"
+            android:exported="false" />
+        <activity
+            android:name=".super_admin_registered_teachers"
+            android:exported="false" />
+        <activity
+            android:name=".super_admin_available_researches"
+            android:exported="false" />
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

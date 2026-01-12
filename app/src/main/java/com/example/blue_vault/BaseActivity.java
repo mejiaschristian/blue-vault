@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.graphics.Insets;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
@@ -21,6 +22,9 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Force Light Mode across the app
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
     }
@@ -55,6 +59,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         Button btnSecurity = findViewById(R.id.nav_security);
         Button btnHelp = findViewById(R.id.nav_help);
         Button btnAdmin = findViewById(R.id.nav_admin);
+        Button btnSuperAdmin = findViewById(R.id.nav_super_admin);
         Button btnLogout = findViewById(R.id.logout_btn);
 
         if (btnResearches != null) btnResearches.setOnClickListener(v -> navigateTo(main_dashboard.class));
@@ -63,6 +68,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (btnSecurity != null) btnSecurity.setOnClickListener(v -> navigateTo(nav_pass_change.class));
         if (btnHelp != null) btnHelp.setOnClickListener(v -> navigateTo(nav_contact_info.class));
         if (btnAdmin != null) btnAdmin.setOnClickListener(v -> navigateTo(admin_login.class));
+        if (btnSuperAdmin != null) btnSuperAdmin.setOnClickListener(v -> navigateTo(super_admin_login.class));
         if (btnLogout != null) btnLogout.setOnClickListener(v -> logout());
     }
 

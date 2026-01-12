@@ -1,34 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/super_admin_registered_teachers">
+    tools:context=".super_admin_registered_teachers">
 
-    <Button
-        android:id="@+id/button23"
-        android:layout_width="35dp"
-        android:layout_height="48dp"
-        android:alpha="0"
-        android:text="Button"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="135dp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/menu_bg"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/button22"
-        android:layout_width="82dp"
-        android:layout_height="48dp"
-        android:alpha="0"
-        android:text="Button"
-        tools:layout_editor_absoluteX="305dp"
-        tools:layout_editor_absoluteY="135dp" />
+        <!-- Top Header Area (Invisible menu button) -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="44dp"
+            android:paddingEnd="28dp">
 
-    <Button
-        android:id="@+id/button21"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:alpha="0"
-        android:text="Button"
-        tools:layout_editor_absoluteX="311dp"
-        tools:layout_editor_absoluteY="45dp" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <Button
+                android:id="@+id/goto_menu"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentEnd="true"
+                android:alpha="0" />
+        </RelativeLayout>
+
+        <!-- Navigation and Filter Bar -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="16dp">
+
+            <Button
+                android:id="@+id/backBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="BACK" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/filter_dropdown_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:hint="DEPT."
+                app:boxBackgroundColor="@color/white"
+                app:boxCornerRadiusBottomEnd="16dp"
+                app:boxCornerRadiusBottomStart="16dp"
+                app:boxCornerRadiusTopEnd="16dp"
+                app:boxCornerRadiusTopStart="16dp">
+
+                <AutoCompleteTextView
+                    android:id="@+id/filter_dropdown_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins"
+                    android:inputType="none"
+                    android:textSize="12sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+        <!-- Table Header -->
+        <TableLayout
+            android:id="@+id/tableHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="20dp"
+            android:background="#D3D3D3">
+
+            <TableRow android:padding="8dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:fontFamily="@font/poppins_bold"
+                    android:text="NAME"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1.5"
+                    android:fontFamily="@font/poppins_bold"
+                    android:text="Teacher ID"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/poppins_bold"
+                    android:text="Dept."
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+            </TableRow>
+
+            <View
+                android:layout_height="1dp"
+                android:background="@color/black" />
+        </TableLayout>
+
+        <!-- Teacher List -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvTeacherList"
+            android:layout_width="match_parent"
+            android:layout_height="540dp"
+            android:layout_marginHorizontal="16dp"
+            android:background="#D3D3D3"
+            tools:listitem="@layout/rc_student_item" />
+
+    </LinearLayout>
+
+    <!-- Navigation Drawer -->
+    <include
+        layout="@layout/nav_menu_layout"
+        android:layout_width="300dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start" />
+
+</androidx.drawerlayout.widget.DrawerLayout>
