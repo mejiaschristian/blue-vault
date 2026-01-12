@@ -55,6 +55,9 @@
         <activity
             android:name=".view_research_admin"
             android:exported="false" />
+        <activity
+            android:name=".view_research_user"
+            android:exported="false" />
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

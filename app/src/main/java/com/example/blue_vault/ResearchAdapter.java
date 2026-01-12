@@ -1,6 +1,6 @@
 package com.example.blue_vault;
 
-import android.util.Log;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +33,14 @@ public class ResearchAdapter extends RecyclerView.Adapter<ResearchAdapter.ViewHo
         holder.rsSchool.setText(item.getSchool());
         holder.rsCourse.setText(item.getCourse());
         holder.rsDate.setText(item.getDate());
+
+        // Handle the click event for the invisible button overlaying the entire item
+        holder.btnItem.setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), view_research_user.class);
+            // In a real app, you would pass the item details or ID here:
+            // intent.putExtra("title", item.getTitle());
+            v.getContext().startActivity(intent);
+        });
     }
 
     @Override
