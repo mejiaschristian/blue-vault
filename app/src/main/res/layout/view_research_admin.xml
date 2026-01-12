@@ -5,7 +5,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".upload_research">
+    tools:context=".view_research_admin">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:fontFamily="@font/poppins_bold"
-                android:text="SUBMIT A RESEARCH STUDY"
+                android:text="RESEARCH DETAILS"
                 android:textColor="@color/black"
                 android:textSize="20sp" />
 
@@ -68,7 +68,9 @@
                         android:layout_marginBottom="12dp"
                         android:background="@drawable/bg_form_input"
                         android:fontFamily="@font/poppins"
-                        android:padding="12dp" />
+                        android:padding="12dp"
+                        android:focusable="false"
+                        android:clickable="false" />
 
                     <!-- Authors -->
                     <TextView
@@ -89,7 +91,9 @@
                         android:fontFamily="@font/poppins"
                         android:minHeight="80dp"
                         android:padding="12dp"
-                        android:gravity="top" />
+                        android:gravity="top"
+                        android:focusable="false"
+                        android:clickable="false" />
 
                     <!-- Course -->
                     <TextView
@@ -100,28 +104,17 @@
                         android:textColor="@color/black"
                         android:textSize="14sp" />
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    <EditText
+                        android:id="@+id/etCourse"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:layout_marginBottom="12dp"
-                        app:boxBackgroundColor="#D9D9D9"
-                        app:boxCornerRadiusBottomEnd="12dp"
-                        app:boxCornerRadiusBottomStart="12dp"
-                        app:boxCornerRadiusTopEnd="12dp"
-                        app:boxCornerRadiusTopStart="12dp"
-                        app:boxStrokeWidth="0dp"
-                        app:boxStrokeWidthFocused="0dp">
-
-                        <AutoCompleteTextView
-                            android:id="@+id/actvCourse"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins"
-                            android:inputType="none"
-                            android:paddingVertical="12dp" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                        android:background="@drawable/bg_form_input"
+                        android:fontFamily="@font/poppins"
+                        android:padding="12dp"
+                        android:focusable="false"
+                        android:clickable="false" />
 
                     <!-- Abstract -->
                     <TextView
@@ -142,26 +135,9 @@
                         android:fontFamily="@font/poppins"
                         android:minHeight="100dp"
                         android:padding="12dp"
-                        android:gravity="top" />
-
-                    <!-- Tags -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppins_bold"
-                        android:text="Tags*"
-                        android:textColor="@color/black"
-                        android:textSize="14sp" />
-
-                    <EditText
-                        android:id="@+id/etTags"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="12dp"
-                        android:background="@drawable/bg_form_input"
-                        android:fontFamily="@font/poppins"
-                        android:padding="12dp" />
+                        android:gravity="top"
+                        android:focusable="false"
+                        android:clickable="false" />
 
                     <!-- DOI -->
                     <TextView
@@ -180,7 +156,9 @@
                         android:layout_marginBottom="12dp"
                         android:background="@drawable/bg_form_input"
                         android:fontFamily="@font/poppins"
-                        android:padding="12dp" />
+                        android:padding="12dp"
+                        android:focusable="false"
+                        android:clickable="false" />
 
                 </LinearLayout>
             </ScrollView>
@@ -194,24 +172,24 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/backBtn"
+                    android:id="@+id/btnDecline"
                     android:layout_width="140dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
-                    android:backgroundTint="#D3D3D3"
+                    android:backgroundTint="#F44336"
                     android:fontFamily="@font/poppins_bold"
-                    android:text="CANCEL"
-                    android:textColor="#111827"
+                    android:text="DECLINE"
+                    android:textColor="@color/white"
                     app:cornerRadius="20dp" />
 
                 <Button
-                    android:id="@+id/btnSubmit"
+                    android:id="@+id/btnApprove"
                     android:layout_width="140dp"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="#FFC107"
+                    android:backgroundTint="#4CAF50"
                     android:fontFamily="@font/poppins_bold"
-                    android:text="SUBMIT"
-                    android:textColor="#111827"
+                    android:text="APPROVE"
+                    android:textColor="@color/white"
                     app:cornerRadius="20dp" />
 
             </LinearLayout>

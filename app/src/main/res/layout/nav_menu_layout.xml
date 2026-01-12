@@ -45,6 +45,31 @@
             android:textStyle="bold" />
     </RelativeLayout>
 
+    <!-- NU Researches (Main Dashboard) -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/nav_researches"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_bold"
+        android:gravity="start|center_vertical"
+        android:paddingVertical="15dp"
+        android:text="NU Researches"
+        android:textAlignment="viewStart"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:icon="@drawable/ic_star"
+        app:iconPadding="15dp"
+        app:iconSize="40dp"
+        app:iconTint="#F8C41D" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#444444" />
+
     <!-- Profile & Researches -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/nav_profile"
@@ -136,6 +161,31 @@
         android:textSize="16sp"
         android:textStyle="bold"
         app:icon="@drawable/support_icon"
+        app:iconPadding="15dp"
+        app:iconSize="40dp"
+        app:iconTint="@null" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#444444" />
+
+    <!-- Admin Login -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/nav_admin"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_bold"
+        android:gravity="start|center_vertical"
+        android:paddingVertical="15dp"
+        android:text="Admin"
+        android:textAlignment="viewStart"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:icon="@drawable/profile_icon"
         app:iconPadding="15dp"
         app:iconSize="40dp"
         app:iconTint="@null" />

@@ -1,84 +1,71 @@
 package com.example.blue_vault;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.GravityCompat;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class main_dashboard extends AppCompatActivity {
+public class main_dashboard extends BaseActivity {
+    
+    private List<ResearchItem> allResearches = new ArrayList<>();
+    private List<ResearchItem> filteredResearches = new ArrayList<>();
+    private ResearchAdapter adapter;
+    private AutoCompleteTextView schoolDropdown;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.main_dashboard);
 
-        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
-        Button gotoMenu = findViewById(R.id.goto_menu);
+        // Use the base activity to set up navigation drawer and window insets
+        setupNavigation();
 
-        gotoMenu.setOnClickListener(v -> {
-            drawerLayout.openDrawer(GravityCompat.START);
-        });
+        // Initialize Data
+        allResearches.add(new ResearchItem("Sample Research Title 1", "Juan Dela Cruz", "SECA", "BSIT", "October 24, 2024"));
+        allResearches.add(new ResearchItem("Sample Research Title 2", "Maria Clara", "SECA", "BSIT", "October 25, 2024"));
+        allResearches.add(new ResearchItem("Sample Research Title 3", "Jose Rizal", "SASE", "PSY", "October 26, 2024"));
+        allResearches.add(new ResearchItem("Sample Research Title 4", "Juan Dela Cruz", "SASE", "PSY", "October 24, 2024"));
+        allResearches.add(new ResearchItem("Sample Research Title 5", "Maria Clara", "SBMA", "TOU", "October 25, 2024"));
+        allResearches.add(new ResearchItem("Sample Research Title 6", "Jose Rizal", "SECA", "TOU", "October 26, 2024"));
+        filteredResearches.addAll(allResearches);
 
-        // Navigation Drawer Item Clicks
-        Button btnProfile = findViewById(R.id.nav_profile);
-        Button btnAbout = findViewById(R.id.nav_about);
-        Button btnSecurity = findViewById(R.id.nav_security);
-        Button btnHelp = findViewById(R.id.nav_help);
-        Button btnLogout = findViewById(R.id.logout_btn);
-
-        btnProfile.setOnClickListener(v -> {
-            startActivity(new Intent(this, profile_view_user.class));
-            drawerLayout.closeDrawer(GravityCompat.START);
-        });
-
-        btnAbout.setOnClickListener(v -> {
-            startActivity(new Intent(this, nav_about_us.class));
-            drawerLayout.closeDrawer(GravityCompat.START);
-        });
-
-        btnSecurity.setOnClickListener(v -> {
-            startActivity(new Intent(this, nav_pass_change.class));
-            drawerLayout.closeDrawer(GravityCompat.START);
-        });
-
-        btnHelp.setOnClickListener(v -> {
-            startActivity(new Intent(this, nav_contact_info.class));
-            drawerLayout.closeDrawer(GravityCompat.START);
-        });
-
-        btnLogout.setOnClickListener(v -> {
-            Intent intent = new Intent(this, main_login.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
-        });
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.drawer_layout), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-
+        // Setup RecyclerView
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        List<ResearchItem> researchList = new ArrayList<>();
-        researchList.add(new ResearchItem("Sample Research Title 1", "Juan Dela Cruz", "BSIT", "October 24, 2024"));
-        researchList.add(new ResearchItem("Sample Research Title 2", "Maria Clara", "BSCS", "October 25, 2024"));
-        researchList.add(new ResearchItem("Sample Research Title 3", "Jose Rizal", "BSIS", "October 26, 2024"));
-
-        ResearchAdapter adapter = new ResearchAdapter(researchList);
+        adapter = new ResearchAdapter(filteredResearches);
         recyclerView.setAdapter(adapter);
+
+        // Setup School Dropdown
+        String[] schools = {"ALL", "SECA", "SASE", "SBMA"};
+        ArrayAdapter<String> schoolAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, schools);
+        schoolDropdown = findViewById(R.id.school_dropdown);
+        schoolDropdown.setAdapter(schoolAdapter);
+        
+        // Make "ALL" selected by default
+        schoolDropdown.setText(schools[0], false);
+
+        // Filter Logic
+        schoolDropdown.setOnItemClickListener((parent, view, position, id) -> {
+            String selected = (String) parent.getItemAtPosition(position);
+            filterData(selected);
+        });
+    }
+
+    private void filterData(String school) {
+        filteredResearches.clear();
+        if (school.equals("ALL")) {
+            filteredResearches.addAll(allResearches);
+        } else {
+            for (ResearchItem item : allResearches) {
+                if (item.getSchool() != null && item.getSchool().equals(school)) {
+                    filteredResearches.add(item);
+                }
+            }
+        }
+        adapter.notifyDataSetChanged();
     }
 }

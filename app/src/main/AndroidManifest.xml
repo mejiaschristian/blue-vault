@@ -6,7 +6,7 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/nu_vault_text"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -36,6 +36,24 @@
             android:exported="false" />
         <activity
             android:name=".profile_view_user"
+            android:exported="false" />
+        <activity
+            android:name=".upload_research"
+            android:exported="false" />
+        <activity
+            android:name=".admin_login"
+            android:exported="false" />
+        <activity
+            android:name=".admin_dashboard"
+            android:exported="false" />
+        <activity
+            android:name=".admin_registered_students"
+            android:exported="false" />
+        <activity
+            android:name=".admin_pending_reqs"
+            android:exported="false" />
+        <activity
+            android:name=".view_research_admin"
             android:exported="false" />
         <meta-data
             android:name="preloaded_fonts"

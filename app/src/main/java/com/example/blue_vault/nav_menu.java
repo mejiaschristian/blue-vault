@@ -17,6 +17,7 @@ public class nav_menu extends AppCompatActivity {
         Button btnAbout = findViewById(R.id.nav_about);
         Button btnSecurity = findViewById(R.id.nav_security);
         Button btnHelp = findViewById(R.id.nav_help);
+        Button btnAdmin = findViewById(R.id.nav_admin);
         Button btnLogout = findViewById(R.id.logout_btn);
 
         btnProfile.setOnClickListener(v -> {
@@ -36,6 +37,11 @@ public class nav_menu extends AppCompatActivity {
 
         btnHelp.setOnClickListener(v -> {
             Intent intent = new Intent(this, nav_contact_info.class);
+            startActivity(intent);
+        });
+
+        btnAdmin.setOnClickListener(v -> {
+            Intent intent = new Intent(this, admin_login.class);
             startActivity(intent);
         });
 

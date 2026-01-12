@@ -28,14 +28,11 @@ public class ResearchAdapter extends RecyclerView.Adapter<ResearchAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ResearchItem item = researchList.get(position);
-        holder.tvTitle.setText(item.getTitle());
-        holder.tvAuthor.setText(item.getAuthor());
-        holder.tvCourse.setText(item.getCourse());
-        holder.tvDate.setText(item.getDate());
-
-        holder.btnItem.setOnClickListener(v -> {
-            Log.d("ResearchAdapter", "Author: " + item.getAuthor() + ", Course: " + item.getCourse() + ", Date: " + item.getDate());
-        });
+        holder.rsTitle.setText(item.getTitle());
+        holder.rsAuthor.setText(item.getAuthor());
+        holder.rsSchool.setText(item.getSchool());
+        holder.rsCourse.setText(item.getCourse());
+        holder.rsDate.setText(item.getDate());
     }
 
     @Override
@@ -44,15 +41,16 @@ public class ResearchAdapter extends RecyclerView.Adapter<ResearchAdapter.ViewHo
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView tvTitle, tvAuthor, tvCourse, tvDate;
+        public TextView rsTitle, rsAuthor, rsSchool, rsCourse, rsDate;
         public Button btnItem;
 
         public ViewHolder(View view) {
             super(view);
-            tvTitle = view.findViewById(R.id.tvTitle);
-            tvAuthor = view.findViewById(R.id.tvAuthor);
-            tvCourse = view.findViewById(R.id.tvCourse);
-            tvDate = view.findViewById(R.id.tvDate);
+            rsTitle = view.findViewById(R.id.tvTitle);
+            rsAuthor = view.findViewById(R.id.tvAuthor);
+            rsSchool = view.findViewById(R.id.tvSchool);
+            rsCourse = view.findViewById(R.id.tvCourse);
+            rsDate = view.findViewById(R.id.tvDate);
             btnItem = view.findViewById(R.id.research_item_btn);
         }
     }
