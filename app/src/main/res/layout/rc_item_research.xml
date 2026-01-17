@@ -8,147 +8,215 @@
     android:padding="16dp"
     android:layout_marginBottom="12dp">
 
-    <TextView
-        android:id="@+id/tvTitle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_bold"
-        android:text="Sample Research Title"
-        android:textColor="@color/white"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/ratingBar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <LinearLayout
-        android:id="@+id/ratingBar"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageView
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:src="@drawable/ic_star"
-            app:tint="#FFD700"/>
-        <ImageView
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:src="@drawable/ic_star"
-            app:tint="#FFD700"/>
-        <ImageView
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:src="@drawable/ic_star"
-            app:tint="#FFD700"/>
-        <ImageView
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:src="@drawable/ic_star"
-            app:tint="#FFD700"/>
-        <ImageView
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:src="@drawable/ic_star"
-            app:tint="#FFD700"/>
+        <!-- Title and Rating Row -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/ratingBar"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="@font/poppins_bold"
+                android:text="Sample Research Title"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:maxLines="2"
+                android:ellipsize="end" />
+
+            <LinearLayout
+                android:id="@+id/ratingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/star1"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:src="@drawable/ic_star"
+                    app:tint="#FFD700"/>
+                <ImageView
+                    android:id="@+id/star2"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:src="@drawable/ic_star"
+                    app:tint="#FFD700"/>
+                <ImageView
+                    android:id="@+id/star3"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:src="@drawable/ic_star"
+                    app:tint="#FFD700"/>
+                <ImageView
+                    android:id="@+id/star4"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:src="@drawable/ic_star"
+                    app:tint="#FFD700"/>
+                <ImageView
+                    android:id="@+id/star5"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:src="@drawable/ic_star"
+                    app:tint="#FFD700"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <!-- Author Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_bold"
+                android:text="Author: "
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tvAuthor"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/poppins"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:maxLines="1"
+                android:ellipsize="end" />
+        </LinearLayout>
+
+        <!-- School Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_bold"
+                android:text="School: "
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tvSchool"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/poppins"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:maxLines="1"
+                android:ellipsize="end" />
+        </LinearLayout>
+
+        <!-- Course Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_bold"
+                android:text="Course: "
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tvCourse"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/poppins"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:maxLines="1"
+                android:ellipsize="end" />
+        </LinearLayout>
+
+        <!-- Date Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_bold"
+                android:text="Date Published: "
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tvDate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/poppins"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:maxLines="1"
+                android:ellipsize="end" />
+        </LinearLayout>
+
+        <!-- Tags Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_bold"
+                android:text="Tags: "
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tvTags"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/poppins"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:maxLines="1"
+                android:ellipsize="end" />
+        </LinearLayout>
+
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/tvAuthorLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:fontFamily="@font/poppins_bold"
-        android:text="Author: "
-        android:textColor="@color/white"
-        android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
-
-    <TextView
-        android:id="@+id/tvAuthor"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins"
-        android:text=""
-        android:textColor="@color/white"
-        android:textSize="12sp"
-        app:layout_constraintStart_toEndOf="@+id/tvAuthorLabel"
-        app:layout_constraintTop_toTopOf="@+id/tvAuthorLabel" />
-
-    <TextView
-        android:id="@+id/tvSchoolLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_bold"
-        android:text="School: "
-        android:textColor="@color/white"
-        android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvAuthorLabel" />
-
-    <TextView
-        android:id="@+id/tvSchool"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins"
-        android:text=""
-        android:textColor="@color/white"
-        android:textSize="12sp"
-        app:layout_constraintStart_toEndOf="@+id/tvSchoolLabel"
-        app:layout_constraintTop_toTopOf="@+id/tvSchoolLabel" />
-
-    <TextView
-        android:id="@+id/tvCourseLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_bold"
-        android:text="Course: "
-        android:textColor="@color/white"
-        android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvSchoolLabel" />
-
-    <TextView
-        android:id="@+id/tvCourse"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins"
-        android:text=""
-        android:textColor="@color/white"
-        android:textSize="12sp"
-        app:layout_constraintStart_toEndOf="@+id/tvCourseLabel"
-        app:layout_constraintTop_toTopOf="@+id/tvCourseLabel" />
-
-    <TextView
-        android:id="@+id/tvDateLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_bold"
-        android:text="Date Published: "
-        android:textColor="@color/white"
-        android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvCourseLabel" />
-
-    <TextView
-        android:id="@+id/tvDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins"
-        android:text=""
-        android:textColor="@color/white"
-        android:textSize="12sp"
-        app:layout_constraintStart_toEndOf="@+id/tvDateLabel"
-        app:layout_constraintTop_toTopOf="@+id/tvDateLabel" />
 
     <Button
         android:id="@+id/research_item_btn"
-        android:layout_width="391dp"
-        android:layout_height="120dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:alpha="0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

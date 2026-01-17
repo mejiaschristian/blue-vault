@@ -1,8 +1,11 @@
 package com.example.blue_vault;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import com.google.android.material.textfield.TextInputEditText;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,22 +18,18 @@ public class main_dashboard extends BaseActivity {
     private List<ResearchItem> filteredResearches = new ArrayList<>();
     private ResearchAdapter adapter;
     private AutoCompleteTextView schoolDropdown;
+    private TextInputEditText searchInput;
+    private String currentSchoolFilter = "ALL";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_dashboard);
 
-        // Use the base activity to set up navigation drawer and window insets
         setupNavigation();
 
-        // Initialize Data
-        allResearches.add(new ResearchItem("Sample Research Title 1", "Juan Dela Cruz", "SECA", "BSIT", "October 24, 2024"));
-        allResearches.add(new ResearchItem("Sample Research Title 2", "Maria Clara", "SECA", "BSIT", "October 25, 2024"));
-        allResearches.add(new ResearchItem("Sample Research Title 3", "Jose Rizal", "SASE", "PSY", "October 26, 2024"));
-        allResearches.add(new ResearchItem("Sample Research Title 4", "Juan Dela Cruz", "SASE", "PSY", "October 24, 2024"));
-        allResearches.add(new ResearchItem("Sample Research Title 5", "Maria Clara", "SBMA", "TOU", "October 25, 2024"));
-        allResearches.add(new ResearchItem("Sample Research Title 6", "Jose Rizal", "SECA", "TOU", "October 26, 2024"));
+        // Fetch Data from Repository
+        allResearches = DataRepository.getInstance().getResearches();
         filteredResearches.addAll(allResearches);
 
         // Setup RecyclerView
@@ -39,31 +38,51 @@ public class main_dashboard extends BaseActivity {
         adapter = new ResearchAdapter(filteredResearches);
         recyclerView.setAdapter(adapter);
 
+        // Setup Search Input
+        searchInput = findViewById(R.id.search_input);
+        if (searchInput != null) {
+            searchInput.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    applyFilters(s.toString(), currentSchoolFilter);
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {}
+            });
+        }
+
         // Setup School Dropdown
         String[] schools = {"ALL", "SECA", "SASE", "SBMA"};
         ArrayAdapter<String> schoolAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, schools);
         schoolDropdown = findViewById(R.id.school_dropdown);
-        schoolDropdown.setAdapter(schoolAdapter);
-        
-        // Make "ALL" selected by default
-        schoolDropdown.setText(schools[0], false);
-
-        // Filter Logic
-        schoolDropdown.setOnItemClickListener((parent, view, position, id) -> {
-            String selected = (String) parent.getItemAtPosition(position);
-            filterData(selected);
-        });
+        if (schoolDropdown != null) {
+            schoolDropdown.setAdapter(schoolAdapter);
+            schoolDropdown.setText(schools[0], false);
+            schoolDropdown.setOnItemClickListener((parent, view, position, id) -> {
+                currentSchoolFilter = (String) parent.getItemAtPosition(position);
+                applyFilters(searchInput.getText().toString(), currentSchoolFilter);
+            });
+        }
     }
 
-    private void filterData(String school) {
+    private void applyFilters(String query, String school) {
         filteredResearches.clear();
-        if (school.equals("ALL")) {
-            filteredResearches.addAll(allResearches);
-        } else {
-            for (ResearchItem item : allResearches) {
-                if (item.getSchool() != null && item.getSchool().equals(school)) {
-                    filteredResearches.add(item);
-                }
+        String lowerCaseQuery = query.toLowerCase().trim();
+
+        for (ResearchItem item : allResearches) {
+            boolean matchesSchool = school.equals("ALL") || (item.getSchool() != null && item.getSchool().equals(school));
+            
+            boolean matchesQuery = lowerCaseQuery.isEmpty() || 
+                (item.getTitle() != null && item.getTitle().toLowerCase().contains(lowerCaseQuery)) ||
+                (item.getAuthor() != null && item.getAuthor().toLowerCase().contains(lowerCaseQuery)) ||
+                (item.getTags() != null && item.getTags().toLowerCase().contains(lowerCaseQuery));
+
+            if (matchesSchool && matchesQuery) {
+                filteredResearches.add(item);
             }
         }
         adapter.notifyDataSetChanged();

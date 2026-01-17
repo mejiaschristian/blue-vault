@@ -113,6 +113,26 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins_bold"
+                        android:text="School:"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                    <EditText
+                        android:id="@+id/etSchool"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="12dp"
+                        android:background="@drawable/bg_form_input"
+                        android:fontFamily="@font/poppins"
+                        android:padding="12dp"
+                        android:focusable="false"
+                        android:clickable="false" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_bold"
                         android:text="Course*"
                         android:textColor="@color/black"
                         android:textSize="14sp" />

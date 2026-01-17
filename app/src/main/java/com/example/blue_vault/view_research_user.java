@@ -15,10 +15,9 @@ public class view_research_user extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_research_user);
         
-        // Initialize common navigation and side menu logic
         setupNavigation();
 
-        // Setup UI Elements
+        // UI Elements
         Button backBtn = findViewById(R.id.backBtn);
         TextView tvHeaderTitle = findViewById(R.id.tvHeaderTitle);
         EditText etTitle = findViewById(R.id.etTitle);
@@ -28,34 +27,45 @@ public class view_research_user extends BaseActivity {
         EditText etTags = findViewById(R.id.etTags);
         TextView tvDoiLink = findViewById(R.id.tvDoiLink);
 
-        // Populate with Sample Filler Content
-        String title = "Automated Library Vault System using QR Code";
-        tvHeaderTitle.setText(title);
-        etTitle.setText(title);
-        etAuthors.setText("Udarbe, LeBron Jamez Z.\nAlinsurin, Emmanuel C.");
-        etCourse.setText("BSIT");
-        etAbstract.setText("This research focuses on developing a secure and automated way to manage library resources using QR code technology for student identification and book tracking...");
-        etTags.setText("Automation, QR Code, Library, Security");
+        // Get data from Intent (passed from Adapter)
+        ResearchItem research = (ResearchItem) getIntent().getSerializableExtra("research_data");
 
-        // Set DOI Link
-        final String doiUrl = "https://doi.org/10.1234/bluevault.2024";
-        tvDoiLink.setText(doiUrl);
-
-        // Make the TextView clickable and handle the browser redirect
-        tvDoiLink.setClickable(true);
-        tvDoiLink.setOnClickListener(v -> {
-            try {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(doiUrl));
-                startActivity(intent);
-            } catch (Exception e) {
-                Toast.makeText(this, "Unable to open link", Toast.LENGTH_SHORT).show();
+        if (research != null) {
+            // Data available from database/intent
+            tvHeaderTitle.setText(research.getTitle());
+            etTitle.setText(research.getTitle());
+            etAuthors.setText(research.getAuthor());
+            etCourse.setText(research.getCourse());
+            etAbstract.setText(research.getResearchAbstract());
+            etTags.setText(research.getTags());
+            
+            final String doiUrl = research.getDoi();
+            tvDoiLink.setText(doiUrl);
+            
+            if (doiUrl != null && !doiUrl.isEmpty()) {
+                tvDoiLink.setClickable(true);
+                tvDoiLink.setOnClickListener(v -> {
+                    try {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(doiUrl));
+                        startActivity(intent);
+                    } catch (Exception e) {
+                        Toast.makeText(this, "Unable to open link", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
-        });
+        } else {
+            // Placeholder/Fallback Data
+            tvHeaderTitle.setText("Research Title Placeholder");
+            etTitle.setText("Sample Title");
+            etAuthors.setText("Sample Author");
+            etCourse.setText("BSIT");
+            etAbstract.setText("This is a placeholder abstract for when no data is provided.");
+            etTags.setText("Placeholder, Sample");
+            tvDoiLink.setText("No DOI available");
+        }
 
-        // Navigation Logic
         if (backBtn != null) {
             backBtn.setOnClickListener(v -> onBackPressed());
         }
-
     }
 }

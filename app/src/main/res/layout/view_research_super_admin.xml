@@ -7,6 +7,15 @@
     android:layout_height="match_parent"
     tools:context=".view_research_super_admin">
 
+    <Button
+        android:id="@+id/backBtn2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="#D3D3D3"
+        android:text="BACK"
+        android:textColor="@color/black" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -37,6 +46,15 @@
             android:orientation="vertical"
             android:padding="20dp">
 
+            <Button
+                android:id="@+id/backBtn3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:backgroundTint="#D3D3D3"
+                android:text="BACK"
+                android:textColor="@color/black" />
+
             <TextView
                 android:id="@+id/tvHeaderTitle"
                 android:layout_width="wrap_content"
@@ -58,6 +76,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
+                    <!-- Title -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -78,6 +97,7 @@
                         android:focusable="false"
                         android:clickable="false" />
 
+                    <!-- Authors -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -100,6 +120,28 @@
                         android:focusable="false"
                         android:clickable="false" />
 
+                    <!-- School -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_bold"
+                        android:text="School:"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                    <EditText
+                        android:id="@+id/etSchool"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="12dp"
+                        android:background="@drawable/bg_form_input"
+                        android:fontFamily="@font/poppins"
+                        android:padding="12dp"
+                        android:focusable="false"
+                        android:clickable="false" />
+
+                    <!-- Course -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -120,6 +162,7 @@
                         android:focusable="false"
                         android:clickable="false" />
 
+                    <!-- Abstract -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -142,6 +185,7 @@
                         android:focusable="false"
                         android:clickable="false" />
 
+                    <!-- Tags -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -162,6 +206,7 @@
                         android:focusable="false"
                         android:clickable="false" />
 
+                    <!-- DOI -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
