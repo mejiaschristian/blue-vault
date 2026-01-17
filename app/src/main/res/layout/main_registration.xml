@@ -91,7 +91,7 @@
                 android:textSize="16sp" />
 
             <EditText
-                android:id="@+id/regEmail2"
+                android:id="@+id/regLastName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -111,7 +111,7 @@
                 android:textSize="16sp" />
 
             <EditText
-                android:id="@+id/regEmail3"
+                android:id="@+id/regFullName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
