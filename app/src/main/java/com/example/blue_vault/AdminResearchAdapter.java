@@ -30,12 +30,14 @@ public class AdminResearchAdapter extends RecyclerView.Adapter<AdminResearchAdap
         ResearchItem item = researchList.get(position);
         holder.tvTitle.setText(item.getTitle());
         holder.tvAuthor.setText(item.getAuthor());
+        holder.tvSchool.setText(item.getSchool());
         holder.tvCourse.setText(item.getCourse());
         holder.tvDate.setText(item.getDate());
-        holder.tvTags.setText(item.getTags()); // Bind tags dynamically
+        holder.tvTags.setText(item.getTags()); 
 
         holder.btnViewResearch.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), view_research_admin.class);
+            intent.putExtra("research_data", item);
             v.getContext().startActivity(intent);
         });
     }
@@ -46,13 +48,14 @@ public class AdminResearchAdapter extends RecyclerView.Adapter<AdminResearchAdap
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView tvTitle, tvAuthor, tvCourse, tvDate, tvTags;
+        public TextView tvTitle, tvAuthor, tvSchool, tvCourse, tvDate, tvTags;
         public Button btnViewResearch;
 
         public ViewHolder(View view) {
             super(view);
             tvTitle = view.findViewById(R.id.tvTitle);
             tvAuthor = view.findViewById(R.id.tvAuthor);
+            tvSchool = view.findViewById(R.id.tvSchool);
             tvCourse = view.findViewById(R.id.tvCourse);
             tvDate = view.findViewById(R.id.tvDate);
             tvTags = view.findViewById(R.id.tvTags);

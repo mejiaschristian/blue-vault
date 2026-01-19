@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class main_dashboard extends BaseActivity {
@@ -17,9 +18,17 @@ public class main_dashboard extends BaseActivity {
     private List<ResearchItem> allResearches = new ArrayList<>();
     private List<ResearchItem> filteredResearches = new ArrayList<>();
     private ResearchAdapter adapter;
-    private AutoCompleteTextView schoolDropdown;
+    private AutoCompleteTextView schoolDropdown, courseDropdown;
     private TextInputEditText searchInput;
+    
     private String currentSchoolFilter = "ALL";
+    private String currentCourseFilter = "ALL";
+
+    // Course Arrays
+    private final String[] allCourses = {"ALL", "ABComm", "BSPsych", "BPEd", "BSA", "BSMA", "BSBA-MM", "BSBA-FM", "BSBA-HRM", "BSHM", "BSTM", "BSIT", "BSCS", "BSCE", "BSCpE", "BSArch"};
+    private final String[] saseCourses = {"ALL", "ABComm", "BSPsych", "BPEd"};
+    private final String[] sbmaCourses = {"ALL", "BSA", "BSMA", "BSBA-MM", "BSBA-FM", "BSBA-HRM", "BSHM", "BSTM"};
+    private final String[] secaCourses = {"ALL", "BSIT", "BSCS", "BSCE", "BSCpE", "BSArch"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +37,8 @@ public class main_dashboard extends BaseActivity {
 
         setupNavigation();
 
-        // Fetch Data from Repository
-        allResearches = DataRepository.getInstance().getResearches();
+        // Fetch Data from Repository - using getPublishedResearches for the main dashboard
+        allResearches = DataRepository.getInstance().getPublishedResearches();
         filteredResearches.addAll(allResearches);
 
         // Setup RecyclerView
@@ -47,7 +56,7 @@ public class main_dashboard extends BaseActivity {
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    applyFilters(s.toString(), currentSchoolFilter);
+                    applyFilters(s.toString(), currentSchoolFilter, currentCourseFilter);
                 }
 
                 @Override
@@ -59,29 +68,67 @@ public class main_dashboard extends BaseActivity {
         String[] schools = {"ALL", "SECA", "SASE", "SBMA"};
         ArrayAdapter<String> schoolAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, schools);
         schoolDropdown = findViewById(R.id.school_dropdown);
+        courseDropdown = findViewById(R.id.course_dropdown);
+
         if (schoolDropdown != null) {
             schoolDropdown.setAdapter(schoolAdapter);
             schoolDropdown.setText(schools[0], false);
             schoolDropdown.setOnItemClickListener((parent, view, position, id) -> {
                 currentSchoolFilter = (String) parent.getItemAtPosition(position);
-                applyFilters(searchInput.getText().toString(), currentSchoolFilter);
+                updateCourseDropdown(currentSchoolFilter);
+                currentCourseFilter = "ALL"; // Reset course filter when school changes
+                courseDropdown.setText("ALL", false);
+                applyFilters(searchInput.getText().toString(), currentSchoolFilter, currentCourseFilter);
+            });
+        }
+
+        // Initial Course Dropdown Setup
+        updateCourseDropdown("ALL");
+        if (courseDropdown != null) {
+            courseDropdown.setText("ALL", false);
+            courseDropdown.setOnItemClickListener((parent, view, position, id) -> {
+                currentCourseFilter = (String) parent.getItemAtPosition(position);
+                applyFilters(searchInput.getText().toString(), currentSchoolFilter, currentCourseFilter);
             });
         }
     }
 
-    private void applyFilters(String query, String school) {
+    private void updateCourseDropdown(String school) {
+        String[] courses;
+        switch (school) {
+            case "SASE":
+                courses = saseCourses;
+                break;
+            case "SBMA":
+                courses = sbmaCourses;
+                break;
+            case "SECA":
+                courses = secaCourses;
+                break;
+            default:
+                courses = allCourses;
+                break;
+        }
+        ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, courses);
+        if (courseDropdown != null) {
+            courseDropdown.setAdapter(courseAdapter);
+        }
+    }
+
+    private void applyFilters(String query, String school, String course) {
         filteredResearches.clear();
         String lowerCaseQuery = query.toLowerCase().trim();
 
         for (ResearchItem item : allResearches) {
             boolean matchesSchool = school.equals("ALL") || (item.getSchool() != null && item.getSchool().equals(school));
+            boolean matchesCourse = course.equals("ALL") || (item.getCourse() != null && item.getCourse().equals(course));
             
             boolean matchesQuery = lowerCaseQuery.isEmpty() || 
                 (item.getTitle() != null && item.getTitle().toLowerCase().contains(lowerCaseQuery)) ||
                 (item.getAuthor() != null && item.getAuthor().toLowerCase().contains(lowerCaseQuery)) ||
                 (item.getTags() != null && item.getTags().toLowerCase().contains(lowerCaseQuery));
 
-            if (matchesSchool && matchesQuery) {
+            if (matchesSchool && matchesCourse && matchesQuery) {
                 filteredResearches.add(item);
             }
         }

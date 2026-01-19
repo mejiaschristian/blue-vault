@@ -27,26 +27,41 @@ public class view_research_super_admin extends BaseActivity {
         Button btnPublish = findViewById(R.id.btnPublish);
         Button backBtn = findViewById(R.id.backBtn3);
 
-        // Filler Content
-        String title = "Smart City Traffic Management System";
-        etTitle.setText(title);
-        etAuthors.setText("Dalisay, Ricardo\nProvinci, Cardo");
-        etSchool.setText("SASE");
-        etCourse.setText("BSCS");
-        etAbstract.setText("A comprehensive study on utilizing IoT and real-time data analytics to optimize traffic flow in urban areas...");
-        etTags.setText("IoT, Smart City, Analytics");
-        
-        final String doiUrl = "https://doi.org/10.bluevault/superadmin.2024";
-        tvDoiLink.setText(doiUrl);
-        tvDoiLink.setClickable(true);
-        tvDoiLink.setOnClickListener(v -> {
-            try {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(doiUrl));
-                startActivity(intent);
-            } catch (Exception e) {
-                Toast.makeText(this, "Link error", Toast.LENGTH_SHORT).show();
+        // Get actual data from Intent (passed from SuperAdminResearchAdapter)
+        ResearchItem research = (ResearchItem) getIntent().getSerializableExtra("research_data");
+
+        if (research != null) {
+            etTitle.setText(research.getTitle());
+            etAuthors.setText(research.getAuthor());
+            etSchool.setText(research.getSchool());
+            etCourse.setText(research.getCourse());
+            etAbstract.setText(research.getResearchAbstract());
+            etTags.setText(research.getTags());
+            
+            final String doiUrl = research.getDoi();
+            tvDoiLink.setText(doiUrl);
+            
+            if (doiUrl != null && !doiUrl.isEmpty()) {
+                tvDoiLink.setClickable(true);
+                tvDoiLink.setOnClickListener(v -> {
+                    try {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(doiUrl));
+                        startActivity(intent);
+                    } catch (Exception e) {
+                        Toast.makeText(this, "Unable to open link", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
-        });
+        } else {
+            // Fallback content
+            etTitle.setText("Super Admin View");
+            etAuthors.setText("N/A");
+            etSchool.setText("N/A");
+            etCourse.setText("N/A");
+            etAbstract.setText("No data provided.");
+            etTags.setText("N/A");
+            tvDoiLink.setText("No link");
+        }
 
         if (backBtn != null) {
             backBtn.setOnClickListener(v -> onBackPressed());
