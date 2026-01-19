@@ -22,15 +22,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/loginLogo1"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:contentDescription="@string/nu_vault_logo"
-            android:paddingHorizontal="110dp"
-
-            app:srcCompat="@drawable/dog_vault" />
-
         <TextView
             android:id="@+id/textView"
             android:layout_width="match_parent"
@@ -55,9 +46,10 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@color/cardview_shadow_start_color"
             android:orientation="vertical"
+            android:isScrollContainer="true"
             android:padding="10dp">
 
             <TextView
@@ -182,7 +174,8 @@
                 android:linksClickable="true"
                 android:text="@string/already_have_an_account_log_in"
                 android:textAlignment="center"
-                android:textColorLink="#1565C0" />
+                android:textColorLink="#1565C0"
+                android:textSize="16sp" />
         </LinearLayout>
 
     </LinearLayout>
