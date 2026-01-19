@@ -40,7 +40,7 @@ public class DataRepository {
                         "oremloremloreml oremloremlorem loremloremloremloremloremlorem loremloremloremloremloremloremloremloremloremloremloremlorem",
                 "toilet, amogus",
                 "https://doi.org/10.1234/bluevault.2024",
-                4.2f,
+                2.2f,
                 true
         ));
         
@@ -62,7 +62,7 @@ public class DataRepository {
         allResearches.add(new ResearchItem(
             "Smart City Traffic Management", 
             "Sean Manding", 
-            "SASE", 
+            "SECA",
             "BSIT", 
             "Oct 26, 2024", 
             "Approved",
@@ -77,30 +77,72 @@ public class DataRepository {
         allResearches.add(new ResearchItem(
             "Impact of Gaming on Sleep", 
             "Ryoji Lagaras", 
-            "SBMA", 
-            "BSIS", 
+            "SECA",
+            "BSCS",
             "Oct 27, 2024", 
             "Declined",
             "A study on how late-night gaming affects student sleep patterns.",
             "Gaming, Health, Students",
-            "",
+            "https://doi.org/10.1234/bluevault.city.2024",
             1.2f,
             false
+        ));
+
+        allResearches.add(new ResearchItem(
+                "Psychological Factors of Insomnia",
+                "Galliard",
+                "SASE",
+                "BPEd",
+                "Sept 23, 2024",
+                "Declined",
+                "A study on insomnia.",
+                "Sleep, Health, Students",
+                "https://doi.org/10.1234/bluevault.city.2024",
+                1.2f,
+                false
+        ));
+
+        allResearches.add(new ResearchItem(
+                "Basic Marketing",
+                "John M. Monster",
+                "SBMA",
+                "BSMA",
+                "Oct 2, 2024",
+                "Declined",
+                "A study on basic marketing",
+                "Marketing, Students, Business",
+                "https://doi.org/10.1234/bluevault.city.2024",
+                1.2f,
+                false
         ));
 
         // Pending
         allResearches.add(new ResearchItem(
             "Blockchain for Secure Voting", 
             "Mejias Christiano", 
-            "SBMA", 
-            "BSIS", 
+            "SECA",
+            "BSIT",
             "Oct 28, 2024", 
             "Pending",
             "Implementing a blockchain-based voting system for transparency.",
             "Blockchain, Voting, Security",
-            "",
+            "https://doi.org/10.1234/bluevault.city.2024",
             0.0f,
             false
+        ));
+
+        allResearches.add(new ResearchItem(
+                "Importance of Psychosocial Therapy",
+                "Linggang G. Guacha",
+                "SASE",
+                "BSPsych",
+                "Jan 8, 2024",
+                "Pending",
+                "A narrative on psychosocial therapy and its importance...",
+                "Mental, Students, Well-being, Therapy, Psychological",
+                "https://doi.org/10.1234/bluevault.city.2024",
+                0.0f,
+                false
         ));
     }
 

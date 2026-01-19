@@ -24,7 +24,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // Force Light Mode across the app
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
     }
