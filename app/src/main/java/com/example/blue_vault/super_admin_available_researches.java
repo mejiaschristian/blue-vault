@@ -14,27 +14,35 @@ public class super_admin_available_researches extends BaseActivity {
     private List<ResearchItem> allResearches = new ArrayList<>();
     private List<ResearchItem> filteredResearches = new ArrayList<>();
     private SuperAdminResearchAdapter adapter;
-    private AutoCompleteTextView statusDropdown;
+    private AutoCompleteTextView schoolDropdown, courseDropdown;
+    
+    private String currentSchoolFilter = "ALL";
+    private String currentCourseFilter = "ALL";
+
+    // Course Arrays (Same as dashboard for consistency)
+    private final String[] allCourses = {"ALL", "ABComm", "BSPsych", "BPEd", "BSA", "BSMA", "BSBA-MM", "BSBA-FM", "BSBA-HRM", "BSHM", "BSTM", "BSIT", "BSCS", "BSCE", "BSCpE", "BSArch"};
+    private final String[] saseCourses = {"ALL", "ABComm", "BSPsych", "BPEd"};
+    private final String[] sbmaCourses = {"ALL", "BSA", "BSMA", "BSBA-MM", "BSBA-FM", "BSBA-HRM", "BSHM", "BSTM"};
+    private final String[] secaCourses = {"ALL", "BSIT", "BSCS", "BSCE", "BSCpE", "BSArch"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.super_admin_available_researches);
 
-        // Initialize common navigation and drawer
         setupNavigation();
 
-        // Setup Back Button
         Button backBtn = findViewById(R.id.backBtn);
         if (backBtn != null) {
             backBtn.setOnClickListener(v -> onBackPressed());
         }
 
-        // Initialize Data
-        allResearches.add(new ResearchItem("AI in Healthcare", "Dr. Smith", "SECA", "BSIT", "Oct 20, 2024", "Approved"));
-        allResearches.add(new ResearchItem("Cybersecurity Trends", "Prof. James", "SECA", "BSCS", "Oct 21, 2024", "Declined"));
-        allResearches.add(new ResearchItem("Blockchain for Finance", "Sarah Lee", "SBMA", "BSBA", "Oct 22, 2024", "Approved"));
-        allResearches.add(new ResearchItem("Quantum Computing Intro", "Chris Evans", "SASE", "BS Physics", "Oct 23, 2024", "Declined"));
+        // Initialize Data from Repository: Combine both Unpublished and Declined lists
+        allResearches.clear();
+        allResearches.addAll(DataRepository.getInstance().getUnpublishedResearches());
+        allResearches.addAll(DataRepository.getInstance().getDeclinedResearches());
+        
+        filteredResearches.clear();
         filteredResearches.addAll(allResearches);
 
         // Setup RecyclerView
@@ -43,33 +51,55 @@ public class super_admin_available_researches extends BaseActivity {
         adapter = new SuperAdminResearchAdapter(filteredResearches);
         recyclerView.setAdapter(adapter);
 
-        // Setup Status Dropdown
-        String[] statuses = {"ALL", "Approved", "Declined"};
-        ArrayAdapter<String> statusAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, statuses);
-        statusDropdown = findViewById(R.id.filter_status_text);
-        if (statusDropdown != null) {
-            statusDropdown.setAdapter(statusAdapter);
-            
-            // Make "ALL" selected by default
-            statusDropdown.setText(statuses[0], false);
+        // Setup School Dropdown
+        String[] schools = {"ALL", "SECA", "SASE", "SBMA"};
+        ArrayAdapter<String> schoolAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, schools);
+        schoolDropdown = findViewById(R.id.school_dropdown);
+        courseDropdown = findViewById(R.id.course_dropdown);
 
-            // Filter Logic
-            statusDropdown.setOnItemClickListener((parent, view, position, id) -> {
-                String selected = (String) parent.getItemAtPosition(position);
-                filterData(selected);
+        if (schoolDropdown != null) {
+            schoolDropdown.setAdapter(schoolAdapter);
+            schoolDropdown.setText(schools[0], false);
+            schoolDropdown.setOnItemClickListener((parent, view, position, id) -> {
+                currentSchoolFilter = (String) parent.getItemAtPosition(position);
+                updateCourseDropdown(currentSchoolFilter);
+                currentCourseFilter = "ALL";
+                courseDropdown.setText("ALL", false);
+                applyFilters(currentSchoolFilter, currentCourseFilter);
+            });
+        }
+
+        // Initial Course Dropdown Setup
+        updateCourseDropdown("ALL");
+        if (courseDropdown != null) {
+            courseDropdown.setText("ALL", false);
+            courseDropdown.setOnItemClickListener((parent, view, position, id) -> {
+                currentCourseFilter = (String) parent.getItemAtPosition(position);
+                applyFilters(currentSchoolFilter, currentCourseFilter);
             });
         }
     }
 
-    private void filterData(String status) {
+    private void updateCourseDropdown(String school) {
+        String[] courses;
+        switch (school) {
+            case "SASE": courses = saseCourses; break;
+            case "SBMA": courses = sbmaCourses; break;
+            case "SECA": courses = secaCourses; break;
+            default: courses = allCourses; break;
+        }
+        ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, courses);
+        courseDropdown.setAdapter(courseAdapter);
+    }
+
+    private void applyFilters(String school, String course) {
         filteredResearches.clear();
-        if (status.equals("ALL")) {
-            filteredResearches.addAll(allResearches);
-        } else {
-            for (ResearchItem item : allResearches) {
-                if (item.getStatus() != null && item.getStatus().equalsIgnoreCase(status)) {
-                    filteredResearches.add(item);
-                }
+        for (ResearchItem item : allResearches) {
+            boolean matchesSchool = school.equals("ALL") || (item.getSchool() != null && item.getSchool().equals(school));
+            boolean matchesCourse = course.equals("ALL") || (item.getCourse() != null && item.getCourse().equals(course));
+            
+            if (matchesSchool && matchesCourse) {
+                filteredResearches.add(item);
             }
         }
         adapter.notifyDataSetChanged();

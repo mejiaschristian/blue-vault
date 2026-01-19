@@ -209,7 +209,24 @@
                 android:textSize="12sp"
                 android:maxLines="1"
                 android:ellipsize="end" />
+
         </LinearLayout>
+
+        <Button
+            android:id="@+id/btnSuperViewResearch2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_weight="1"
+            android:backgroundTint="#FFD700"
+            android:fontFamily="@font/poppins_bold"
+            android:minHeight="0dp"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:text="View Research"
+            android:textColor="#1A1144"
+            android:textSize="12sp"
+            app:cornerRadius="8dp" />
 
     </LinearLayout>
 

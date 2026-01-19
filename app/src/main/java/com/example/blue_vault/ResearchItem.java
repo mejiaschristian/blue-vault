@@ -8,21 +8,22 @@ public class ResearchItem implements Serializable {
     private String school;
     private String course;
     private String date;
-    private String status;
+    private String status; // Approved, Declined, Pending
     private String researchAbstract;
     private String tags;
     private String doi;
-    private int rating; // Added rating field (0-5)
+    private float rating; 
+    private boolean isPublished; // Added to distinguish between approved and actually visible to public
 
     public ResearchItem(String title, String author, String school, String course, String date) {
-        this(title, author, school, course, date, "Pending", "", "", "", 0);
+        this(title, author, school, course, date, "Pending", "", "", "", 0.0f, false);
     }
 
     public ResearchItem(String title, String author, String school, String course, String date, String status) {
-        this(title, author, school, course, date, status, "", "", "", 0);
+        this(title, author, school, course, date, status, "", "", "", 0.0f, false);
     }
 
-    public ResearchItem(String title, String author, String school, String course, String date, String status, String researchAbstract, String tags, String doi, int rating) {
+    public ResearchItem(String title, String author, String school, String course, String date, String status, String researchAbstract, String tags, String doi, float rating, boolean isPublished) {
         this.title = title;
         this.author = author;
         this.school = school;
@@ -33,6 +34,7 @@ public class ResearchItem implements Serializable {
         this.tags = tags;
         this.doi = doi;
         this.rating = rating;
+        this.isPublished = isPublished;
     }
 
     public String getTitle() { return title; }
@@ -44,5 +46,7 @@ public class ResearchItem implements Serializable {
     public String getResearchAbstract() { return researchAbstract; }
     public String getTags() { return tags; }
     public String getDoi() { return doi; }
-    public int getRating() { return rating; }
+    public float getRating() { return rating; }
+    public boolean isPublished() { return isPublished; }
+    public void setPublished(boolean published) { isPublished = published; }
 }

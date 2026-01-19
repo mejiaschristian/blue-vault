@@ -27,25 +27,41 @@ public class view_research_admin extends BaseActivity {
         Button btnDecline = findViewById(R.id.btnDecline);
         Button backBtn = findViewById(R.id.backBtn4);
 
-        // Setting Filler Data
-        etTitle.setText("A Study on AI in Modern Education");
-        etAuthors.setText("John Doe, Jane Smith");
-        etSchool.setText("SECA");
-        etCourse.setText("BSIT");
-        etAbstract.setText("This research explores the impact of Artificial Intelligence on student engagement and academic performance in higher education settings.");
-        etTags.setText("AI, Education, Modern");
-        
-        final String doiUrl = "https://doi.org/10.1234/bluevault.2024";
-        tvDoiLink.setText(doiUrl);
-        tvDoiLink.setClickable(true);
-        tvDoiLink.setOnClickListener(v -> {
-            try {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(doiUrl));
-                startActivity(intent);
-            } catch (Exception e) {
-                Toast.makeText(this, "Unable to open link", Toast.LENGTH_SHORT).show();
+        // Get actual data from Intent
+        ResearchItem research = (ResearchItem) getIntent().getSerializableExtra("research_data");
+
+        if (research != null) {
+            etTitle.setText(research.getTitle());
+            etAuthors.setText(research.getAuthor());
+            etSchool.setText(research.getSchool());
+            etCourse.setText(research.getCourse());
+            etAbstract.setText(research.getResearchAbstract());
+            etTags.setText(research.getTags());
+            
+            final String doiUrl = research.getDoi();
+            tvDoiLink.setText(doiUrl);
+            
+            if (doiUrl != null && !doiUrl.isEmpty()) {
+                tvDoiLink.setClickable(true);
+                tvDoiLink.setOnClickListener(v -> {
+                    try {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(doiUrl));
+                        startActivity(intent);
+                    } catch (Exception e) {
+                        Toast.makeText(this, "Unable to open link", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
-        });
+        } else {
+            // Fallback filler if somehow no data passed
+            etTitle.setText("Pending Research Details");
+            etAuthors.setText("Filler Author");
+            etSchool.setText("SECA");
+            etCourse.setText("BSIT");
+            etAbstract.setText("Placeholder abstract content.");
+            etTags.setText("AI, Education");
+            tvDoiLink.setText("No link");
+        }
 
         if (backBtn != null) {
             backBtn.setOnClickListener(v -> onBackPressed());

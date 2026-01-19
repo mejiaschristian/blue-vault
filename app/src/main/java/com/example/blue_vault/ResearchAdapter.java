@@ -34,19 +34,25 @@ public class ResearchAdapter extends RecyclerView.Adapter<ResearchAdapter.ViewHo
         holder.rsSchool.setText(item.getSchool());
         holder.rsCourse.setText(item.getCourse());
         holder.rsDate.setText(item.getDate());
-        holder.rsTags.setText(item.getTags()); // Dynamically set tags
+        holder.rsTags.setText(item.getTags());
 
-        // Dynamic Star Rating Logic
-        int rating = item.getRating();
+        // Dynamic Star Rating Logic with Decimal Support
+        float rating = item.getRating();
         ImageView[] stars = {holder.star1, holder.star2, holder.star3, holder.star4, holder.star5};
         
         for (int i = 0; i < stars.length; i++) {
-            if (i < rating) {
-                stars[i].setVisibility(View.VISIBLE);
-                stars[i].setAlpha(1.0f); // Fully visible/colored
+            if (i < (int) rating) {
+                // Full star
+                stars[i].setImageResource(R.drawable.ic_star);
+                stars[i].setAlpha(1.0f);
+            } else if (i < rating) {
+                // Half star (e.g., if rating is 4.5, index 4 will hit this)
+                stars[i].setImageResource(R.drawable.ic_star_half);
+                stars[i].setAlpha(1.0f);
             } else {
-                stars[i].setVisibility(View.VISIBLE);
-                stars[i].setAlpha(0.2f); // Faded out stars
+                // Empty/Faded star
+                stars[i].setImageResource(R.drawable.ic_star);
+                stars[i].setAlpha(0.2f);
             }
         }
 
@@ -74,7 +80,7 @@ public class ResearchAdapter extends RecyclerView.Adapter<ResearchAdapter.ViewHo
             rsSchool = view.findViewById(R.id.tvSchool);
             rsCourse = view.findViewById(R.id.tvCourse);
             rsDate = view.findViewById(R.id.tvDate);
-            rsTags = view.findViewById(R.id.tvTags); // Initialize tvTags
+            rsTags = view.findViewById(R.id.tvTags);
             btnItem = view.findViewById(R.id.research_item_btn);
             
             star1 = view.findViewById(R.id.star1);

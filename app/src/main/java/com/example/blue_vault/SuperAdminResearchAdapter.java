@@ -34,9 +34,10 @@ public class SuperAdminResearchAdapter extends RecyclerView.Adapter<SuperAdminRe
         ResearchItem item = researchList.get(position);
         holder.tvTitle.setText(item.getTitle());
         holder.tvAuthor.setText(item.getAuthor());
+        holder.tvSchool.setText(item.getSchool());
         holder.tvCourse.setText(item.getCourse());
         holder.tvDate.setText(item.getDate());
-        holder.tvTags.setText(item.getTags()); // Bind tags dynamically
+        holder.tvTags.setText(item.getTags());
         holder.tvStatus.setText(item.getStatus());
 
         if ("Approved".equalsIgnoreCase(item.getStatus())) {
@@ -49,6 +50,7 @@ public class SuperAdminResearchAdapter extends RecyclerView.Adapter<SuperAdminRe
 
         holder.btnSuperView.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), view_research_super_admin.class);
+            intent.putExtra("research_data", item); // Pass the data
             v.getContext().startActivity(intent);
         });
     }
@@ -73,16 +75,17 @@ public class SuperAdminResearchAdapter extends RecyclerView.Adapter<SuperAdminRe
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView tvTitle, tvAuthor, tvCourse, tvDate, tvStatus, tvTags;
+        public TextView tvTitle, tvAuthor, tvSchool, tvCourse, tvDate, tvStatus, tvTags;
         public Button btnSuperView;
 
         public ViewHolder(View view) {
             super(view);
             tvTitle = view.findViewById(R.id.tvTitle);
             tvAuthor = view.findViewById(R.id.tvAuthor);
+            tvSchool = view.findViewById(R.id.tvSchool);
             tvCourse = view.findViewById(R.id.tvCourse);
             tvDate = view.findViewById(R.id.tvDate);
-            tvTags = view.findViewById(R.id.tvTags); // Initialize tags
+            tvTags = view.findViewById(R.id.tvTags);
             tvStatus = view.findViewById(R.id.textView3);
             btnSuperView = view.findViewById(R.id.btnSuperViewResearch);
         }
