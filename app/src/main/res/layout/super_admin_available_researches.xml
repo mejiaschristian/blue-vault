@@ -39,11 +39,11 @@
 
             <Button
                 android:id="@+id/backBtn"
+                style="@android:style/Widget.Material.Button.Colored"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#D3D3D3"
-                android:text="BACK"
-                android:textColor="@color/black" />
+                android:layout_height="match_parent"
+                android:backgroundTint="#140958"
+                android:text="BACK" />
 
             <View
                 android:layout_width="8dp"

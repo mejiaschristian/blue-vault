@@ -1,6 +1,7 @@
 package com.example.blue_vault;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,15 +15,22 @@ import java.util.List;
 public class ResearchAdapter extends RecyclerView.Adapter<ResearchAdapter.ViewHolder> {
 
     private List<ResearchItem> researchList;
+    private boolean isProfileView;
 
     public ResearchAdapter(List<ResearchItem> researchList) {
+        this(researchList, false);
+    }
+
+    public ResearchAdapter(List<ResearchItem> researchList, boolean isProfileView) {
         this.researchList = researchList;
+        this.isProfileView = isProfileView;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.rc_item_research, parent, false);
+        int layoutId = isProfileView ? R.layout.rc_profile_item_research : R.layout.rc_item_research;
+        View view = LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false);
         return new ViewHolder(view);
     }
 
@@ -34,7 +42,24 @@ public class ResearchAdapter extends RecyclerView.Adapter<ResearchAdapter.ViewHo
         holder.rsSchool.setText(item.getSchool());
         holder.rsCourse.setText(item.getCourse());
         holder.rsDate.setText(item.getDate());
-        holder.rsTags.setText(item.getTags());
+        if (holder.rsTags != null) {
+            holder.rsTags.setText(item.getTags());
+        }
+
+        // Handle Status for Profile View
+        if (isProfileView && holder.rsStatus != null) {
+            int status = item.getStatus();
+            if (status == DataRepository.STATUS_APPROVED) {
+                holder.rsStatus.setText("Approved");
+                holder.rsStatus.setTextColor(Color.GREEN);
+            } else if (status == DataRepository.STATUS_DECLINED) {
+                holder.rsStatus.setText("Declined");
+                holder.rsStatus.setTextColor(Color.RED);
+            } else {
+                holder.rsStatus.setText("Pending");
+                holder.rsStatus.setTextColor(Color.YELLOW);
+            }
+        }
 
         // Dynamic Star Rating Logic with Decimal Support
         float rating = item.getRating();
@@ -42,15 +67,12 @@ public class ResearchAdapter extends RecyclerView.Adapter<ResearchAdapter.ViewHo
         
         for (int i = 0; i < stars.length; i++) {
             if (i < (int) rating) {
-                // Full star
                 stars[i].setImageResource(R.drawable.ic_star);
                 stars[i].setAlpha(1.0f);
             } else if (i < rating) {
-                // Half star (e.g., if rating is 4.5, index 4 will hit this)
                 stars[i].setImageResource(R.drawable.ic_star_half);
                 stars[i].setAlpha(1.0f);
             } else {
-                // Empty/Faded star
                 stars[i].setImageResource(R.drawable.ic_star);
                 stars[i].setAlpha(0.2f);
             }
@@ -69,7 +91,7 @@ public class ResearchAdapter extends RecyclerView.Adapter<ResearchAdapter.ViewHo
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView rsTitle, rsAuthor, rsSchool, rsCourse, rsDate, rsTags;
+        public TextView rsTitle, rsAuthor, rsSchool, rsCourse, rsDate, rsTags, rsStatus;
         public Button btnItem;
         public ImageView star1, star2, star3, star4, star5;
 
@@ -81,6 +103,7 @@ public class ResearchAdapter extends RecyclerView.Adapter<ResearchAdapter.ViewHo
             rsCourse = view.findViewById(R.id.tvCourse);
             rsDate = view.findViewById(R.id.tvDate);
             rsTags = view.findViewById(R.id.tvTags);
+            rsStatus = view.findViewById(R.id.tvStatus); // For profile view status display
             btnItem = view.findViewById(R.id.research_item_btn);
             
             star1 = view.findViewById(R.id.star1);

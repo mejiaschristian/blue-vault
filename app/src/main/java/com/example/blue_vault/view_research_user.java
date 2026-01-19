@@ -21,6 +21,7 @@ public class view_research_user extends BaseActivity {
         Button backBtn = findViewById(R.id.backBtn);
         TextView tvHeaderTitle = findViewById(R.id.tvHeaderTitle);
         EditText etTitle = findViewById(R.id.etTitle);
+        EditText etSchool = findViewById(R.id.etSchool);
         EditText etAuthors = findViewById(R.id.etAuthors);
         EditText etCourse = findViewById(R.id.etCourse);
         EditText etAbstract = findViewById(R.id.etAbstract);
@@ -35,6 +36,7 @@ public class view_research_user extends BaseActivity {
             tvHeaderTitle.setText(research.getTitle());
             etTitle.setText(research.getTitle());
             etAuthors.setText(research.getAuthor());
+            etSchool.setText(research.getSchool());
             etCourse.setText(research.getCourse());
             etAbstract.setText(research.getResearchAbstract());
             etTags.setText(research.getTags());
@@ -58,6 +60,7 @@ public class view_research_user extends BaseActivity {
             tvHeaderTitle.setText("Research Title Placeholder");
             etTitle.setText("Sample Title");
             etAuthors.setText("Sample Author");
+            etSchool.setText("Sample School");
             etCourse.setText("BSIT");
             etAbstract.setText("This is a placeholder abstract for when no data is provided.");
             etTags.setText("Placeholder, Sample");

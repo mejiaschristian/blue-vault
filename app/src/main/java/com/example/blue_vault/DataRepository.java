@@ -12,9 +12,15 @@ public class DataRepository {
     private static DataRepository instance;
     private List<ResearchItem> allResearches;
 
+    // Status Constants: 0=Declined, 1=Approved, 3=Pending
+    public static final int STATUS_DECLINED = 0;
+    public static final int STATUS_APPROVED = 1;
+    public static final int STATUS_PENDING = 3;
+
     private DataRepository() {
         allResearches = new ArrayList<>();
-        // Initialize with placeholder data
+        // Initialize with placeholder data using int status
+        
         // Approved and Published
         allResearches.add(new ResearchItem(
             "Automated Library Vault System using QR Code", 
@@ -22,22 +28,22 @@ public class DataRepository {
             "SECA", 
             "BSIT", 
             "Oct 24, 2024", 
-            "Approved",
+            STATUS_APPROVED,
             "This research focuses on developing a secure and automated way to manage library resources using QR code technology...",
             "Automation, QR Code, Library, Security",
             "https://doi.org/10.1234/bluevault.2024",
             4.2f,
             true // Published
         ));
+        
         allResearches.add(new ResearchItem(
                 "Amogus Skibiddy Toilet",
                 "John Galli A. Mendoza",
                 "SECA",
                 "BSIT",
                 "March 3, 2024",
-                "Approved",
-                "loremloremloremloremloremloremloremloremloreml oremloremloremlor emloremloremloremloreml oremloremloremloremloremloremloreml " +
-                        "oremloremloreml oremloremlorem loremloremloremloremloremlorem loremloremloremloremloremloremloremloremloremloremloremlorem",
+                STATUS_APPROVED,
+                "A deep dive into the cultural phenomenon of Skibidi Toilet...",
                 "toilet, amogus",
                 "https://doi.org/10.1234/bluevault.2024",
                 2.2f,
@@ -50,7 +56,7 @@ public class DataRepository {
             "SECA", 
             "BSCS", 
             "Oct 25, 2024", 
-            "Approved",
+            STATUS_APPROVED,
             "Exploring the impact of Artificial Intelligence on student engagement and academic performance.",
             "AI, Education, Technology",
             "https://doi.org/10.1234/bluevault.ai.2024",
@@ -65,7 +71,7 @@ public class DataRepository {
             "SECA",
             "BSIT", 
             "Oct 26, 2024", 
-            "Approved",
+            STATUS_APPROVED,
             "Utilizing IoT and real-time data analytics to optimize traffic flow in urban areas.",
             "IoT, Smart City, Analytics",
             "https://doi.org/10.1234/bluevault.city.2024",
@@ -80,7 +86,7 @@ public class DataRepository {
             "SECA",
             "BSCS",
             "Oct 27, 2024", 
-            "Declined",
+            STATUS_DECLINED,
             "A study on how late-night gaming affects student sleep patterns.",
             "Gaming, Health, Students",
             "https://doi.org/10.1234/bluevault.city.2024",
@@ -94,23 +100,9 @@ public class DataRepository {
                 "SASE",
                 "BPEd",
                 "Sept 23, 2024",
-                "Declined",
+                STATUS_DECLINED,
                 "A study on insomnia.",
                 "Sleep, Health, Students",
-                "https://doi.org/10.1234/bluevault.city.2024",
-                1.2f,
-                false
-        ));
-
-        allResearches.add(new ResearchItem(
-                "Basic Marketing",
-                "John M. Monster",
-                "SBMA",
-                "BSMA",
-                "Oct 2, 2024",
-                "Declined",
-                "A study on basic marketing",
-                "Marketing, Students, Business",
                 "https://doi.org/10.1234/bluevault.city.2024",
                 1.2f,
                 false
@@ -120,10 +112,10 @@ public class DataRepository {
         allResearches.add(new ResearchItem(
             "Blockchain for Secure Voting", 
             "Mejias Christiano", 
-            "SECA",
+            "SECA", 
             "BSIT",
             "Oct 28, 2024", 
-            "Pending",
+            STATUS_PENDING,
             "Implementing a blockchain-based voting system for transparency.",
             "Blockchain, Voting, Security",
             "https://doi.org/10.1234/bluevault.city.2024",
@@ -132,15 +124,43 @@ public class DataRepository {
         ));
 
         allResearches.add(new ResearchItem(
-                "Importance of Psychosocial Therapy",
-                "Linggang G. Guacha",
-                "SASE",
-                "BSPsych",
-                "Jan 8, 2024",
-                "Pending",
-                "A narrative on psychosocial therapy and its importance...",
-                "Mental, Students, Well-being, Therapy, Psychological",
-                "https://doi.org/10.1234/bluevault.city.2024",
+                "My Research 1",
+                "Juan Dela Cruz",
+                "SECA",
+                "BSIT",
+                "Oct 1, 2024",
+                STATUS_APPROVED,
+                "Detailed abstract for My Research 1...",
+                "User, Research, Skills",
+                "",
+                2.3f,
+                true
+        ));
+
+        allResearches.add(new ResearchItem(
+                "My Research 2",
+                "Juan Dela Cruz",
+                "SECA",
+                "BSIT",
+                "Oct 3, 2024",
+                STATUS_DECLINED,
+                "Detailed abstract for My Research 2...",
+                "User, Research, Skills",
+                "",
+                0.0f,
+                false
+        ));
+
+        allResearches.add(new ResearchItem(
+                "My Research 3",
+                "Juan Dela Cruz",
+                "SECA",
+                "BSIT",
+                "Oct 5, 2024",
+                STATUS_PENDING,
+                "Detailed abstract for My Research 3...",
+                "User, Research, Skills",
+                "",
                 0.0f,
                 false
         ));
@@ -153,9 +173,6 @@ public class DataRepository {
         return instance;
     }
 
-    /**
-     * @return List of all research items across all statuses
-     */
     public List<ResearchItem> getAllResearches() {
         return allResearches;
     }
@@ -173,7 +190,7 @@ public class DataRepository {
     public List<ResearchItem> getUnpublishedResearches() {
         List<ResearchItem> filtered = new ArrayList<>();
         for (ResearchItem item : allResearches) {
-            if ("Approved".equalsIgnoreCase(item.getStatus()) && !item.isPublished()) {
+            if (item.getStatus() == STATUS_APPROVED && !item.isPublished()) {
                 filtered.add(item);
             }
         }
@@ -183,7 +200,7 @@ public class DataRepository {
     public List<ResearchItem> getApprovedResearches() {
         List<ResearchItem> filtered = new ArrayList<>();
         for (ResearchItem item : allResearches) {
-            if ("Approved".equalsIgnoreCase(item.getStatus())) {
+            if (item.getStatus() == STATUS_APPROVED) {
                 filtered.add(item);
             }
         }
@@ -193,7 +210,7 @@ public class DataRepository {
     public List<ResearchItem> getDeclinedResearches() {
         List<ResearchItem> filtered = new ArrayList<>();
         for (ResearchItem item : allResearches) {
-            if ("Declined".equalsIgnoreCase(item.getStatus())) {
+            if (item.getStatus() == STATUS_DECLINED) {
                 filtered.add(item);
             }
         }
@@ -203,7 +220,17 @@ public class DataRepository {
     public List<ResearchItem> getPendingResearches() {
         List<ResearchItem> filtered = new ArrayList<>();
         for (ResearchItem item : allResearches) {
-            if ("Pending".equalsIgnoreCase(item.getStatus())) {
+            if (item.getStatus() == STATUS_PENDING) {
+                filtered.add(item);
+            }
+        }
+        return filtered;
+    }
+
+    public List<ResearchItem> getUserResearches(String authorName) {
+        List<ResearchItem> filtered = new ArrayList<>();
+        for (ResearchItem item : allResearches) {
+            if (item.getAuthor().contains(authorName)) {
                 filtered.add(item);
             }
         }

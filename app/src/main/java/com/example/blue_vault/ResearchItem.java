@@ -8,7 +8,7 @@ public class ResearchItem implements Serializable {
     private String school;
     private String course;
     private String date;
-    private String status; // Approved, Declined, Pending
+    private int status; // Approved, Declined, Pending
     private String researchAbstract;
     private String tags;
     private String doi;
@@ -16,14 +16,14 @@ public class ResearchItem implements Serializable {
     private boolean isPublished; // Added to distinguish between approved and actually visible to public
 
     public ResearchItem(String title, String author, String school, String course, String date) {
-        this(title, author, school, course, date, "Pending", "", "", "", 0.0f, false);
+        this(title, author, school, course, date, 3, "", "", "", 0.0f, false);
     }
 
-    public ResearchItem(String title, String author, String school, String course, String date, String status) {
+    public ResearchItem(String title, String author, String school, String course, String date, int status) {
         this(title, author, school, course, date, status, "", "", "", 0.0f, false);
     }
 
-    public ResearchItem(String title, String author, String school, String course, String date, String status, String researchAbstract, String tags, String doi, float rating, boolean isPublished) {
+    public ResearchItem(String title, String author, String school, String course, String date, int status, String researchAbstract, String tags, String doi, float rating, boolean isPublished) {
         this.title = title;
         this.author = author;
         this.school = school;
@@ -42,7 +42,7 @@ public class ResearchItem implements Serializable {
     public String getSchool() { return school; }
     public String getCourse() { return course; }
     public String getDate() { return date; }
-    public String getStatus() { return status; }
+    public int getStatus() { return status; }
     public String getResearchAbstract() { return researchAbstract; }
     public String getTags() { return tags; }
     public String getDoi() { return doi; }

@@ -34,23 +34,26 @@ public class SuperAdminResearchAdapter extends RecyclerView.Adapter<SuperAdminRe
         ResearchItem item = researchList.get(position);
         holder.tvTitle.setText(item.getTitle());
         holder.tvAuthor.setText(item.getAuthor());
-        holder.tvSchool.setText(item.getSchool());
         holder.tvCourse.setText(item.getCourse());
         holder.tvDate.setText(item.getDate());
         holder.tvTags.setText(item.getTags());
-        holder.tvStatus.setText(item.getStatus());
-
-        if ("Approved".equalsIgnoreCase(item.getStatus())) {
+        
+        // Handle int status: 0=Declined, 1=Approved, 3=Pending
+        int status = item.getStatus();
+        if (status == DataRepository.STATUS_APPROVED) {
+            holder.tvStatus.setText("Approved");
             holder.tvStatus.setTextColor(Color.GREEN);
-        } else if ("Declined".equalsIgnoreCase(item.getStatus())) {
+        } else if (status == DataRepository.STATUS_DECLINED) {
+            holder.tvStatus.setText("Declined");
             holder.tvStatus.setTextColor(Color.RED);
         } else {
+            holder.tvStatus.setText("Pending");
             holder.tvStatus.setTextColor(Color.YELLOW);
         }
 
         holder.btnSuperView.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), view_research_super_admin.class);
-            intent.putExtra("research_data", item); // Pass the data
+            intent.putExtra("research_data", item); 
             v.getContext().startActivity(intent);
         });
     }
@@ -60,13 +63,18 @@ public class SuperAdminResearchAdapter extends RecyclerView.Adapter<SuperAdminRe
         return researchList.size();
     }
 
-    public void filter(String status) {
+    public void filter(String statusStr) {
         researchList.clear();
-        if (status.equals("ALL")) {
+        if (statusStr.equals("ALL")) {
             researchList.addAll(researchListFull);
         } else {
+            int statusToFilter = -1;
+            if (statusStr.equalsIgnoreCase("Approved")) statusToFilter = DataRepository.STATUS_APPROVED;
+            else if (statusStr.equalsIgnoreCase("Declined")) statusToFilter = DataRepository.STATUS_DECLINED;
+            else if (statusStr.equalsIgnoreCase("Pending")) statusToFilter = DataRepository.STATUS_PENDING;
+
             for (ResearchItem item : researchListFull) {
-                if (item.getStatus().equalsIgnoreCase(status)) {
+                if (item.getStatus() == statusToFilter) {
                     researchList.add(item);
                 }
             }
@@ -75,14 +83,13 @@ public class SuperAdminResearchAdapter extends RecyclerView.Adapter<SuperAdminRe
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView tvTitle, tvAuthor, tvSchool, tvCourse, tvDate, tvStatus, tvTags;
+        public TextView tvTitle, tvAuthor, tvCourse, tvDate, tvStatus, tvTags;
         public Button btnSuperView;
 
         public ViewHolder(View view) {
             super(view);
             tvTitle = view.findViewById(R.id.tvTitle);
             tvAuthor = view.findViewById(R.id.tvAuthor);
-            tvSchool = view.findViewById(R.id.tvSchool);
             tvCourse = view.findViewById(R.id.tvCourse);
             tvDate = view.findViewById(R.id.tvDate);
             tvTags = view.findViewById(R.id.tvTags);

@@ -6,7 +6,6 @@ import android.widget.Button;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class profile_view_user extends BaseActivity {
@@ -15,7 +14,7 @@ public class profile_view_user extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile_view_user);
 
-        // This replaces all manual drawer logic
+        // Standard setup from BaseActivity
         setupNavigation();
 
         Button btnUpload = findViewById(R.id.addResBtn);
@@ -28,13 +27,16 @@ public class profile_view_user extends BaseActivity {
 
         // RecyclerView Setup
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        if (recyclerView != null) {
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        List<ResearchItem> researchList = new ArrayList<>();
-        researchList.add(new ResearchItem("My Research 1", "Juan Dela Cruz", "SECA", "BSIT", "Oct 1, 2024"));
-        researchList.add(new ResearchItem("My Research 2", "Juan Dela Cruz", "SECA", "CS","Oct 10, 2024"));
+            // Fetch user-specific researches from the Data Repository
+            // Using "Juan Dela Cruz" as the placeholder current user
+            List<ResearchItem> userResearches = DataRepository.getInstance().getUserResearches("Juan Dela Cruz");
 
-        ResearchAdapter adapter = new ResearchAdapter(researchList);
-        recyclerView.setAdapter(adapter);
+            // Initialize adapter with isProfileView = true to show status
+            ResearchAdapter adapter = new ResearchAdapter(userResearches, true);
+            recyclerView.setAdapter(adapter);
+        }
     }
 }
