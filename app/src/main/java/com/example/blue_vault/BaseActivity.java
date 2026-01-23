@@ -3,6 +3,7 @@ package com.example.blue_vault;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -47,6 +48,12 @@ public abstract class BaseActivity extends AppCompatActivity {
                 gotoMenu.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
             }
 
+            // Set User Email in Drawer
+            TextView userEmailTv = findViewById(R.id.user_email);
+            if (userEmailTv != null) {
+                userEmailTv.setText(DataRepository.getInstance().getLoggedInUserEmail());
+            }
+
             setupDrawerButtons();
         }
     }
@@ -57,8 +64,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         Button btnAbout = findViewById(R.id.nav_about);
         Button btnSecurity = findViewById(R.id.nav_security);
         Button btnHelp = findViewById(R.id.nav_help);
-        Button btnAdmin = findViewById(R.id.nav_admin);
-        Button btnSuperAdmin = findViewById(R.id.nav_super_admin);
         Button btnLogout = findViewById(R.id.logout_btn);
 
         if (btnResearches != null) btnResearches.setOnClickListener(v -> navigateTo(main_dashboard.class));
@@ -66,8 +71,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (btnAbout != null) btnAbout.setOnClickListener(v -> navigateTo(nav_about_us.class));
         if (btnSecurity != null) btnSecurity.setOnClickListener(v -> navigateTo(nav_pass_change.class));
         if (btnHelp != null) btnHelp.setOnClickListener(v -> navigateTo(nav_contact_info.class));
-        if (btnAdmin != null) btnAdmin.setOnClickListener(v -> navigateTo(admin_login.class));
-        if (btnSuperAdmin != null) btnSuperAdmin.setOnClickListener(v -> navigateTo(super_admin_login.class));
         if (btnLogout != null) btnLogout.setOnClickListener(v -> logout());
     }
 

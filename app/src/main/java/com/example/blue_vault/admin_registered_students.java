@@ -35,11 +35,11 @@ public class admin_registered_students extends BaseActivity {
         List<StudentItem> studentList = new ArrayList<>();
         studentList.add(new StudentItem("Alinsurin, Emmanuel C.", "2024-1234567", "SECA"));
         studentList.add(new StudentItem("Manding, Sean M.", "2024-2468101", "SECA"));
-        studentList.add(new StudentItem("Udarbe, LeBron Jamez Z.", "2024-3691113", "SASE"));
+        studentList.add(new StudentItem("Udarbe, Lebron James S.", "2024-3691113", "SASE"));
         studentList.add(new StudentItem("Lagaras, Ryoji B.", "2024-4812162", "SBMA"));
-        studentList.add(new StudentItem("Tolentino, Francis Aris T.", "2024-5101520", "SECA"));
-        studentList.add(new StudentItem("Mejias, Christiano R.", "2024-6121824", "SASE"));
-        studentList.add(new StudentItem("Publico, Adi Nicolodeon N.", "2024-7142128", "SBMA"));
+        studentList.add(new StudentItem("Tolentino, Aristotle W.", "2024-5101520", "SECA"));
+        studentList.add(new StudentItem("Mejias, Christian Lloyd J.", "2024-6121824", "SASE"));
+        studentList.add(new StudentItem("Publico, Adlae Nicolaus T.", "2024-7142128", "SBMA"));
 
         adapter = new StudentAdapter(studentList);
         recyclerView.setAdapter(adapter);

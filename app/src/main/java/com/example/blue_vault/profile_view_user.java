@@ -3,6 +3,8 @@ package com.example.blue_vault;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.TextView;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,6 +18,20 @@ public class profile_view_user extends BaseActivity {
 
         // Standard setup from BaseActivity
         setupNavigation();
+
+        TextView profileName = findViewById(R.id.tvProfileName);
+        TextView profileId = findViewById(R.id.tvProfileId);
+        TextView profileEmail = findViewById(R.id.tvProfileEmail);
+
+        // Fetch logged in user info from repository
+        StudentItem currentUser = DataRepository.getInstance().getLoggedInUser();
+        String currentEmail = DataRepository.getInstance().getLoggedInUserEmail();
+
+        if (profileName != null && profileId != null && profileEmail != null && currentUser != null) {
+            profileName.setText(currentUser.getName());
+            profileId.setText(currentUser.getStudentID());
+            profileEmail.setText(currentEmail);
+        }
 
         Button btnUpload = findViewById(R.id.addResBtn);
         if (btnUpload != null) {
@@ -31,8 +47,8 @@ public class profile_view_user extends BaseActivity {
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
             // Fetch user-specific researches from the Data Repository
-            // Using "Juan Dela Cruz" as the placeholder current user
-            List<ResearchItem> userResearches = DataRepository.getInstance().getUserResearches("Juan Dela Cruz");
+            // Using the current user's name from the repository
+            List<ResearchItem> userResearches = DataRepository.getInstance().getUserResearches(currentUser != null ? currentUser.getName() : "Juan Dela Cruz");
 
             // Initialize adapter with isProfileView = true to show status
             ResearchAdapter adapter = new ResearchAdapter(userResearches, true);

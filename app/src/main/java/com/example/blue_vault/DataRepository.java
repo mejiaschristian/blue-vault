@@ -123,6 +123,7 @@ public class DataRepository {
             false
         ));
 
+        // User's specific researches (Migrated from profile_view_user)
         allResearches.add(new ResearchItem(
                 "My Research 1",
                 "Juan Dela Cruz",
@@ -171,6 +172,17 @@ public class DataRepository {
             instance = new DataRepository();
         }
         return instance;
+    }
+
+    /**
+     * Simulation of getting current logged-in user info
+     */
+    public StudentItem getLoggedInUser() {
+        return new StudentItem("Juan Dela Cruz", "2024-3691113", "SECA");
+    }
+
+    public String getLoggedInUserEmail() {
+        return "udarbels@students.nu-dasma.edu.ph";
     }
 
     public List<ResearchItem> getAllResearches() {

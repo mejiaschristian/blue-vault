@@ -41,9 +41,6 @@
             android:name=".upload_research"
             android:exported="false" />
         <activity
-            android:name=".admin_login"
-            android:exported="false" />
-        <activity
             android:name=".admin_dashboard"
             android:exported="false" />
         <activity
@@ -60,9 +57,6 @@
             android:exported="false" />
         <activity
             android:name=".view_research_super_admin"
-            android:exported="false" />
-        <activity
-            android:name=".super_admin_login"
             android:exported="false" />
         <activity
             android:name=".super_admin_dashboard"

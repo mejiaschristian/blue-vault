@@ -23,7 +23,7 @@
             android:layout_marginEnd="10dp"
             android:layout_toStartOf="@+id/logout_btn"
             android:fontFamily="@font/poppins"
-            android:text="udarbels@students.nu-dasmaa.edu.ph"
+            android:text="email@test.edu.ph"
             android:textColor="@color/white"
             android:textSize="12sp"
             android:textStyle="bold" />
@@ -169,55 +169,4 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#444444" />
-
-    <!-- Admin Login -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/nav_admin"
-        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_bold"
-        android:gravity="start|center_vertical"
-        android:paddingVertical="15dp"
-        android:text="Admin"
-        android:textAlignment="viewStart"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:icon="@drawable/profile_icon"
-        app:iconPadding="15dp"
-        app:iconSize="40dp"
-        app:iconTint="@null" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#444444" />
-
-    <!-- Super Admin Login -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/nav_super_admin"
-        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_bold"
-        android:gravity="start|center_vertical"
-        android:paddingVertical="15dp"
-        android:text="Super Admin"
-        android:textAlignment="viewStart"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:icon="@drawable/profile_icon"
-        app:iconPadding="15dp"
-        app:iconSize="40dp"
-        app:iconTint="@null" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#444444" />
-
 </LinearLayout>

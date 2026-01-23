@@ -2,6 +2,7 @@ package com.example.blue_vault;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,8 +23,14 @@ public class main_registration extends AppCompatActivity {
             return insets;
         });
 
+        Button regBtn = findViewById(R.id.regBtn);
         TextView tvLogIn = findViewById(R.id.tvLoginLink);
         tvLogIn.setText(R.string.already_have_an_account_log_in);
+
+        regBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(main_registration.this, main_login.class);
+            startActivity(intent);
+        });
 
         tvLogIn.setOnClickListener(v -> {
             Intent intent = new Intent(main_registration.this, main_login.class);
