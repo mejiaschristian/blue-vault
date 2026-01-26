@@ -2,7 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.intent.permission.INTERNET" />
+    <uses-permission android:name="android.intent.permission.ACCESS_NETWORK_STATE" />
+
     <application
+        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -40,9 +44,7 @@
         <activity
             android:name=".upload_research"
             android:exported="false" />
-        <activity
-            android:name=".admin_login"
-            android:exported="false" />
+
         <activity
             android:name=".admin_dashboard"
             android:exported="false" />
@@ -61,9 +63,7 @@
         <activity
             android:name=".view_research_super_admin"
             android:exported="false" />
-        <activity
-            android:name=".super_admin_login"
-            android:exported="false" />
+
         <activity
             android:name=".super_admin_dashboard"
             android:exported="false" />
