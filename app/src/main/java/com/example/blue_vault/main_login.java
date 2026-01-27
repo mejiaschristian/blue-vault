@@ -2,7 +2,8 @@ package com.example.blue_vault;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;import android.widget.EditText;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -12,14 +13,14 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
-import java.util.HashMap;
-import java.util.Map;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 public class main_login extends AppCompatActivity {
 
@@ -36,7 +37,7 @@ public class main_login extends AppCompatActivity {
         });
 
         // Initialize Input Fields
-        final EditText etIdNumber = findViewById(R.id.loginIdNum); // This is your ID input
+        final EditText etIdNumber = findViewById(R.id.loginIdNum);
         final EditText etPassword = findViewById(R.id.loginPassword);
         Button loginBtn = findViewById(R.id.loginBtn);
 
@@ -61,41 +62,68 @@ public class main_login extends AppCompatActivity {
     }
 
     private void loginUser(String idNumber, String password) {
-        String URL = "http://10.0.2.2/bluevault/BV_Login.php";
+        new Thread(() -> {
+            try {
+                URL url = new URL("http://10.0.2.2/bluevault/BV_Login.php"); // emulator
+                // URL url = new URL("http://192.168.100.4/bluevault/BV_Login.php"); // phone
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
-                response -> {
-                    String result = response.trim();
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("POST");
+                conn.setDoOutput(true);
+                conn.setConnectTimeout(5000);
+                conn.setReadTimeout(5000);
 
-                    if (result.equals("role_admin")) {
-                        Toast.makeText(this, "Admin Login Successful", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(this, admin_dashboard.class));
-                        finish();
-                    }
-                    else if (result.equals("role_super_admin")) {
-                        Toast.makeText(this, "Super Admin Login Successful", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(this, super_admin_dashboard.class));
-                        finish();
-                    }
-                    else if (result.equals("role_user")) {
-                        Toast.makeText(this, "Student Login Successful", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(this, main_dashboard.class));
-                        finish();
-                    }
-                    else {
-                        Toast.makeText(this, result, Toast.LENGTH_LONG).show();
-                    }
-                },
-                error -> Toast.makeText(this, "Connection Error", Toast.LENGTH_SHORT).show()) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
-                params.put("id_input", idNumber);
-                params.put("password", password);
-                return params;
+                String postData = "id_input=" + URLEncoder.encode(idNumber, "UTF-8") +
+                        "&password=" + URLEncoder.encode(password, "UTF-8");
+
+                OutputStream os = conn.getOutputStream();
+                os.write(postData.getBytes(StandardCharsets.UTF_8));
+                os.flush();
+                os.close();
+
+                int responseCode = conn.getResponseCode();
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    StringBuilder sb = new StringBuilder();
+                    String line;
+                    while ((line = br.readLine()) != null) sb.append(line);
+                    br.close();
+
+                    String result = sb.toString().trim();
+
+                    runOnUiThread(() -> {
+                        switch (result) {
+                            case "role_admin":
+                                Toast.makeText(this, "Admin Login Successful", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(this, admin_dashboard.class));
+                                finish();
+                                break;
+                            case "role_super_admin":
+                                Toast.makeText(this, "Super Admin Login Successful", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(this, super_admin_dashboard.class));
+                                finish();
+                                break;
+                            case "role_user":
+                                Toast.makeText(this, "Student Login Successful", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(this, main_dashboard.class));
+                                finish();
+                                break;
+                            default:
+                                Toast.makeText(this, result, Toast.LENGTH_LONG).show();
+                                break;
+                        }
+                    });
+                } else {
+                    runOnUiThread(() ->
+                            Toast.makeText(this, "HTTP Error: " + responseCode, Toast.LENGTH_LONG).show()
+                    );
+                }
+
+                conn.disconnect();
+            } catch (Exception e) {
+                e.printStackTrace();
+                runOnUiThread(() -> Toast.makeText(this, e.getClass().getSimpleName() + ": " + e.getMessage(), Toast.LENGTH_LONG).show());
             }
-        };
-
-        Volley.newRequestQueue(this).add(stringRequest);
+        }).start();
     }
 }
