@@ -41,7 +41,7 @@ public class nav_menu extends AppCompatActivity {
         });
 
         btnAdmin.setOnClickListener(v -> {
-            Intent intent = new Intent(this, admin_login.class);
+            Intent intent = new Intent(this, admin_dashboard.class);
             startActivity(intent);
         });
 

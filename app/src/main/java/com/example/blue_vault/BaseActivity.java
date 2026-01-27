@@ -66,8 +66,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (btnAbout != null) btnAbout.setOnClickListener(v -> navigateTo(nav_about_us.class));
         if (btnSecurity != null) btnSecurity.setOnClickListener(v -> navigateTo(nav_pass_change.class));
         if (btnHelp != null) btnHelp.setOnClickListener(v -> navigateTo(nav_contact_info.class));
-        if (btnAdmin != null) btnAdmin.setOnClickListener(v -> navigateTo(admin_login.class));
-        if (btnSuperAdmin != null) btnSuperAdmin.setOnClickListener(v -> navigateTo(super_admin_login.class));
+        if (btnAdmin != null) btnAdmin.setOnClickListener(v -> navigateTo(admin_dashboard.class));
+        //if (btnSuperAdmin != null) btnSuperAdmin.setOnClickListener(v -> navigateTo(super_admin_login.class));
         if (btnLogout != null) btnLogout.setOnClickListener(v -> logout());
     }
 
