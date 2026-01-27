@@ -1,129 +1,98 @@
 package com.example.blue_vault;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
+import com.android.volley.Request;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class main_login extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.main_login);
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.login_main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-
-        // Initialize Input Fields
-        final EditText etIdNumber = findViewById(R.id.loginIdNum);
+        final EditText etIdNum = findViewById(R.id.loginIdNum);
         final EditText etPassword = findViewById(R.id.loginPassword);
         Button loginBtn = findViewById(R.id.loginBtn);
 
-        // Login Button Logic
         loginBtn.setOnClickListener(v -> {
-            String idNumber = etIdNumber.getText().toString().trim();
-            String password = etPassword.getText().toString().trim();
+            String id = etIdNum.getText().toString().trim();
+            String pass = etPassword.getText().toString().trim();
 
-            if (idNumber.isEmpty() || password.isEmpty()) {
-                Toast.makeText(main_login.this, "Please enter ID and Password", Toast.LENGTH_SHORT).show();
+            if (id.isEmpty() || pass.isEmpty()) {
+                Toast.makeText(main_login.this, "Please fill all fields", Toast.LENGTH_SHORT).show();
             } else {
-                loginUser(idNumber, password);
+                loginUser(id, pass);
             }
-        });
-
-        // Sign Up Link Logic
-        TextView tvSignUp = findViewById(R.id.tvRegisterLink);
-        tvSignUp.setOnClickListener(v -> {
-            Intent intent = new Intent(main_login.this, main_registration.class);
-            startActivity(intent);
         });
     }
 
-    private void loginUser(String idNumber, String password) {
-        new Thread(() -> {
-            try {
-                URL url = new URL("http://10.0.2.2/bluevault/BV_Login.php"); // emulator
-                // URL url = new URL("http://192.168.100.4/bluevault/BV_Login.php"); // phone
+    private void loginUser(final String idNumber, String password) {
+        String URL = "http://10.0.2.2/bluevault/BV_Login.php";
 
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("POST");
-                conn.setDoOutput(true);
-                conn.setConnectTimeout(5000);
-                conn.setReadTimeout(5000);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
+                response -> {
+                    String result = response.trim();
 
-                String postData = "id_input=" + URLEncoder.encode(idNumber, "UTF-8") +
-                        "&password=" + URLEncoder.encode(password, "UTF-8");
+                    // 1. Handle Student (User) Login
+                    if (result.startsWith("role_user")) {
+                        String[] parts = result.split("\\|", -1);
+                        SharedPreferences.Editor editor = getSharedPreferences("UserSession", MODE_PRIVATE).edit();
 
-                OutputStream os = conn.getOutputStream();
-                os.write(postData.getBytes(StandardCharsets.UTF_8));
-                os.flush();
-                os.close();
-
-                int responseCode = conn.getResponseCode();
-                if (responseCode == HttpURLConnection.HTTP_OK) {
-                    BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                    StringBuilder sb = new StringBuilder();
-                    String line;
-                    while ((line = br.readLine()) != null) sb.append(line);
-                    br.close();
-
-                    String result = sb.toString().trim();
-
-                    runOnUiThread(() -> {
-                        switch (result) {
-                            case "role_admin":
-                                Toast.makeText(this, "Admin Login Successful", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(this, admin_dashboard.class));
-                                finish();
-                                break;
-                            case "role_super_admin":
-                                Toast.makeText(this, "Super Admin Login Successful", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(this, super_admin_dashboard.class));
-                                finish();
-                                break;
-                            case "role_user":
-                                Toast.makeText(this, "Student Login Successful", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(this, main_dashboard.class));
-                                finish();
-                                break;
-                            default:
-                                Toast.makeText(this, result, Toast.LENGTH_LONG).show();
-                                break;
+                        if (parts.length >= 4) {
+                            editor.putString("name", parts[1]);
+                            editor.putString("id", parts[2]);
+                            editor.putString("email", parts[3]);
+                        } else {
+                            // Fallback if PHP didn't send pipes
+                            editor.putString("name", "Student User");
+                            editor.putString("id", idNumber);
+                            editor.putString("email", "Not Set");
                         }
-                    });
-                } else {
-                    runOnUiThread(() ->
-                            Toast.makeText(this, "HTTP Error: " + responseCode, Toast.LENGTH_LONG).show()
-                    );
-                }
+                        editor.apply();
 
-                conn.disconnect();
-            } catch (Exception e) {
-                e.printStackTrace();
-                runOnUiThread(() -> Toast.makeText(this, e.getClass().getSimpleName() + ": " + e.getMessage(), Toast.LENGTH_LONG).show());
+                        Toast.makeText(main_login.this, "Student Login Success", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(main_login.this, main_dashboard.class));
+                        finish();
+                    }
+                    // 2. Handle Admin Login
+                    else if (result.equals("role_admin")) {
+                        Toast.makeText(main_login.this, "Admin Login Success", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(main_login.this, admin_dashboard.class));
+                        finish();
+                    }
+                    // 3. Handle Super Admin Login
+                    else if (result.equals("role_super_admin")) {
+                        Toast.makeText(main_login.this, "Super Admin Login Success", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(main_login.this, super_admin_dashboard.class));
+                        finish();
+                    }
+                    // 4. Handle Error Messages from PHP
+                    else {
+                        Toast.makeText(main_login.this, result, Toast.LENGTH_LONG).show();
+                    }
+                },
+                error -> Toast.makeText(main_login.this, "Connection Error: Check XAMPP", Toast.LENGTH_SHORT).show()) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("id_input", idNumber);
+                params.put("password", password);
+                return params;
             }
-        }).start();
+        };
+
+        Volley.newRequestQueue(this).add(stringRequest);
     }
 }

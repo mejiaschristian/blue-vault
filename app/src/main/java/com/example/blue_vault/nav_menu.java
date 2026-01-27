@@ -21,11 +21,11 @@ public class nav_menu extends AppCompatActivity {
         Button btnSecurity = findViewById(R.id.nav_security);
         Button btnHelp = findViewById(R.id.nav_help);
         Button btnLogout = findViewById(R.id.logout_btn);
-        
+
         if (userEmail != null) {
             userEmail.setText(DataRepository.getInstance().getLoggedInUserEmail());
         }
-        
+
         btnProfile.setOnClickListener(v -> {
             Intent intent = new Intent(this, profile_view_user.class);
             startActivity(intent);

@@ -1,10 +1,12 @@
 package com.example.blue_vault;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,22 +18,21 @@ public class profile_view_user extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile_view_user);
 
-        // Standard setup from BaseActivity
-        setupNavigation();
+        // Initialize TextViews (Ensure these IDs match your profile_view_user.xml)
+        TextView tvName = findViewById(R.id.tvProfileName);
+        TextView tvId = findViewById(R.id.tvProfileId);
+        TextView tvEmail = findViewById(R.id.tvProfileEmail);
 
-        TextView profileName = findViewById(R.id.tvProfileName);
-        TextView profileId = findViewById(R.id.tvProfileId);
-        TextView profileEmail = findViewById(R.id.tvProfileEmail);
+        // Load data from SharedPreferences
+        SharedPreferences sp = getSharedPreferences("UserSession", MODE_PRIVATE);
+        String name = sp.getString("name", "N/A");
+        String id = sp.getString("id", "N/A");
+        String email = sp.getString("email", "N/A");
 
-        // Fetch logged in user info from repository
-        StudentItem currentUser = DataRepository.getInstance().getLoggedInUser();
-        String currentEmail = DataRepository.getInstance().getLoggedInUserEmail();
-
-        if (profileName != null && profileId != null && profileEmail != null && currentUser != null) {
-            profileName.setText(currentUser.getName());
-            profileId.setText(currentUser.getStudentID());
-            profileEmail.setText(currentEmail);
-        }
+        // Set text to UI
+        tvName.setText(name);
+        tvId.setText(id);
+        tvEmail.setText(email);
 
         Button btnUpload = findViewById(R.id.addResBtn);
         if (btnUpload != null) {
@@ -41,18 +42,5 @@ public class profile_view_user extends BaseActivity {
             });
         }
 
-        // RecyclerView Setup
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        if (recyclerView != null) {
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-            // Fetch user-specific researches from the Data Repository
-            // Using the current user's name from the repository
-            List<ResearchItem> userResearches = DataRepository.getInstance().getUserResearches(currentUser != null ? currentUser.getName() : "Juan Dela Cruz");
-
-            // Initialize adapter with isProfileView = true to show status
-            ResearchAdapter adapter = new ResearchAdapter(userResearches, true);
-            recyclerView.setAdapter(adapter);
-        }
     }
 }

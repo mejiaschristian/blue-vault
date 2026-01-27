@@ -16,7 +16,16 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
 
     public StudentAdapter(List<StudentItem> studentList) {
         this.studentList = studentList;
+        // Initialize with a copy so filtering has a baseline
         this.studentListFull = new ArrayList<>(studentList);
+    }
+
+    /**
+     * Call this method after fetching data from MySQL via Volley
+     * to ensure the filter has the latest data.
+     */
+    public void updateOriginalList(List<StudentItem> newList) {
+        this.studentListFull = new ArrayList<>(newList);
     }
 
     @NonNull
@@ -41,11 +50,12 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
 
     public void filter(String dept) {
         studentList.clear();
-        if (dept.equals("ALL")) {
+        if (dept.equalsIgnoreCase("ALL")) {
             studentList.addAll(studentListFull);
         } else {
             for (StudentItem item : studentListFull) {
-                if (item.getDept().equals(dept)) {
+                // Case-insensitive comparison is safer
+                if (item.getDept() != null && item.getDept().equalsIgnoreCase(dept)) {
                     studentList.add(item);
                 }
             }
