@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -24,7 +25,11 @@ public class main_login extends AppCompatActivity {
 
         final EditText etIdNum = findViewById(R.id.loginIdNum);
         final EditText etPassword = findViewById(R.id.loginPassword);
+        TextView registerBtn = findViewById(R.id.tvRegisterLink);
         Button loginBtn = findViewById(R.id.loginBtn);
+
+        registerBtn.setOnClickListener(v ->
+                startActivity(new Intent(main_login.this, main_registration.class)));
 
         loginBtn.setOnClickListener(v -> {
             String id = etIdNum.getText().toString().trim();

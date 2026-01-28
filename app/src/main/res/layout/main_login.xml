@@ -109,7 +109,8 @@
                 android:padding="15dp"
                 android:text="@string/log_in"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:cornerRadius="12dp" />
 
             <TextView
                 android:id="@+id/tvRegisterLink"

@@ -2,6 +2,8 @@ package com.example.blue_vault;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -50,6 +52,12 @@ public class main_registration extends AppCompatActivity {
             startActivity(new Intent(main_registration.this, main_login.class));
             finish();
         });
+
+        AutoCompleteTextView schoolDropdown = findViewById(R.id.regSchoolDropdown);
+        String[] schools = {"SASE", "SBMA", "SECA"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, schools);
+        schoolDropdown.setAdapter(adapter);
+
     }
 
     private void registerUser(String email, String last, String first, String id, String pass) {
