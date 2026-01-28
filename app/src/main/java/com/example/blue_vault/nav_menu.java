@@ -1,6 +1,7 @@
 package com.example.blue_vault;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
@@ -21,10 +22,6 @@ public class nav_menu extends AppCompatActivity {
         Button btnSecurity = findViewById(R.id.nav_security);
         Button btnHelp = findViewById(R.id.nav_help);
         Button btnLogout = findViewById(R.id.logout_btn);
-
-        if (userEmail != null) {
-            userEmail.setText(DataRepository.getInstance().getLoggedInUserEmail());
-        }
 
         btnProfile.setOnClickListener(v -> {
             Intent intent = new Intent(this, profile_view_user.class);

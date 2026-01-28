@@ -1,5 +1,8 @@
 package com.example.blue_vault;
 
+import static android.view.View.GONE;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -20,6 +23,19 @@ public class super_admin_registered_teachers extends BaseActivity {
 
         // Initialize common navigation logic
         setupNavigation();
+        Button navResearches = findViewById(R.id.nav_researches);
+        Button navSecurity = findViewById(R.id.nav_security);
+
+        // Load data from SharedPreferences
+        SharedPreferences sp = getSharedPreferences("UserSession", MODE_PRIVATE);
+        String currentName = sp.getString("name", "N/A");
+        String currentId = sp.getString("id", "N/A");
+        String currentEmail = sp.getString("email", "N/A");
+
+        if (currentName.equals("N/A") || currentId.equals("N/A") || currentEmail.equals("N/A")) {
+            navResearches.setVisibility(GONE);
+            navSecurity.setVisibility(GONE);
+        }
 
         // Setup Back Button
         Button backBtn = findViewById(R.id.backBtn);

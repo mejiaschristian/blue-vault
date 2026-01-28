@@ -1,5 +1,7 @@
 package com.example.blue_vault;
 
+import android.content.SharedPreferences;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -95,6 +97,20 @@ public class DataRepository {
         ));
 
         allResearches.add(new ResearchItem(
+                "Basic Study",
+                "Rayuji Lagaras",
+                "SECA",
+                "BSIT-MWA",
+                "Sept 23, 2024",
+                STATUS_PENDING,
+                "A study on insomnia.",
+                "Students, NUD",
+                "https://doi.org/10.1234/bluevault.city.2024",
+                0f,
+                false
+        ));
+
+        allResearches.add(new ResearchItem(
                 "Psychological Factors of Insomnia",
                 "Galliard",
                 "SASE",
@@ -182,7 +198,7 @@ public class DataRepository {
     }
 
     public String getLoggedInUserEmail() {
-        return "udarbels@students.nu-dasma.edu.ph";
+        return "test@mail.com";
     }
 
     public List<ResearchItem> getAllResearches() {

@@ -91,38 +91,6 @@
                         android:padding="12dp"
                         android:gravity="top" />
 
-                    <!-- Course -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppins_bold"
-                        android:text="Course*"
-                        android:textColor="@color/black"
-                        android:textSize="14sp" />
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="12dp"
-                        app:boxBackgroundColor="#D9D9D9"
-                        app:boxCornerRadiusBottomEnd="12dp"
-                        app:boxCornerRadiusBottomStart="12dp"
-                        app:boxCornerRadiusTopEnd="12dp"
-                        app:boxCornerRadiusTopStart="12dp"
-                        app:boxStrokeWidth="0dp"
-                        app:boxStrokeWidthFocused="0dp">
-
-                        <AutoCompleteTextView
-                            android:id="@+id/actvCourse"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins"
-                            android:inputType="none"
-                            android:paddingVertical="12dp" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
                     <!-- Abstract -->
                     <TextView
                         android:layout_width="wrap_content"

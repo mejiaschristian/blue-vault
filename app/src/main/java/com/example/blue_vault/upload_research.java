@@ -33,16 +33,8 @@ public class upload_research extends AppCompatActivity {
         }
 
         EditText etTitle = findViewById(R.id.etTitle);
-        AutoCompleteTextView actvCourse = findViewById(R.id.actvCourse);
         Button btnCancel = findViewById(R.id.backBtn);
         Button btnSubmit = findViewById(R.id.btnSubmit);
-
-        // Setup Course Dropdown
-        if (actvCourse != null) {
-            String[] courses = {"BSIT", "BSCS", "BSIS", "BSCPE"};
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, courses);
-            actvCourse.setAdapter(adapter);
-        }
 
         if (btnCancel != null) {
             btnCancel.setOnClickListener(v -> finish());

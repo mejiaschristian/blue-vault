@@ -1,6 +1,7 @@
 package com.example.blue_vault;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
@@ -51,7 +52,9 @@ public abstract class BaseActivity extends AppCompatActivity {
             // Set User Email in Drawer
             TextView userEmailTv = findViewById(R.id.user_email);
             if (userEmailTv != null) {
-                userEmailTv.setText(DataRepository.getInstance().getLoggedInUserEmail());
+                SharedPreferences sp = getSharedPreferences("UserSession", MODE_PRIVATE);
+                String email = sp.getString("email", "N/A");
+                userEmailTv.setText(email);
             }
 
             setupDrawerButtons();
@@ -85,6 +88,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     void logout() {
+        SharedPreferences sp = getSharedPreferences("UserSession", MODE_PRIVATE);
+        sp.edit().clear().apply();
         Intent intent = new Intent(this, main_login.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
