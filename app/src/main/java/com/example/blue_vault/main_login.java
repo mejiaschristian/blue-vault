@@ -55,10 +55,11 @@ public class main_login extends AppCompatActivity {
                         String[] parts = result.split("\\|", -1);
                         SharedPreferences.Editor editor = getSharedPreferences("UserSession", MODE_PRIVATE).edit();
 
-                        if (parts.length >= 4) {
+                        if (parts.length >= 5) {
                             editor.putString("name", parts[1]);
                             editor.putString("id", parts[2]);
                             editor.putString("email", parts[3]);
+                            editor.putString("school",parts[4]);
                         } else {
                             // Fallback if PHP didn't send pipes
                             editor.putString("name", "Student User");

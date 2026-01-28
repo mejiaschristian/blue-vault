@@ -1,53 +1,108 @@
 package com.example.blue_vault;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.Toast;
+
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.android.volley.Request;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class admin_pending_reqs extends BaseActivity {
-    
+
     private List<ResearchItem> allResearches = new ArrayList<>();
     private List<ResearchItem> filteredResearches = new ArrayList<>();
     private AdminResearchAdapter adapter;
     private AutoCompleteTextView schoolDropdown, courseDropdown;
-    
     private String currentSchoolFilter = "ALL";
     private String currentCourseFilter = "ALL";
-
-    // Course Arrays
-    private final String[] allCourses = {"ALL", "ABComm", "BSPsych", "BPEd", "BSA", "BSMA", "BSBA-MM", "BSBA-FM", "BSBA-HRM", "BSHM", "BSTM", "BSIT", "BSCS", "BSCE", "BSCpE", "BSArch"};
-    private final String[] saseCourses = {"ALL", "ABComm", "BSPsych", "BPEd"};
-    private final String[] sbmaCourses = {"ALL", "BSA", "BSMA", "BSBA-MM", "BSBA-FM", "BSBA-HRM", "BSHM", "BSTM"};
-    private final String[] secaCourses = {"ALL", "BSIT", "BSCS", "BSCE", "BSCpE", "BSArch"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.admin_pending_reqs);
+
+        // 1. Setup BaseActivity Navigation (Drawer)
         setupNavigation();
 
+        // 2. Fix Back Button
         Button backBtn = findViewById(R.id.backBtn);
         if (backBtn != null) {
-            backBtn.setOnClickListener(v -> onBackPressed());
+            backBtn.setOnClickListener(v -> finish());
         }
 
-        // Fetch Pending Data from Repository
-        allResearches = DataRepository.getInstance().getPendingResearches();
-        filteredResearches.addAll(allResearches);
+        // 3. Setup Drawer Trigger (the transparent button in your XML)
+        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+        Button gotoMenu = findViewById(R.id.goto_menu);
+        if (gotoMenu != null && drawerLayout != null) {
+            gotoMenu.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
+        }
 
-        // Setup RecyclerView
+        // 4. Setup RecyclerView and Handle Clicks
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new AdminResearchAdapter(filteredResearches);
+
+        // Initializing adapter with the Click Listener to open the details view
+        adapter = new AdminResearchAdapter(filteredResearches, item -> {
+            Intent intent = new Intent(admin_pending_reqs.this, view_research_admin.class);
+            intent.putExtra("RESEARCH_ITEM", item);
+            startActivity(intent);
+        });
         recyclerView.setAdapter(adapter);
 
-        // Setup School Dropdown
+        // 5. Fetch Data and Setup Filters
+        fetchPendingResearches();
+        setupDropdowns();
+    }
+
+    private void fetchPendingResearches() {
+        String URL = "http://10.0.2.2/bluevault/GetPendingResearch.php";
+
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, URL, null,
+                response -> {
+                    allResearches.clear();
+                    try {
+                        for (int i = 0; i < response.length(); i++) {
+                            JSONObject obj = response.getJSONObject(i);
+                            allResearches.add(new ResearchItem(
+                                    obj.getInt("rsid"),
+                                    obj.getString("title"),
+                                    obj.getString("author"),
+                                    obj.getString("school"),
+                                    obj.getString("course"),
+                                    obj.getString("date"),
+                                    obj.getInt("status"),
+                                    obj.getString("abstract"),
+                                    obj.getString("tags"),
+                                    obj.getString("doi"),
+                                    0.0f, false
+                            ));
+                        }
+                        applyFilters(currentSchoolFilter, currentCourseFilter);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> Toast.makeText(this, "Server Connection Error", Toast.LENGTH_SHORT).show()
+        );
+        Volley.newRequestQueue(this).add(request);
+    }
+
+    private void setupDropdowns() {
         String[] schools = {"ALL", "SECA", "SASE", "SBMA"};
         ArrayAdapter<String> schoolAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, schools);
         schoolDropdown = findViewById(R.id.school_dropdown);
@@ -55,50 +110,18 @@ public class admin_pending_reqs extends BaseActivity {
 
         if (schoolDropdown != null) {
             schoolDropdown.setAdapter(schoolAdapter);
-            schoolDropdown.setText(schools[0], false);
             schoolDropdown.setOnItemClickListener((parent, view, position, id) -> {
                 currentSchoolFilter = (String) parent.getItemAtPosition(position);
-                updateCourseDropdown(currentSchoolFilter);
-                currentCourseFilter = "ALL";
-                if (courseDropdown != null) {
-                    courseDropdown.setText("ALL", false);
-                }
                 applyFilters(currentSchoolFilter, currentCourseFilter);
             });
-        }
-
-        // Initial Course Dropdown Setup
-        updateCourseDropdown("ALL");
-        if (courseDropdown != null) {
-            courseDropdown.setText("ALL", false);
-            courseDropdown.setOnItemClickListener((parent, view, position, id) -> {
-                currentCourseFilter = (String) parent.getItemAtPosition(position);
-                applyFilters(currentSchoolFilter, currentCourseFilter);
-            });
-        }
-    }
-
-    private void updateCourseDropdown(String school) {
-        String[] courses;
-        switch (school) {
-            case "SASE": courses = saseCourses; break;
-            case "SBMA": courses = sbmaCourses; break;
-            case "SECA": courses = secaCourses; break;
-            default: courses = allCourses; break;
-        }
-        ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, courses);
-        if (courseDropdown != null) {
-            courseDropdown.setAdapter(courseAdapter);
         }
     }
 
     private void applyFilters(String school, String course) {
         filteredResearches.clear();
         for (ResearchItem item : allResearches) {
-            boolean matchesSchool = school.equals("ALL") || (item.getSchool() != null && item.getSchool().equals(school));
-            boolean matchesCourse = course.equals("ALL") || (item.getCourse() != null && item.getCourse().equals(course));
-            
-            if (matchesSchool && matchesCourse) {
+            boolean matchesSchool = school.equals("ALL") || item.getSchool().equalsIgnoreCase(school);
+            if (matchesSchool) {
                 filteredResearches.add(item);
             }
         }

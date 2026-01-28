@@ -1,17 +1,23 @@
 package com.example.blue_vault;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
+
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+
+import com.android.volley.Request;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class upload_research extends AppCompatActivity {
 
@@ -20,6 +26,11 @@ public class upload_research extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.upload_research);
+
+        // Retrieve User Session Data (ID and School table)
+        SharedPreferences sp = getSharedPreferences("UserSession", MODE_PRIVATE);
+        final String loggedID = sp.getString("id", "");
+        final String loggedSchool = sp.getString("school", "");
 
         DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
         Button gotoMenu = findViewById(R.id.goto_menu);
@@ -32,7 +43,13 @@ public class upload_research extends AppCompatActivity {
             });
         }
 
+        // Initialize Input Fields
         EditText etTitle = findViewById(R.id.etTitle);
+        EditText etAuthors = findViewById(R.id.etAuthors);
+        EditText etAbstract = findViewById(R.id.etAbstract);
+        EditText etTags = findViewById(R.id.etTags);
+        EditText etDoi = findViewById(R.id.etDoi);
+
         Button btnCancel = findViewById(R.id.backBtn);
         Button btnSubmit = findViewById(R.id.btnSubmit);
 
@@ -42,18 +59,19 @@ public class upload_research extends AppCompatActivity {
 
         if (btnSubmit != null) {
             btnSubmit.setOnClickListener(v -> {
-                if (etTitle != null) {
-                    String title = etTitle.getText().toString();
-                    if (title.isEmpty()) {
-                        Toast.makeText(this, "Please enter a title", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(this, "Uploading..", Toast.LENGTH_SHORT).show();
-                        Toast.makeText(this, "Uploading success! Waiting for approval.", Toast.LENGTH_LONG).show();
-                        
-                        Intent intent = new Intent(this, profile_view_user.class);
-                        startActivity(intent);
-                        finish();
-                    }
+                String title = etTitle.getText().toString().trim();
+                String authors = etAuthors.getText().toString().trim();
+                String resAbstract = etAbstract.getText().toString().trim();
+                String tags = etTags.getText().toString().trim();
+                String doi = etDoi.getText().toString().trim();
+
+                if (title.isEmpty() || authors.isEmpty()) {
+                    Toast.makeText(this, "Title and Authors are required", Toast.LENGTH_SHORT).show();
+                } else if (loggedSchool.isEmpty()) {
+                    Toast.makeText(this, "Session error. Please re-login.", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Send data to MySQL
+                    uploadDataToServer(loggedID, loggedSchool, title, authors, resAbstract, tags, doi);
                 }
             });
         }
@@ -61,6 +79,36 @@ public class upload_research extends AppCompatActivity {
         if (drawerLayout != null) {
             setupDrawerNavigation(drawerLayout);
         }
+    }
+
+    private void uploadDataToServer(String id, String school, String title, String authors, String resAbstract, String tags, String doi) {
+        String URL = "http://10.0.2.2/bluevault/UploadResearch.php";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
+                response -> {
+                    if (response.trim().equals("success")) {
+                        Toast.makeText(this, "Uploading success! Waiting for approval.", Toast.LENGTH_LONG).show();
+                        startActivity(new Intent(this, profile_view_user.class));
+                        finish();
+                    } else {
+                        Toast.makeText(this, "Error: " + response, Toast.LENGTH_LONG).show();
+                    }
+                },
+                error -> Toast.makeText(this, "Connection Error", Toast.LENGTH_SHORT).show()) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("id_number", id);
+                params.put("school", school.toLowerCase()); // Targets table 'seca', 'sase', or 'sbma'
+                params.put("title", title);
+                params.put("authors", authors);
+                params.put("abstract", resAbstract);
+                params.put("tags", tags);
+                params.put("doi", doi);
+                return params;
+            }
+        };
+        Volley.newRequestQueue(this).add(stringRequest);
     }
 
     private void setupDrawerNavigation(DrawerLayout drawerLayout) {

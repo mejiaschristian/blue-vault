@@ -35,7 +35,7 @@ public class view_research_super_admin extends BaseActivity {
             etAuthors.setText(research.getAuthor());
             etSchool.setText(research.getSchool());
             etCourse.setText(research.getCourse());
-            etAbstract.setText(research.getResearchAbstract());
+            etAbstract.setText(research.getAbstract());
             etTags.setText(research.getTags());
             
             final String doiUrl = research.getDoi();

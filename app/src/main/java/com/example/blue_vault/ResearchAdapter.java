@@ -29,6 +29,7 @@ public class ResearchAdapter extends RecyclerView.Adapter<ResearchAdapter.ViewHo
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // Decide which layout to use based on where the adapter is called
         int layoutId = isProfileView ? R.layout.rc_profile_item_research : R.layout.rc_item_research;
         View view = LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false);
         return new ViewHolder(view);
@@ -42,29 +43,31 @@ public class ResearchAdapter extends RecyclerView.Adapter<ResearchAdapter.ViewHo
         holder.rsSchool.setText(item.getSchool());
         holder.rsCourse.setText(item.getCourse());
         holder.rsDate.setText(item.getDate());
+
         if (holder.rsTags != null) {
             holder.rsTags.setText(item.getTags());
         }
 
-        // Handle Status for Profile View
+        // Handle Status for Profile View using MySQL Status numbers
+        // 1 = Approved, 0 = Declined, 3 = Pending
         if (isProfileView && holder.rsStatus != null) {
             int status = item.getStatus();
-            if (status == DataRepository.STATUS_APPROVED) {
+            if (status == 1) { // Approved
                 holder.rsStatus.setText("Approved");
                 holder.rsStatus.setTextColor(Color.GREEN);
-            } else if (status == DataRepository.STATUS_DECLINED) {
+            } else if (status == 0) { // Declined
                 holder.rsStatus.setText("Declined");
                 holder.rsStatus.setTextColor(Color.RED);
-            } else {
+            } else { // 3 or other = Pending
                 holder.rsStatus.setText("Pending");
-                holder.rsStatus.setTextColor(Color.YELLOW);
+                holder.rsStatus.setTextColor(Color.parseColor("#FFD700")); // Yellow/Gold
             }
         }
 
-        // Dynamic Star Rating Logic with Decimal Support
+        // Dynamic Star Rating Logic
         float rating = item.getRating();
         ImageView[] stars = {holder.star1, holder.star2, holder.star3, holder.star4, holder.star5};
-        
+
         for (int i = 0; i < stars.length; i++) {
             if (i < (int) rating) {
                 stars[i].setImageResource(R.drawable.ic_star);
@@ -78,9 +81,13 @@ public class ResearchAdapter extends RecyclerView.Adapter<ResearchAdapter.ViewHo
             }
         }
 
+        // Set the click listener to open the detailed view
         holder.btnItem.setOnClickListener(v -> {
+            // Check if the user is an admin or student to decide where to go
+            // If isProfileView is true, we go to user view.
+            // If you are in admin_pending_reqs, you should use the click listener from that activity.
             Intent intent = new Intent(v.getContext(), view_research_user.class);
-            intent.putExtra("research_data", item); 
+            intent.putExtra("research_data", item);
             v.getContext().startActivity(intent);
         });
     }
@@ -103,9 +110,9 @@ public class ResearchAdapter extends RecyclerView.Adapter<ResearchAdapter.ViewHo
             rsCourse = view.findViewById(R.id.tvCourse);
             rsDate = view.findViewById(R.id.tvDate);
             rsTags = view.findViewById(R.id.tvTags);
-            rsStatus = view.findViewById(R.id.tvStatus); // For profile view status display
+            rsStatus = view.findViewById(R.id.tvStatus);
             btnItem = view.findViewById(R.id.research_item_btn);
-            
+
             star1 = view.findViewById(R.id.star1);
             star2 = view.findViewById(R.id.star2);
             star3 = view.findViewById(R.id.star3);

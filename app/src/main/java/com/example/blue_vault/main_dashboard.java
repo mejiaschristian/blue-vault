@@ -5,26 +5,33 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Toast;
 import com.google.android.material.textfield.TextInputEditText;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.android.volley.Request;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class main_dashboard extends BaseActivity {
-    
+
     private List<ResearchItem> allResearches = new ArrayList<>();
     private List<ResearchItem> filteredResearches = new ArrayList<>();
     private ResearchAdapter adapter;
     private AutoCompleteTextView schoolDropdown, courseDropdown;
     private TextInputEditText searchInput;
-    
+
     private String currentSchoolFilter = "ALL";
     private String currentCourseFilter = "ALL";
 
-    // Course Arrays
     private final String[] allCourses = {"ALL", "ABComm", "BSPsych", "BPEd", "BSA", "BSMA", "BSBA-MM", "BSBA-FM", "BSBA-HRM", "BSHM", "BSTM", "BSIT", "BSCS", "BSCE", "BSCpE", "BSArch"};
     private final String[] saseCourses = {"ALL", "ABComm", "BSPsych", "BPEd"};
     private final String[] sbmaCourses = {"ALL", "BSA", "BSMA", "BSBA-MM", "BSBA-FM", "BSBA-HRM", "BSHM", "BSTM"};
@@ -37,15 +44,14 @@ public class main_dashboard extends BaseActivity {
 
         setupNavigation();
 
-        // Fetch Data from Repository - using getPublishedResearches for the main dashboard
-        allResearches = DataRepository.getInstance().getPublishedResearches();
-        filteredResearches.addAll(allResearches);
-
         // Setup RecyclerView
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new ResearchAdapter(filteredResearches);
         recyclerView.setAdapter(adapter);
+
+        // Fetch Data from MySQL
+        fetchApprovedResearches();
 
         // Setup Search Input
         searchInput = findViewById(R.id.search_input);
@@ -76,13 +82,12 @@ public class main_dashboard extends BaseActivity {
             schoolDropdown.setOnItemClickListener((parent, view, position, id) -> {
                 currentSchoolFilter = (String) parent.getItemAtPosition(position);
                 updateCourseDropdown(currentSchoolFilter);
-                currentCourseFilter = "ALL"; // Reset course filter when school changes
+                currentCourseFilter = "ALL";
                 courseDropdown.setText("ALL", false);
                 applyFilters(searchInput.getText().toString(), currentSchoolFilter, currentCourseFilter);
             });
         }
 
-        // Initial Course Dropdown Setup
         updateCourseDropdown("ALL");
         if (courseDropdown != null) {
             courseDropdown.setText("ALL", false);
@@ -93,21 +98,46 @@ public class main_dashboard extends BaseActivity {
         }
     }
 
+    private void fetchApprovedResearches() {
+        String URL = "http://10.0.2.2/bluevault/GetApprovedResearch.php";
+
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, URL, null,
+                response -> {
+                    allResearches.clear();
+                    try {
+                        for (int i = 0; i < response.length(); i++) {
+                            JSONObject obj = response.getJSONObject(i);
+                            allResearches.add(new ResearchItem(
+                                    obj.getInt("rsid"),
+                                    obj.getString("title"),
+                                    obj.getString("author"),
+                                    obj.getString("school"),
+                                    obj.getString("course"),
+                                    obj.getString("date"),
+                                    obj.getInt("status"),
+                                    obj.getString("abstract"),
+                                    obj.getString("tags"),
+                                    obj.getString("doi"),
+                                    0.0f, true
+                            ));
+                        }
+                        applyFilters(searchInput.getText().toString(), currentSchoolFilter, currentCourseFilter);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> Toast.makeText(this, "Connection Error", Toast.LENGTH_SHORT).show()
+        );
+        Volley.newRequestQueue(this).add(request);
+    }
+
     private void updateCourseDropdown(String school) {
         String[] courses;
         switch (school) {
-            case "SASE":
-                courses = saseCourses;
-                break;
-            case "SBMA":
-                courses = sbmaCourses;
-                break;
-            case "SECA":
-                courses = secaCourses;
-                break;
-            default:
-                courses = allCourses;
-                break;
+            case "SASE": courses = saseCourses; break;
+            case "SBMA": courses = sbmaCourses; break;
+            case "SECA": courses = secaCourses; break;
+            default: courses = allCourses; break;
         }
         ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, courses);
         if (courseDropdown != null) {
@@ -120,13 +150,13 @@ public class main_dashboard extends BaseActivity {
         String lowerCaseQuery = query.toLowerCase().trim();
 
         for (ResearchItem item : allResearches) {
-            boolean matchesSchool = school.equals("ALL") || (item.getSchool() != null && item.getSchool().equals(school));
-            boolean matchesCourse = course.equals("ALL") || (item.getCourse() != null && item.getCourse().equals(course));
-            
-            boolean matchesQuery = lowerCaseQuery.isEmpty() || 
-                (item.getTitle() != null && item.getTitle().toLowerCase().contains(lowerCaseQuery)) ||
-                (item.getAuthor() != null && item.getAuthor().toLowerCase().contains(lowerCaseQuery)) ||
-                (item.getTags() != null && item.getTags().toLowerCase().contains(lowerCaseQuery));
+            boolean matchesSchool = school.equals("ALL") || (item.getSchool() != null && item.getSchool().equalsIgnoreCase(school));
+            boolean matchesCourse = course.equals("ALL") || (item.getCourse() != null && item.getCourse().equalsIgnoreCase(course));
+
+            boolean matchesQuery = lowerCaseQuery.isEmpty() ||
+                    (item.getTitle() != null && item.getTitle().toLowerCase().contains(lowerCaseQuery)) ||
+                    (item.getAuthor() != null && item.getAuthor().toLowerCase().contains(lowerCaseQuery)) ||
+                    (item.getTags() != null && item.getTags().toLowerCase().contains(lowerCaseQuery));
 
             if (matchesSchool && matchesCourse && matchesQuery) {
                 filteredResearches.add(item);

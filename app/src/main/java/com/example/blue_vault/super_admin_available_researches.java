@@ -7,8 +7,18 @@ import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.Toast;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.android.volley.Request;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,11 +28,10 @@ public class super_admin_available_researches extends BaseActivity {
     private List<ResearchItem> filteredResearches = new ArrayList<>();
     private SuperAdminResearchAdapter adapter;
     private AutoCompleteTextView schoolDropdown, courseDropdown;
-    
+
     private String currentSchoolFilter = "ALL";
     private String currentCourseFilter = "ALL";
 
-    // Course Arrays (Same as dashboard for consistency)
     private final String[] allCourses = {"ALL", "ABComm", "BSPsych", "BPEd", "BSA", "BSMA", "BSBA-MM", "BSBA-FM", "BSBA-HRM", "BSHM", "BSTM", "BSIT", "BSCS", "BSCE", "BSCpE", "BSArch"};
     private final String[] saseCourses = {"ALL", "ABComm", "BSPsych", "BPEd"};
     private final String[] sbmaCourses = {"ALL", "BSA", "BSMA", "BSBA-MM", "BSBA-FM", "BSBA-HRM", "BSHM", "BSTM"};
@@ -34,32 +43,6 @@ public class super_admin_available_researches extends BaseActivity {
         setContentView(R.layout.super_admin_available_researches);
 
         setupNavigation();
-        Button navResearches = findViewById(R.id.nav_researches);
-        Button navSecurity = findViewById(R.id.nav_security);
-
-        // Load data from SharedPreferences
-        SharedPreferences sp = getSharedPreferences("UserSession", MODE_PRIVATE);
-        String currentName = sp.getString("name", "N/A");
-        String currentId = sp.getString("id", "N/A");
-        String currentEmail = sp.getString("email", "N/A");
-
-        if (currentName.equals("N/A") || currentId.equals("N/A") || currentEmail.equals("N/A")) {
-            navResearches.setVisibility(GONE);
-            navSecurity.setVisibility(GONE);
-        }
-
-        Button backBtn = findViewById(R.id.backBtn);
-        if (backBtn != null) {
-            backBtn.setOnClickListener(v -> onBackPressed());
-        }
-
-        // Initialize Data from Repository: Combine both Unpublished and Declined lists
-        allResearches.clear();
-        allResearches.addAll(DataRepository.getInstance().getUnpublishedResearches());
-        allResearches.addAll(DataRepository.getInstance().getDeclinedResearches());
-        
-        filteredResearches.clear();
-        filteredResearches.addAll(allResearches);
 
         // Setup RecyclerView
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
@@ -67,7 +50,47 @@ public class super_admin_available_researches extends BaseActivity {
         adapter = new SuperAdminResearchAdapter(filteredResearches);
         recyclerView.setAdapter(adapter);
 
-        // Setup School Dropdown
+        // FETCH FROM DATABASE
+        fetchUnpublishedAndDeclined();
+
+        // Dropdowns setup...
+        setupFilters();
+    }
+
+    private void fetchUnpublishedAndDeclined() {
+        String URL = "http://10.0.2.2/bluevault/GetUnpublishedAndDeclined.php";
+
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, URL, null,
+                response -> {
+                    allResearches.clear();
+                    try {
+                        for (int i = 0; i < response.length(); i++) {
+                            JSONObject obj = response.getJSONObject(i);
+                            allResearches.add(new ResearchItem(
+                                    obj.getInt("rsid"),
+                                    obj.getString("title"),
+                                    obj.getString("author"),
+                                    obj.getString("school"),
+                                    obj.getString("course"),
+                                    obj.getString("date"),
+                                    obj.getInt("status"),
+                                    obj.getString("abstract"),
+                                    obj.getString("tags"),
+                                    obj.getString("doi"),
+                                    0.0f, false
+                            ));
+                        }
+                        applyFilters(currentSchoolFilter, currentCourseFilter);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> Toast.makeText(this, "Connection Error", Toast.LENGTH_SHORT).show()
+        );
+        Volley.newRequestQueue(this).add(request);
+    }
+
+    private void setupFilters() {
         String[] schools = {"ALL", "SECA", "SASE", "SBMA"};
         ArrayAdapter<String> schoolAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, schools);
         schoolDropdown = findViewById(R.id.school_dropdown);
@@ -85,7 +108,6 @@ public class super_admin_available_researches extends BaseActivity {
             });
         }
 
-        // Initial Course Dropdown Setup
         updateCourseDropdown("ALL");
         if (courseDropdown != null) {
             courseDropdown.setText("ALL", false);
@@ -111,10 +133,11 @@ public class super_admin_available_researches extends BaseActivity {
     private void applyFilters(String school, String course) {
         filteredResearches.clear();
         for (ResearchItem item : allResearches) {
-            boolean matchesSchool = school.equals("ALL") || (item.getSchool() != null && item.getSchool().equals(school));
-            boolean matchesCourse = course.equals("ALL") || (item.getCourse() != null && item.getCourse().equals(course));
-            
-            if (matchesSchool && matchesCourse) {
+            boolean matchesSchool = school.equals("ALL") || item.getSchool().equalsIgnoreCase(school);
+            boolean matchesCourse = course.equals("ALL") || item.getCourse().equalsIgnoreCase(course);
+
+            // Super Admin logic: Exclude Pending (3)
+            if (matchesSchool && matchesCourse && item.getStatus() != 3) {
                 filteredResearches.add(item);
             }
         }

@@ -13,7 +13,7 @@
         android:background="@drawable/menu_bg"
         android:orientation="vertical">
 
-        <!-- Top Header Area (Invisible menu button) -->
+        <!-- Top Header Area -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
                 android:id="@+id/backBtn"
                 style="@android:style/Widget.Material.Button.Colored"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="48dp"
                 android:backgroundTint="#140958"
                 android:text="BACK" />
 
@@ -67,7 +67,6 @@
                     android:id="@+id/school_dropdown"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_bold"
                     android:inputType="none"
                     android:textSize="10sp" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -94,26 +93,24 @@
                     android:id="@+id/course_dropdown"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_bold"
                     android:inputType="none"
                     android:textSize="10sp" />
             </com.google.android.material.textfield.TextInputLayout>
-
         </LinearLayout>
 
-        <!-- Pending List -->
+        <!-- Use layout_weight="1" to ensure RecyclerView is clickable and fills space -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="610dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:layout_marginTop="10dp"
             android:padding="10dp"
-            android:visibility="visible"
+            android:clipToPadding="false"
             tools:listitem="@layout/rc_admin_item_research" />
 
     </LinearLayout>
 
-    <!-- Navigation Drawer -->
     <include
         layout="@layout/nav_menu_layout"
         android:layout_width="300dp"
