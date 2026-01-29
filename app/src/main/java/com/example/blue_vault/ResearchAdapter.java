@@ -49,7 +49,7 @@ public class ResearchAdapter extends RecyclerView.Adapter<ResearchAdapter.ViewHo
         }
 
         // Handle Status for Profile View using MySQL Status numbers
-        // 1 = Approved, 0 = Declined, 3 = Pending
+        // 1 = Approved, 2 = Published, 0 = Declined, 3 = Pending
         if (isProfileView && holder.rsStatus != null) {
             int status = item.getStatus();
             if (status == 1) { // Approved
@@ -58,9 +58,13 @@ public class ResearchAdapter extends RecyclerView.Adapter<ResearchAdapter.ViewHo
             } else if (status == 0) { // Declined
                 holder.rsStatus.setText("Declined");
                 holder.rsStatus.setTextColor(Color.RED);
-            } else { // 3 or other = Pending
+            } else if (status == 2) { // Published
+                holder.rsStatus.setText("Published");
+                holder.rsStatus.setTextColor(Color.YELLOW);
+            }
+            else { // 3 or other = Pending
                 holder.rsStatus.setText("Pending");
-                holder.rsStatus.setTextColor(Color.parseColor("#FFD700")); // Yellow/Gold
+                holder.rsStatus.setTextColor(Color.GRAY);
             }
         }
 

@@ -91,6 +91,8 @@ public class view_research_admin extends BaseActivity {
                 response -> {
                     if (response.trim().equals("success")) {
                         Toast.makeText(this, "Status Updated", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(this, admin_pending_reqs.class);
+                        startActivity(intent);
                         finish(); // Return to list
                     } else {
                         Toast.makeText(this, "Error: " + response, Toast.LENGTH_LONG).show();

@@ -1,12 +1,20 @@
 package com.example.blue_vault;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class view_research_super_admin extends BaseActivity {
 
@@ -40,7 +48,19 @@ public class view_research_super_admin extends BaseActivity {
             
             final String doiUrl = research.getDoi();
             tvDoiLink.setText(doiUrl);
-            
+
+            // --- DYNAMIC BUTTON LOGIC START ---
+            int status = research.getStatus();
+            if (status == 1) { // Approved
+                btnPublish.setText("Publish Research");
+                btnPublish.setBackgroundColor(Color.parseColor("#FFD700")); // Yellow/Gold
+            } else if (status == 0) { // Declined
+                btnPublish.setText("Return to Pending");
+                btnPublish.setBackgroundColor(Color.GRAY);
+            }
+            // --- DYNAMIC BUTTON LOGIC END ---
+
+
             if (doiUrl != null && !doiUrl.isEmpty()) {
                 tvDoiLink.setClickable(true);
                 tvDoiLink.setOnClickListener(v -> {
@@ -73,9 +93,45 @@ public class view_research_super_admin extends BaseActivity {
 
         if (btnPublish != null) {
             btnPublish.setOnClickListener(v -> {
-                Toast.makeText(this, "Research Published Successfully!", Toast.LENGTH_LONG).show();
-                finish();
+                if (research != null) {
+                    if (research.getStatus() == 1) {
+                        // If Approved, update to Published (Status 2)
+                        updateStatus(research, "2");
+                        Toast.makeText(this, "Research Published Successfully!", Toast.LENGTH_LONG).show();
+                    } else if (research.getStatus() == 0) {
+                        // If Declined, update back to Pending (Status 3)
+                        updateStatus(research, "3");
+                        Toast.makeText(this, "Moved back to Pending Requests", Toast.LENGTH_LONG).show();
+                    }
+                }
             });
         }
+    }
+
+    private void updateStatus(ResearchItem research, String status) {
+        String URL = "http://10.0.2.2/bluevault/UpdateResearchStatus.php";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
+                response -> {
+                    if (response.trim().equals("success")) {
+                        Toast.makeText(this, "Status Updated", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(this, super_admin_available_researches.class);
+                        startActivity(intent);
+                        finish(); // Return to list
+                    } else {
+                        Toast.makeText(this, "Error: " + response, Toast.LENGTH_LONG).show();
+                    }
+                },
+                error -> Toast.makeText(this, "Connection Error", Toast.LENGTH_SHORT).show()) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("rsid", String.valueOf(research.getRsID()));
+                params.put("school", research.getSchool().toLowerCase());
+                params.put("status", status);
+                return params;
+            }
+        };
+        Volley.newRequestQueue(this).add(stringRequest);
     }
 }

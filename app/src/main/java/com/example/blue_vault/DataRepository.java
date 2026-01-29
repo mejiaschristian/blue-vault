@@ -12,9 +12,10 @@ public class DataRepository {
     private static DataRepository instance;
     private List<ResearchItem> allResearches;
 
-    // Status Constants: 0=Declined, 1=Approved, 3=Pending
+    // Status Constants: 0=Declined, 1=Approved, 2=Published (new invention very nice), 3=Pending
     public static final int STATUS_DECLINED = 0;
     public static final int STATUS_APPROVED = 1;
+    public static final int STATUS_PUBLISHED = 2;
     public static final int STATUS_PENDING = 3;
 
     private DataRepository() {

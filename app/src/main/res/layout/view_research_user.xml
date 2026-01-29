@@ -58,6 +58,14 @@
                 android:textStyle="bold" />
 
             <!-- Dynamic Star Rating -->
+            <RatingBar
+                android:id="@+id/ratingBar3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:max="5"
+                android:numStars="5"
+                android:rating="0" />
+
             <LinearLayout
                 android:id="@+id/ratingBar"
                 android:layout_width="wrap_content"
