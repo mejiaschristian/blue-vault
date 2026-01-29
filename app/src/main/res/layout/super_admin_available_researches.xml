@@ -34,14 +34,14 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
             android:gravity="center_vertical"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:paddingHorizontal="16dp">
 
             <Button
                 android:id="@+id/backBtn"
                 style="@android:style/Widget.Material.Button.Colored"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:backgroundTint="#140958"
                 android:text="BACK" />
 
@@ -53,7 +53,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/school_dropdown_layout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:hint="SCHOOL"
@@ -80,7 +80,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/course_dropdown_layout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:hint="COURSE"
@@ -99,13 +99,40 @@
                     android:textSize="10sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <View
+                android:layout_width="8dp"
+                android:layout_height="0dp" />
+
+            <!-- Status Dropdown -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/status_dropdown_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="STATUS"
+                app:boxBackgroundColor="@color/white"
+                app:boxCornerRadiusBottomEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusTopStart="12dp">
+
+                <AutoCompleteTextView
+                    android:id="@+id/status_dropdown"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_bold"
+                    android:inputType="none"
+                    android:textSize="10sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
         </LinearLayout>
 
         <!-- Research List -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="620dp"
+            android:layout_height="463dp"
             android:padding="10dp"
             android:visibility="visible"
             tools:listitem="@layout/rc_super_admin_available_researches" />

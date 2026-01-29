@@ -99,9 +99,20 @@ public class main_registration extends AppCompatActivity {
             String school = schoolDropdown.getText().toString().trim();
             String course = courseDropdown.getText().toString().trim();
 
+            // Validate Fields
             if (email.isEmpty() || last.isEmpty() || first.isEmpty() || id.isEmpty() || pass.isEmpty() || school.isEmpty() || course.isEmpty()) {
                 Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
-            } else {
+            } else if (!email.contains("@") || !email.contains(".com")) {
+                Toast.makeText(this, "Invalid Email", Toast.LENGTH_SHORT).show();
+            } else if (id.length() != 12 || id.charAt(4) != '-') {
+                // Validation for ID format: XXXX-XXXXXXX (12 chars total, '-' at index 4)
+                Toast.makeText(this, "Invalid ID Number (Format should be: 2024-1234567)", Toast.LENGTH_SHORT).show();
+            } else if (pass.length() < 8) {
+                Toast.makeText(this, "Password must be at least 8-12 characters long", Toast.LENGTH_SHORT).show();
+            }
+
+            else {
+                // If all validations pass, proceed to registration
                 registerUser(email, last, first, id, pass, school, course);
             }
         });

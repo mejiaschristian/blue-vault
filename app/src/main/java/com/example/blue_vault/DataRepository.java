@@ -43,6 +43,7 @@ public class DataRepository {
         return allResearches;
     }
 
+
     // These methods can remain as helper filters if you ever pass
     // a full list to the repository, but they won't cause errors anymore.
     public List<ResearchItem> getPendingResearches() {

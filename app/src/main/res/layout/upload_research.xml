@@ -117,7 +117,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins_bold"
-                        android:text="Tags*"
+                        android:text="Tags"
                         android:textColor="@color/black"
                         android:textSize="14sp" />
 
@@ -136,7 +136,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins_bold"
-                        android:text="DOI (Link)"
+                        android:text="Link of Research (Google Drive, OneDrive, etc.)"
                         android:textColor="@color/black"
                         android:textSize="14sp" />
 

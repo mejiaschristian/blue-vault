@@ -16,7 +16,6 @@ public class nav_menu extends AppCompatActivity {
         // but typically it would be R.layout.nav_menu_layout if you're using it as a standalone activity.
         setContentView(R.layout.nav_menu_layout);
 
-        TextView userEmail = findViewById(R.id.user_email);
         Button btnProfile = findViewById(R.id.nav_profile);
         Button btnAbout = findViewById(R.id.nav_about);
         Button btnSecurity = findViewById(R.id.nav_security);

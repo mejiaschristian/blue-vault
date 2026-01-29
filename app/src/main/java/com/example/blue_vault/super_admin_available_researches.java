@@ -27,10 +27,11 @@ public class super_admin_available_researches extends BaseActivity {
     private List<ResearchItem> allResearches = new ArrayList<>();
     private List<ResearchItem> filteredResearches = new ArrayList<>();
     private SuperAdminResearchAdapter adapter;
-    private AutoCompleteTextView schoolDropdown, courseDropdown;
+    private AutoCompleteTextView schoolDropdown, courseDropdown, statusDropdown;
 
     private String currentSchoolFilter = "ALL";
     private String currentCourseFilter = "ALL";
+    private String currentStatusFilter = "ALL";
 
     private final String[] allCourses = {"ALL", "ABComm", "BSPsych", "BPEd", "BSA", "BSMA", "BSBA-MM", "BSBA-FM", "BSBA-HRM", "BSHM", "BSTM", "BSIT", "BSCS", "BSCE", "BSCpE", "BSArch"};
     private final String[] saseCourses = {"ALL", "ABComm", "BSPsych", "BPEd"};
@@ -44,6 +45,11 @@ public class super_admin_available_researches extends BaseActivity {
 
         setupNavigation();
 
+        Button backBtn = findViewById(R.id.backBtn);
+        if (backBtn != null) {
+            backBtn.setOnClickListener(v -> onBackPressed());
+        }
+
         // Setup RecyclerView
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -53,7 +59,7 @@ public class super_admin_available_researches extends BaseActivity {
         // FETCH FROM DATABASE
         fetchUnpublishedAndDeclined();
 
-        // Dropdowns setup...
+        // Dropdowns setup
         setupFilters();
     }
 
@@ -80,7 +86,7 @@ public class super_admin_available_researches extends BaseActivity {
                                     0.0f, false
                             ));
                         }
-                        applyFilters(currentSchoolFilter, currentCourseFilter);
+                        applyFilters(currentSchoolFilter, currentCourseFilter, currentStatusFilter);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -92,9 +98,14 @@ public class super_admin_available_researches extends BaseActivity {
 
     private void setupFilters() {
         String[] schools = {"ALL", "SECA", "SASE", "SBMA"};
+        String[] statuses = {"ALL", "Approved", "Declined"};
+
         ArrayAdapter<String> schoolAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, schools);
+        ArrayAdapter<String> statusAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, statuses);
+
         schoolDropdown = findViewById(R.id.school_dropdown);
         courseDropdown = findViewById(R.id.course_dropdown);
+        statusDropdown = findViewById(R.id.status_dropdown);
 
         if (schoolDropdown != null) {
             schoolDropdown.setAdapter(schoolAdapter);
@@ -103,8 +114,8 @@ public class super_admin_available_researches extends BaseActivity {
                 currentSchoolFilter = (String) parent.getItemAtPosition(position);
                 updateCourseDropdown(currentSchoolFilter);
                 currentCourseFilter = "ALL";
-                courseDropdown.setText("ALL", false);
-                applyFilters(currentSchoolFilter, currentCourseFilter);
+                if (courseDropdown != null) courseDropdown.setText("ALL", false);
+                applyFilters(currentSchoolFilter, currentCourseFilter, currentStatusFilter);
             });
         }
 
@@ -113,7 +124,16 @@ public class super_admin_available_researches extends BaseActivity {
             courseDropdown.setText("ALL", false);
             courseDropdown.setOnItemClickListener((parent, view, position, id) -> {
                 currentCourseFilter = (String) parent.getItemAtPosition(position);
-                applyFilters(currentSchoolFilter, currentCourseFilter);
+                applyFilters(currentSchoolFilter, currentCourseFilter, currentStatusFilter);
+            });
+        }
+
+        if (statusDropdown != null) {
+            statusDropdown.setAdapter(statusAdapter);
+            statusDropdown.setText(statuses[0], false);
+            statusDropdown.setOnItemClickListener((parent, view, position, id) -> {
+                currentStatusFilter = (String) parent.getItemAtPosition(position);
+                applyFilters(currentSchoolFilter, currentCourseFilter, currentStatusFilter);
             });
         }
     }
@@ -127,17 +147,22 @@ public class super_admin_available_researches extends BaseActivity {
             default: courses = allCourses; break;
         }
         ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, courses);
-        courseDropdown.setAdapter(courseAdapter);
+        if (courseDropdown != null) courseDropdown.setAdapter(courseAdapter);
     }
 
-    private void applyFilters(String school, String course) {
+    private void applyFilters(String school, String course, String status) {
         filteredResearches.clear();
         for (ResearchItem item : allResearches) {
             boolean matchesSchool = school.equals("ALL") || item.getSchool().equalsIgnoreCase(school);
             boolean matchesCourse = course.equals("ALL") || item.getCourse().equalsIgnoreCase(course);
+            
+            boolean matchesStatus = true;
+            if (!status.equals("ALL")) {
+                int statusInt = status.equalsIgnoreCase("Approved") ? 1 : 0;
+                matchesStatus = (item.getStatus() == statusInt);
+            }
 
-            // Super Admin logic: Exclude Pending (3)
-            if (matchesSchool && matchesCourse && item.getStatus() != 3) {
+            if (matchesSchool && matchesCourse && matchesStatus) {
                 filteredResearches.add(item);
             }
         }
