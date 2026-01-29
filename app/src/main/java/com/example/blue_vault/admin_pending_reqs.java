@@ -45,14 +45,6 @@ public class admin_pending_reqs extends BaseActivity {
             backBtn.setOnClickListener(v -> finish());
         }
 
-        // 3. Setup Drawer Trigger (the transparent button in your XML)
-        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
-        Button gotoMenu = findViewById(R.id.goto_menu);
-        if (gotoMenu != null && drawerLayout != null) {
-            gotoMenu.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
-        }
-
-        // 4. Setup RecyclerView and Handle Clicks
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 

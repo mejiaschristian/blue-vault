@@ -213,7 +213,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/btnViewResearch"
+            android:id="@+id/btnAdminViewResearch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
