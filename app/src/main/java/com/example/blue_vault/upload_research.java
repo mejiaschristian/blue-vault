@@ -86,10 +86,16 @@ public class upload_research extends AppCompatActivity {
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 response -> {
-                    if (response.trim().equals("success")) {
+                    String result = response.trim();
+                    if (result.equals("success")) {
                         Toast.makeText(this, "Uploading success! Waiting for approval.", Toast.LENGTH_LONG).show();
-                        startActivity(new Intent(this, profile_view_user.class));
+                        // Navigate back to user profile after success
+                        Intent intent = new Intent(this, profile_view_user.class);
+                        startActivity(intent);
                         finish();
+                    } else if (result.equals("duplicate")) {
+                        // Logic to handle existing title check from PHP
+                        Toast.makeText(this, "A research with the same title already exists", Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(this, "Error: " + response, Toast.LENGTH_LONG).show();
                     }
@@ -99,7 +105,7 @@ public class upload_research extends AppCompatActivity {
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
                 params.put("id_number", id);
-                params.put("school", school.toLowerCase()); // Targets table 'seca', 'sase', or 'sbma'
+                params.put("school", school.toLowerCase());
                 params.put("title", title);
                 params.put("authors", authors);
                 params.put("abstract", resAbstract);
