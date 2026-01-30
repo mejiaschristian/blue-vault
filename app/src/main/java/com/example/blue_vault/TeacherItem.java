@@ -2,16 +2,13 @@ package com.example.blue_vault;
 
 public class TeacherItem {
     private String name;
-    private String teacherID;
-    private String dept;
+    private String id;
 
-    public TeacherItem(String name, String teacherID, String dept) {
+    public TeacherItem(String name, String id) {
         this.name = name;
-        this.teacherID = teacherID;
-        this.dept = dept;
+        this.id = id;
     }
 
     public String getName() { return name; }
-    public String getTeacherID() { return teacherID; }
-    public String getDept() { return dept; }
+    public String getId() { return id; }
 }

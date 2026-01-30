@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,7 +54,10 @@ public class profile_view_user extends BaseActivity {
         TextView tvId = findViewById(R.id.tvProfileId);
         TextView tvEmail = findViewById(R.id.tvProfileEmail);
         recyclerLabel = findViewById(R.id.recyclerLabel);
+        View researchesHeader = findViewById(R.id.researches_header);
         Button addResBtn = findViewById(R.id.addResBtn);
+        Button navResearches = findViewById(R.id.nav_researches);
+        Button navSecurity = findViewById(R.id.nav_security);
         recyclerView = findViewById(R.id.recyclerView);
         statusFilterDropdown = findViewById(R.id.status_filter_dropdown); // Ensure this ID exists in XML
 
@@ -72,9 +76,19 @@ public class profile_view_user extends BaseActivity {
         if (id.equals("N/A") || school.isEmpty()) {
             if (recyclerLabel != null) recyclerLabel.setVisibility(GONE);
             if (recyclerView != null) recyclerView.setVisibility(GONE);
+            if (researchesHeader != null) researchesHeader.setVisibility(GONE);
+            if (addResBtn != null) addResBtn.setVisibility(GONE);
+
+            navResearches.setVisibility(GONE);
+            navSecurity.setVisibility(GONE);
         } else {
             if (recyclerLabel != null) recyclerLabel.setVisibility(VISIBLE);
             if (recyclerView != null) recyclerView.setVisibility(VISIBLE);
+            if (researchesHeader != null) researchesHeader.setVisibility(VISIBLE);
+            if (addResBtn != null) addResBtn.setVisibility(VISIBLE);
+
+            navResearches.setVisibility(VISIBLE);
+            navSecurity.setVisibility(VISIBLE);
         }
 
         // 4. Setup RecyclerView

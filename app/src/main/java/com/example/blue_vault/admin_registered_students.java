@@ -1,5 +1,7 @@
 package com.example.blue_vault;
 
+import static android.view.View.GONE;
+
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -29,6 +31,10 @@ public class admin_registered_students extends BaseActivity {
         setContentView(R.layout.admin_registered_students);
 
         setupNavigation();
+        Button navResearches = findViewById(R.id.nav_researches);
+        Button navSecurity = findViewById(R.id.nav_security);
+        navResearches.setVisibility(GONE);
+        navSecurity.setVisibility(GONE);
 
         // Setup Back Button
         Button backBtn = findViewById(R.id.backBtn);

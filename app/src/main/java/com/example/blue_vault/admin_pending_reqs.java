@@ -1,5 +1,7 @@
 package com.example.blue_vault;
 
+import static android.view.View.GONE;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
@@ -42,6 +44,10 @@ public class admin_pending_reqs extends BaseActivity {
 
         // 1. Setup BaseActivity Navigation (Drawer)
         setupNavigation();
+        Button navResearches = findViewById(R.id.nav_researches);
+        Button navSecurity = findViewById(R.id.nav_security);
+        navResearches.setVisibility(GONE);
+        navSecurity.setVisibility(GONE);
 
         // 2. Fix Back Button
         Button backBtn = findViewById(R.id.backBtn);

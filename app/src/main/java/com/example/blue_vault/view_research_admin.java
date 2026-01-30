@@ -1,6 +1,10 @@
 package com.example.blue_vault;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View; // Required for View.GONE
@@ -35,6 +39,19 @@ public class view_research_admin extends BaseActivity {
         Button btnApprove = findViewById(R.id.btnApprove);
         Button btnDecline = findViewById(R.id.btnDecline);
         Button backBtn = findViewById(R.id.backBtn4);
+
+        SharedPreferences sp = getSharedPreferences("UserSession", MODE_PRIVATE);
+        String email = sp.getString("email", "N/A");
+        Button navResearches = findViewById(R.id.nav_researches);
+        Button navSecurity = findViewById(R.id.nav_security);
+        // 3. Visibility logic
+        if (email.equals("N/A")) {
+            navResearches.setVisibility(GONE);
+            navSecurity.setVisibility(GONE);
+        } else {
+            navResearches.setVisibility(VISIBLE);
+            navSecurity.setVisibility(VISIBLE);
+        }
 
         // 2. BACK BUTTON FIX: Ensure it is set before any logic that might 'finish()'
         if (backBtn != null) {

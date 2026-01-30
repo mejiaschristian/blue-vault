@@ -1,9 +1,15 @@
 package com.example.blue_vault;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -41,9 +47,28 @@ public class super_admin_available_researches extends BaseActivity {
 
         // Standard Navigation setup
         setupNavigation();
+        // 2. Load data from SharedPreferences
+        SharedPreferences sp = getSharedPreferences("UserSession", MODE_PRIVATE);
+        String email = sp.getString("email", "N/A");
+        Button navResearches = findViewById(R.id.nav_researches);
+        Button navSecurity = findViewById(R.id.nav_security);
+        // 3. Visibility logic
+        if (email.equals("N/A")) {
+            navResearches.setVisibility(GONE);
+            navSecurity.setVisibility(GONE);
+        } else {
+            navResearches.setVisibility(VISIBLE);
+            navSecurity.setVisibility(VISIBLE);
+        }
 
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // Setup Back Button
+        Button backBtn = findViewById(R.id.backBtn);
+        if (backBtn != null) {
+            backBtn.setOnClickListener(v -> onBackPressed());
+        }
 
         // Use filteredResearches for the adapter
         adapter = new SuperAdminResearchAdapter(filteredResearches);

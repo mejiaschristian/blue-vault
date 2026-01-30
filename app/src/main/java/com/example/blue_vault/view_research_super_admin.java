@@ -1,6 +1,10 @@
 package com.example.blue_vault;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -35,6 +39,18 @@ public class view_research_super_admin extends BaseActivity {
         Button btnPublish = findViewById(R.id.btnPublish);
         Button backBtn = findViewById(R.id.backBtn3);
 
+        SharedPreferences sp = getSharedPreferences("UserSession", MODE_PRIVATE);
+        String email = sp.getString("email", "N/A");
+        Button navResearches = findViewById(R.id.nav_researches);
+        Button navSecurity = findViewById(R.id.nav_security);
+        // 3. Visibility logic
+        if (email.equals("N/A")) {
+            navResearches.setVisibility(GONE);
+            navSecurity.setVisibility(GONE);
+        } else {
+            navResearches.setVisibility(VISIBLE);
+            navSecurity.setVisibility(VISIBLE);
+        }
         // Get actual data from Intent (passed from SuperAdminResearchAdapter)
         ResearchItem research = (ResearchItem) getIntent().getSerializableExtra("research_data");
 

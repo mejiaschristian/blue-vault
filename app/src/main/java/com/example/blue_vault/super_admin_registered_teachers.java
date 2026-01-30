@@ -4,17 +4,31 @@ import static android.view.View.GONE;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.Toast;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.android.volley.Request;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class super_admin_registered_teachers extends BaseActivity {
 
     private TeacherAdapter adapter;
+    private List<TeacherItem> allTeachers = new ArrayList<>(); // Master list from DB
+    private List<TeacherItem> filteredTeachers = new ArrayList<>(); // List shown in UI
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +47,8 @@ public class super_admin_registered_teachers extends BaseActivity {
         String currentEmail = sp.getString("email", "N/A");
 
         if (currentName.equals("N/A") || currentId.equals("N/A") || currentEmail.equals("N/A")) {
-            navResearches.setVisibility(GONE);
-            navSecurity.setVisibility(GONE);
+            if (navResearches != null) navResearches.setVisibility(GONE);
+            if (navSecurity != null) navSecurity.setVisibility(GONE);
         }
 
         // Setup Back Button
@@ -48,32 +62,54 @@ public class super_admin_registered_teachers extends BaseActivity {
         if (recyclerView != null) {
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-            List<TeacherItem> teacherList = new ArrayList<>();
-            teacherList.add(new TeacherItem("Dr. Ricardo Dalisay", "T-2024-001", "SECA"));
-            teacherList.add(new TeacherItem("Prof. Cardo Provinci", "T-2024-002", "SASE"));
-            teacherList.add(new TeacherItem("Engr. Neri Naig", "T-2024-003", "SECA"));
-            teacherList.add(new TeacherItem("Ms. Sarah Geronimo", "T-2024-004", "SBMA"));
-            teacherList.add(new TeacherItem("Dr. Jose Mari Chan", "T-2024-005", "SASE"));
-
-            adapter = new TeacherAdapter(teacherList);
+            // Bind to filteredTeachers so UI updates correctly
+            adapter = new TeacherAdapter(filteredTeachers);
             recyclerView.setAdapter(adapter);
         }
 
-        // Setup Filter Dropdown
-        String[] depts = {"ALL", "SECA", "SASE", "SBMA"};
-        ArrayAdapter<String> deptAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, depts);
-        AutoCompleteTextView filterDropdown = findViewById(R.id.filter_dropdown_text);
-        
-        if (filterDropdown != null) {
-            filterDropdown.setAdapter(deptAdapter);
-            filterDropdown.setText(depts[0], false); // Set "ALL" as default
-            
-            filterDropdown.setOnItemClickListener((parent, view, position, id) -> {
-                String selectedDept = (String) parent.getItemAtPosition(position);
-                if (adapter != null) {
-                    adapter.filter(selectedDept);
+        // Fetch Real Data from MySQL
+        fetchTeachersFromMySQL();
+    }
+
+    private void fetchTeachersFromMySQL() {
+        // Pointing to the specific PHP file created above
+        String URL = "http://10.0.2.2/bluevault/TeacherFetch.php";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
+                response -> {
+                    Log.d("DEBUG_TEACHERS", "Response: " + response);
+                    allTeachers.clear();
+                    filteredTeachers.clear();
+                    try {
+                        JSONArray jsonArray = new JSONArray(response);
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject obj = jsonArray.getJSONObject(i);
+
+                            // Ensure the 'name' and 'id' keys match PHP output
+                            TeacherItem item = new TeacherItem(
+                                    obj.getString("name"),
+                                    obj.getString("id")
+                            );
+                            allTeachers.add(item);
+                        }
+
+                        // IMPORTANT: Sync filtered list with fetched data and refresh UI
+                        filteredTeachers.addAll(allTeachers);
+                        if (adapter != null) {
+                            adapter.notifyDataSetChanged();
+                        }
+
+                    } catch (JSONException e) {
+                        Log.e("VOLLEY_ERROR", "JSON Error: " + e.getMessage());
+                        Toast.makeText(this, "Data parsing error", Toast.LENGTH_SHORT).show();
+                    }
+                },
+                error -> {
+                    Log.e("VOLLEY_ERROR", "Network Error: " + error.toString());
+                    Toast.makeText(this, "Connection Error. Check XAMPP.", Toast.LENGTH_SHORT).show();
                 }
-            });
-        }
+        );
+
+        Volley.newRequestQueue(this).add(stringRequest);
     }
 }
