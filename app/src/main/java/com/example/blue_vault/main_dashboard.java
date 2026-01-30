@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
-import com.android.volley.toolbox.StringRequest; // Changed to StringRequest for reliability
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
@@ -48,11 +48,8 @@ public class main_dashboard extends BaseActivity {
         // Setup RecyclerView
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new ResearchAdapter(filteredResearches);
+        adapter = new ResearchAdapter(filteredResearches, false);
         recyclerView.setAdapter(adapter);
-
-        // Fetch Data from MySQL
-        fetchApprovedResearches();
 
         // Setup Search Input
         searchInput = findViewById(R.id.search_input);
@@ -99,10 +96,19 @@ public class main_dashboard extends BaseActivity {
         }
     }
 
+    /**
+     * onResume runs every time the user navigates back to this screen.
+     * This makes the dashboard refresh immediately to show new ratings or approvals.
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fetchApprovedResearches();
+    }
+
     private void fetchApprovedResearches() {
         String URL = "http://10.0.2.2/bluevault/GetApprovedResearch.php";
 
-        // Using StringRequest to avoid "BR" parsing errors and ensure order is visible in logs
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
                 response -> {
                     allResearches.clear();
@@ -121,18 +127,17 @@ public class main_dashboard extends BaseActivity {
                                     obj.getString("abstract"),
                                     obj.getString("tags"),
                                     obj.getString("doi"),
-                                    0.0f, true
+                                    (float) obj.optDouble("rating", 0.0),
+                                    true
                             ));
                         }
-                        // Apply filters immediately after data is fetched
                         applyFilters(searchInput.getText().toString(), currentSchoolFilter, currentCourseFilter);
-                        Log.d("ORDER_CHECK", "Data fetched and sorted by PHP");
+                        Log.d("REFRESH_CHECK", "Dashboard Refreshed");
                     } catch (JSONException e) {
-                        Log.e("ORDER_CHECK", "JSON Error: " + e.getMessage());
-                        Toast.makeText(this , "Data parsing error", Toast.LENGTH_SHORT).show();
+                        Log.e("REFRESH_CHECK", "JSON Error: " + e.getMessage());
                     }
                 },
-                error -> Toast.makeText(this, "Connection Error", Toast.LENGTH_SHORT).show()
+                error -> Log.e("REFRESH_CHECK", "Connection Error")
         );
         Volley.newRequestQueue(this).add(stringRequest);
     }
