@@ -68,18 +68,21 @@ public class ResearchAdapter extends RecyclerView.Adapter<ResearchAdapter.ViewHo
             }
         }
 
-        // Dynamic Star Rating Logic
+        // --- Objective: Dynamic Star Rating Logic ---
         float rating = item.getRating();
         ImageView[] stars = {holder.star1, holder.star2, holder.star3, holder.star4, holder.star5};
 
         for (int i = 0; i < stars.length; i++) {
             if (i < (int) rating) {
+                // Full Star
                 stars[i].setImageResource(R.drawable.ic_star);
                 stars[i].setAlpha(1.0f);
             } else if (i < rating) {
+                // Half Star
                 stars[i].setImageResource(R.drawable.ic_star_half);
                 stars[i].setAlpha(1.0f);
             } else {
+                // Empty Star (Faded)
                 stars[i].setImageResource(R.drawable.ic_star);
                 stars[i].setAlpha(0.2f);
             }
@@ -87,9 +90,6 @@ public class ResearchAdapter extends RecyclerView.Adapter<ResearchAdapter.ViewHo
 
         // Set the click listener to open the detailed view
         holder.btnItem.setOnClickListener(v -> {
-            // Check if the user is an admin or student to decide where to go
-            // If isProfileView is true, we go to user view.
-            // If you are in admin_pending_reqs, you should use the click listener from that activity.
             Intent intent = new Intent(v.getContext(), view_research_user.class);
             intent.putExtra("research_data", item);
             v.getContext().startActivity(intent);
@@ -117,6 +117,7 @@ public class ResearchAdapter extends RecyclerView.Adapter<ResearchAdapter.ViewHo
             rsStatus = view.findViewById(R.id.tvStatus);
             btnItem = view.findViewById(R.id.research_item_btn);
 
+            // Mapping the stars to the ImageViews in rc_item_research.xml
             star1 = view.findViewById(R.id.star1);
             star2 = view.findViewById(R.id.star2);
             star3 = view.findViewById(R.id.star3);

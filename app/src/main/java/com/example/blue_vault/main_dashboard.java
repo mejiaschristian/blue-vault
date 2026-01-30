@@ -3,6 +3,7 @@ package com.example.blue_vault;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
@@ -11,14 +12,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
-import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class main_dashboard extends BaseActivity {
@@ -47,11 +48,8 @@ public class main_dashboard extends BaseActivity {
         // Setup RecyclerView
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new ResearchAdapter(filteredResearches);
+        adapter = new ResearchAdapter(filteredResearches, false);
         recyclerView.setAdapter(adapter);
-
-        // Fetch Data from MySQL
-        fetchApprovedResearches();
 
         // Setup Search Input
         searchInput = findViewById(R.id.search_input);
@@ -98,15 +96,26 @@ public class main_dashboard extends BaseActivity {
         }
     }
 
+    /**
+     * onResume runs every time the user navigates back to this screen.
+     * This makes the dashboard refresh immediately to show new ratings or approvals.
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fetchApprovedResearches();
+    }
+
     private void fetchApprovedResearches() {
         String URL = "http://10.0.2.2/bluevault/GetApprovedResearch.php";
 
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, URL, null,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
                 response -> {
                     allResearches.clear();
                     try {
-                        for (int i = 0; i < response.length(); i++) {
-                            JSONObject obj = response.getJSONObject(i);
+                        JSONArray jsonArray = new JSONArray(response);
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject obj = jsonArray.getJSONObject(i);
                             allResearches.add(new ResearchItem(
                                     obj.getInt("rsid"),
                                     obj.getString("title"),
@@ -118,17 +127,19 @@ public class main_dashboard extends BaseActivity {
                                     obj.getString("abstract"),
                                     obj.getString("tags"),
                                     obj.getString("doi"),
-                                    0.0f, true
+                                    (float) obj.optDouble("rating", 0.0),
+                                    true
                             ));
                         }
                         applyFilters(searchInput.getText().toString(), currentSchoolFilter, currentCourseFilter);
+                        Log.d("REFRESH_CHECK", "Dashboard Refreshed");
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        Log.e("REFRESH_CHECK", "JSON Error: " + e.getMessage());
                     }
                 },
-                error -> Toast.makeText(this, "Connection Error", Toast.LENGTH_SHORT).show()
+                error -> Log.e("REFRESH_CHECK", "Connection Error")
         );
-        Volley.newRequestQueue(this).add(request);
+        Volley.newRequestQueue(this).add(stringRequest);
     }
 
     private void updateCourseDropdown(String school) {
