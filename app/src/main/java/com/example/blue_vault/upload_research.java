@@ -65,8 +65,8 @@ public class upload_research extends AppCompatActivity {
                 String tags = etTags.getText().toString().trim();
                 String doi = etDoi.getText().toString().trim();
 
-                if (title.isEmpty() || authors.isEmpty()) {
-                    Toast.makeText(this, "Title and Authors are required", Toast.LENGTH_SHORT).show();
+                if (title.isEmpty() || authors.isEmpty() || resAbstract.isEmpty() || tags.isEmpty() || doi.isEmpty()) {
+                    Toast.makeText(this, "All fields must be filled.", Toast.LENGTH_SHORT).show();
                 } else if (loggedSchool.isEmpty()) {
                     Toast.makeText(this, "Session error. Please re-login.", Toast.LENGTH_SHORT).show();
                 } else {

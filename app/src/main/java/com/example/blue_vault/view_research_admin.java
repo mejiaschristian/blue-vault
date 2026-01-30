@@ -53,15 +53,27 @@ public class view_research_admin extends BaseActivity {
             etAbstract.setText(research.getAbstract());
             etTags.setText(research.getTags());
 
-            final String doiUrl = research.getDoi();
+            String doiUrl = research.getDoi();
             if (doiUrl != null && !doiUrl.isEmpty()) {
-                tvDoiLink.setText(doiUrl);
+                doiUrl = doiUrl.trim(); // Remove accidental spaces
+
+                // FIX 1: Ensure URL starts with http:// or https://
+                if (!doiUrl.startsWith("http://") && !doiUrl.startsWith("https://")) {
+                    doiUrl = "https://" + doiUrl;
+                }
+
+                final String finalUrl = doiUrl;
+                tvDoiLink.setText(finalUrl);
+                tvDoiLink.setClickable(true);
+                tvDoiLink.setPaintFlags(tvDoiLink.getPaintFlags() | android.graphics.Paint.UNDERLINE_TEXT_FLAG); // Make it look like a link
+
                 tvDoiLink.setOnClickListener(v -> {
                     try {
-                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(doiUrl));
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(finalUrl));
                         startActivity(intent);
                     } catch (Exception e) {
-                        Toast.makeText(this, "Invalid URL", Toast.LENGTH_SHORT).show();
+                        // FIX 2: Better error message for debugging
+                        Toast.makeText(this, "No browser found to open link", Toast.LENGTH_SHORT).show();
                     }
                 });
             }

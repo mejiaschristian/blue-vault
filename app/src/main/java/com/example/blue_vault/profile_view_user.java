@@ -5,8 +5,11 @@ import static android.view.View.VISIBLE;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Bundle;import android.util.Log;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,10 +31,15 @@ import java.util.List;
 
 public class profile_view_user extends BaseActivity {
 
-    private List<ResearchItem> userResearches;
+    // Logic: Use two lists. 'allUserResearches' is the master, 'displayedResearches' is for the UI.
+    private List<ResearchItem> allUserResearches = new ArrayList<>();
+    private List<ResearchItem> displayedResearches = new ArrayList<>();
+
     private ResearchAdapter adapter;
     private RecyclerView recyclerView;
     private TextView recyclerLabel;
+    private AutoCompleteTextView statusFilterDropdown;
+    private String currentStatusFilter = "All";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +55,7 @@ public class profile_view_user extends BaseActivity {
         recyclerLabel = findViewById(R.id.recyclerLabel);
         Button addResBtn = findViewById(R.id.addResBtn);
         recyclerView = findViewById(R.id.recyclerView);
+        statusFilterDropdown = findViewById(R.id.status_filter_dropdown); // Ensure this ID exists in XML
 
         // 2. Load data from SharedPreferences
         SharedPreferences sp = getSharedPreferences("UserSession", MODE_PRIVATE);
@@ -71,17 +80,20 @@ public class profile_view_user extends BaseActivity {
         // 4. Setup RecyclerView
         if (recyclerView != null) {
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            userResearches = new ArrayList<>();
-            adapter = new ResearchAdapter(userResearches, true);
+            // Bind adapter to the DISPLAYED list
+            adapter = new ResearchAdapter(displayedResearches, true);
             recyclerView.setAdapter(adapter);
         }
 
-        // 5. Fetch only this user's research
+        // 5. Setup Filter Dropdown
+        setupFilterDropdown();
+
+        // 6. Fetch only this user's research
         if (!id.equals("N/A") && !school.isEmpty()) {
             fetchUserResearchFromMySQL(id, school);
         }
 
-        // 6. Buttons
+        // 7. Buttons
         Button backBtn = findViewById(R.id.backBtn);
         if (backBtn != null) backBtn.setOnClickListener(v -> onBackPressed());
 
@@ -94,29 +106,70 @@ public class profile_view_user extends BaseActivity {
         }
     }
 
+    private void setupFilterDropdown() {
+        String[] statuses = {"All", "Approved", "Declined", "Pending", "Published"};
+        ArrayAdapter<String> filterAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, statuses);
+
+        if (statusFilterDropdown != null) {
+            statusFilterDropdown.setAdapter(filterAdapter);
+            statusFilterDropdown.setText(statuses[0], false); // Default to "All"
+            statusFilterDropdown.setOnItemClickListener((parent, view, position, id) -> {
+                currentStatusFilter = (String) parent.getItemAtPosition(position);
+                applyStatusFilter();
+            });
+        }
+    }
+
+    private void applyStatusFilter() {
+        displayedResearches.clear();
+
+        for (ResearchItem item : allUserResearches) {
+            int status = item.getStatus();
+            boolean matches = false;
+
+            if (currentStatusFilter.equals("All")) {
+                matches = true;
+            } else if (currentStatusFilter.equals("Approved") && status == 1) {
+                matches = true;
+            } else if (currentStatusFilter.equals("Declined") && status == 0) {
+                matches = true;
+            } else if (currentStatusFilter.equals("Published") && status == 2) {
+                matches = true;
+            } else if (currentStatusFilter.equals("Pending") && status == 3) {
+                matches = true;
+            }
+
+            if (matches) {
+                displayedResearches.add(item);
+            }
+        }
+
+        if (displayedResearches.isEmpty()) {
+            recyclerLabel.setText("No " + currentStatusFilter + " researches.");
+        } else {
+            recyclerLabel.setText("YOUR RESEARCHES:");
+        }
+
+        adapter.notifyDataSetChanged();
+    }
+
     private void fetchUserResearchFromMySQL(String id, String school) {
-        // Build the URL
         String URL = "http://10.0.2.2/bluevault/GetUserResearch.php?id_number=" + id + "&school=" + school.toLowerCase();
 
         Log.d("DEBUG_VOLLEY", "Requesting: " + URL);
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
                 response -> {
-                    // This log is crucial! If you see <br /> here, read the text next to it.
                     Log.d("DEBUG_VOLLEY", "Raw Server Response: " + response);
 
-                    userResearches.clear();
+                    allUserResearches.clear();
                     try {
                         JSONArray jsonArray = new JSONArray(response);
-
-                        if (jsonArray.length() == 0) {
-                            if (recyclerLabel != null) recyclerLabel.setText("No researches uploaded yet.");
-                        }
 
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject obj = jsonArray.getJSONObject(i);
 
-                            userResearches.add(new ResearchItem(
+                            allUserResearches.add(new ResearchItem(
                                     obj.getInt("rsid"),
                                     obj.getString("title"),
                                     obj.getString("author"),
@@ -131,11 +184,12 @@ public class profile_view_user extends BaseActivity {
                                     false
                             ));
                         }
-                        adapter.notifyDataSetChanged();
+
+                        // After loading master list, apply the current filter to the UI
+                        applyStatusFilter();
 
                     } catch (JSONException e) {
                         Log.e("DEBUG_VOLLEY", "JSON Error: " + e.getMessage());
-                        // This toast triggers because PHP sent back an HTML Error message
                         Toast.makeText(this, "PHP Error detected. Check Logcat for details.", Toast.LENGTH_LONG).show();
                     }
                 },

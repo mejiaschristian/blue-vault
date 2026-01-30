@@ -30,6 +30,10 @@ public class admin_pending_reqs extends BaseActivity {
     private AutoCompleteTextView schoolDropdown, courseDropdown;
     private String currentSchoolFilter = "ALL";
     private String currentCourseFilter = "ALL";
+    private final String[] allCourses = {"ALL", "ABComm", "BSPsych", "BPEd", "BSA", "BSMA", "BSBA-MM", "BSBA-FM", "BSBA-HRM", "BSHM", "BSTM", "BSIT", "BSCS", "BSCE", "BSCpE", "BSArch"};
+    private final String[] saseCourses = {"ALL", "ABComm", "BSPsych", "BPEd"};
+    private final String[] sbmaCourses = {"ALL", "BSA", "BSMA", "BSBA-MM", "BSBA-FM", "BSBA-HRM", "BSHM", "BSTM"};
+    private final String[] secaCourses = {"ALL", "BSIT", "BSCS", "BSCE", "BSCpE", "BSArch"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +99,7 @@ public class admin_pending_reqs extends BaseActivity {
     }
 
     private void setupDropdowns() {
+        // Setup School Dropdown
         String[] schools = {"ALL", "SECA", "SASE", "SBMA"};
         ArrayAdapter<String> schoolAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, schools);
         schoolDropdown = findViewById(R.id.school_dropdown);
@@ -102,18 +107,48 @@ public class admin_pending_reqs extends BaseActivity {
 
         if (schoolDropdown != null) {
             schoolDropdown.setAdapter(schoolAdapter);
+            schoolDropdown.setText(schools[0], false);
             schoolDropdown.setOnItemClickListener((parent, view, position, id) -> {
                 currentSchoolFilter = (String) parent.getItemAtPosition(position);
+                updateCourseDropdown(currentSchoolFilter);
+                currentCourseFilter = "ALL";
+                courseDropdown.setText("ALL", false);
+                applyFilters(currentSchoolFilter, currentCourseFilter);
+            });
+        }
+
+        updateCourseDropdown("ALL");
+        if (courseDropdown != null) {
+            courseDropdown.setText("ALL", false);
+            courseDropdown.setOnItemClickListener((parent, view, position, id) -> {
+                currentCourseFilter = (String) parent.getItemAtPosition(position);
                 applyFilters(currentSchoolFilter, currentCourseFilter);
             });
         }
     }
 
+    private void updateCourseDropdown(String school) {
+        String[] courses;
+        switch (school) {
+            case "SASE": courses = saseCourses; break;
+            case "SBMA": courses = sbmaCourses; break;
+            case "SECA": courses = secaCourses; break;
+            default: courses = allCourses; break;
+        }
+        ArrayAdapter<String> courseAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, courses);
+        if (courseDropdown != null) {
+            courseDropdown.setAdapter(courseAdapter);
+        }
+    }
+
     private void applyFilters(String school, String course) {
         filteredResearches.clear();
+
         for (ResearchItem item : allResearches) {
-            boolean matchesSchool = school.equals("ALL") || item.getSchool().equalsIgnoreCase(school);
-            if (matchesSchool) {
+            boolean matchesSchool = school.equals("ALL") || (item.getSchool() != null && item.getSchool().equalsIgnoreCase(school));
+            boolean matchesCourse = course.equals("ALL") || (item.getCourse() != null && item.getCourse().equalsIgnoreCase(course));
+
+            if (matchesSchool && matchesCourse) {
                 filteredResearches.add(item);
             }
         }

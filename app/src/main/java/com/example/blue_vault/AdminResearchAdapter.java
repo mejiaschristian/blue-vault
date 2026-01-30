@@ -39,6 +39,7 @@ public class AdminResearchAdapter extends RecyclerView.Adapter<AdminResearchAdap
         ResearchItem item = list.get(position);
         holder.tvTitle.setText(item.getTitle());
         holder.tvAuthor.setText(item.getAuthor());
+        holder.tvSchool.setText(item.getSchool());
         holder.tvCourse.setText(item.getCourse());
         holder.tvDate.setText(item.getDate());
         holder.tvTags.setText(item.getTags());
@@ -55,7 +56,7 @@ public class AdminResearchAdapter extends RecyclerView.Adapter<AdminResearchAdap
     public int getItemCount() { return list.size(); }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView tvTitle, tvAuthor, tvCourse, tvDate, tvStatus, tvTags;
+        public TextView tvTitle, tvAuthor, tvSchool, tvCourse, tvDate, tvTags;
         public Button btnAdminView;
         public ViewHolder(View itemView) {
             super(itemView);
@@ -63,6 +64,7 @@ public class AdminResearchAdapter extends RecyclerView.Adapter<AdminResearchAdap
             tvAuthor = itemView.findViewById(R.id.tvAuthor);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvAuthor = itemView.findViewById(R.id.tvAuthor);
+            tvSchool = itemView.findViewById(R.id.tvSchool);
             tvCourse = itemView.findViewById(R.id.tvCourse);
             tvDate = itemView.findViewById(R.id.tvDate);
             tvTags = itemView.findViewById(R.id.tvTags);

@@ -14,7 +14,7 @@ public class view_research_user extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_research_user);
-        
+
         setupNavigation();
 
         // UI Elements
@@ -40,20 +40,33 @@ public class view_research_user extends BaseActivity {
             etCourse.setText(research.getCourse());
             etAbstract.setText(research.getAbstract());
             etTags.setText(research.getTags());
-            
-            final String doiUrl = research.getDoi();
-            tvDoiLink.setText(doiUrl);
-            
+
+            String doiUrl = research.getDoi();
+
             if (doiUrl != null && !doiUrl.isEmpty()) {
+                doiUrl = doiUrl.trim(); // Remove accidental spaces
+
+                // FIX 1: Ensure URL starts with http:// or https://
+                if (!doiUrl.startsWith("http://") && !doiUrl.startsWith("https://")) {
+                    doiUrl = "https://" + doiUrl;
+                }
+
+                final String finalUrl = doiUrl;
+                tvDoiLink.setText(finalUrl);
                 tvDoiLink.setClickable(true);
+                tvDoiLink.setPaintFlags(tvDoiLink.getPaintFlags() | android.graphics.Paint.UNDERLINE_TEXT_FLAG); // Make it look like a link
+
                 tvDoiLink.setOnClickListener(v -> {
                     try {
-                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(doiUrl));
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(finalUrl));
                         startActivity(intent);
                     } catch (Exception e) {
-                        Toast.makeText(this, "Unable to open link", Toast.LENGTH_SHORT).show();
+                        // FIX 2: Better error message for debugging
+                        Toast.makeText(this, "No browser found to open link", Toast.LENGTH_SHORT).show();
                     }
                 });
+            } else {
+                tvDoiLink.setText("No DOI available");
             }
         } else {
             // Placeholder/Fallback Data

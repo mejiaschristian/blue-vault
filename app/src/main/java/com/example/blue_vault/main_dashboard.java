@@ -3,6 +3,7 @@ package com.example.blue_vault;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
@@ -11,14 +12,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
-import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest; // Changed to StringRequest for reliability
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class main_dashboard extends BaseActivity {
@@ -101,12 +102,14 @@ public class main_dashboard extends BaseActivity {
     private void fetchApprovedResearches() {
         String URL = "http://10.0.2.2/bluevault/GetApprovedResearch.php";
 
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, URL, null,
+        // Using StringRequest to avoid "BR" parsing errors and ensure order is visible in logs
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
                 response -> {
                     allResearches.clear();
                     try {
-                        for (int i = 0; i < response.length(); i++) {
-                            JSONObject obj = response.getJSONObject(i);
+                        JSONArray jsonArray = new JSONArray(response);
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject obj = jsonArray.getJSONObject(i);
                             allResearches.add(new ResearchItem(
                                     obj.getInt("rsid"),
                                     obj.getString("title"),
@@ -121,14 +124,17 @@ public class main_dashboard extends BaseActivity {
                                     0.0f, true
                             ));
                         }
+                        // Apply filters immediately after data is fetched
                         applyFilters(searchInput.getText().toString(), currentSchoolFilter, currentCourseFilter);
+                        Log.d("ORDER_CHECK", "Data fetched and sorted by PHP");
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        Log.e("ORDER_CHECK", "JSON Error: " + e.getMessage());
+                        Toast.makeText(this , "Data parsing error", Toast.LENGTH_SHORT).show();
                     }
                 },
                 error -> Toast.makeText(this, "Connection Error", Toast.LENGTH_SHORT).show()
         );
-        Volley.newRequestQueue(this).add(request);
+        Volley.newRequestQueue(this).add(stringRequest);
     }
 
     private void updateCourseDropdown(String school) {
