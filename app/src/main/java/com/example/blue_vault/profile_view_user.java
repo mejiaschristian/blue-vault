@@ -194,7 +194,7 @@ public class profile_view_user extends BaseActivity {
                                     obj.getString("abstract"),
                                     obj.getString("tags"),
                                     obj.getString("doi"),
-                                    0.0f,
+                                    (float) obj.optDouble("rating"),
                                     false
                             ));
                         }

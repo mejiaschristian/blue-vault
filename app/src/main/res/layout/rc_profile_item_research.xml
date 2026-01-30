@@ -45,10 +45,10 @@
 
                 <ImageView
                     android:id="@+id/star1"
-                    android:layout_width="14dp"
-                    android:layout_height="14dp"
+                    android:layout_width="12dp"
+                    android:layout_height="match_parent"
                     android:src="@drawable/ic_star"
-                    app:tint="#FFD700"/>
+                    app:tint="#FFD700" />
                 <ImageView
                     android:id="@+id/star2"
                     android:layout_width="14dp"

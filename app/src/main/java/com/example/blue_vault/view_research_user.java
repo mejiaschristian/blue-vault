@@ -37,7 +37,10 @@ public class view_research_user extends BaseActivity {
         TextView tvHeaderTitle = findViewById(R.id.tvHeaderTitle);
         EditText etTitle = findViewById(R.id.etTitle);
         EditText etAuthors = findViewById(R.id.etAuthors);
+        EditText etSchool = findViewById(R.id.etSchool);
+        EditText etCourse = findViewById(R.id.etCourse);
         EditText etAbstract = findViewById(R.id.etAbstract);
+        EditText etTags = findViewById(R.id.etTags);
         TextView tvDoiLink = findViewById(R.id.tvDoiLink);
 
         // 3. Receive Data
@@ -47,7 +50,10 @@ public class view_research_user extends BaseActivity {
             tvHeaderTitle.setText(research.getTitle());
             etTitle.setText(research.getTitle());
             etAuthors.setText(research.getAuthor());
+            etSchool.setText(research.getSchool());
+            etCourse.setText(research.getCourse());
             etAbstract.setText(research.getAbstract());
+            etTags.setText(research.getTags());
 
             // Set the bar to show the user's CURRENT rating (if we had it)
             // or just the current average as a starting point
@@ -60,13 +66,33 @@ public class view_research_user extends BaseActivity {
                 }
             });
 
-            final String doiUrl = research.getDoi();
-            tvDoiLink.setText(doiUrl);
-            tvDoiLink.setOnClickListener(v -> {
-                if (doiUrl != null && !doiUrl.isEmpty()) {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(doiUrl)));
+            String doiUrl = research.getDoi();
+
+            if (doiUrl != null && !doiUrl.isEmpty()) {
+                doiUrl = doiUrl.trim(); // Remove accidental spaces
+
+                // FIX 1: Ensure URL starts with http:// or https://
+                if (!doiUrl.startsWith("http://") && !doiUrl.startsWith("https://")) {
+                    doiUrl = "https://" + doiUrl;
                 }
-            });
+
+                final String finalUrl = doiUrl;
+                tvDoiLink.setText(finalUrl);
+                tvDoiLink.setClickable(true);
+                tvDoiLink.setPaintFlags(tvDoiLink.getPaintFlags() | android.graphics.Paint.UNDERLINE_TEXT_FLAG); // Make it look like a link
+
+                tvDoiLink.setOnClickListener(v -> {
+                    try {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(finalUrl));
+                        startActivity(intent);
+                    } catch (Exception e) {
+                        // FIX 2: Better error message for debugging
+                        Toast.makeText(this, "No browser found to open link", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                tvDoiLink.setText("No DOI available");
+            }
         }
 
         if (backBtn != null) backBtn.setOnClickListener(v -> finish());
