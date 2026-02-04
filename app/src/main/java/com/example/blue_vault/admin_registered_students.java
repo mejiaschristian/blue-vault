@@ -71,7 +71,8 @@ public class admin_registered_students extends BaseActivity {
 
     private void fetchStudentsFromServer() {
         // 1. Corrected filename as per your request
-        String URL = "http://10.0.2.2/bluevault/StudentFetch.php";
+        String ip = DataRepository.getInstance().getIpAddress();
+        String URL = "http://"+ip+"/bluevault/StudentFetch.php";
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, URL, null,
                 response -> {

@@ -40,6 +40,8 @@ public class DataRepository {
         return "user@example.com";
     }
 
+    public String getIpAddress() { return "10.28.12.122"; }
+
     public List<ResearchItem> getAllResearches() {
         return allResearches;
     }

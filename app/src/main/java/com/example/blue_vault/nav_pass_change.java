@@ -53,7 +53,8 @@ public class nav_pass_change extends BaseActivity {
         String newP = newPass.getText().toString().trim();
 
         // Ensure this path matches exactly where you saved the file in htdocs
-        String URL = "http://10.0.2.2/bluevault/ChangePass.php";
+        String ip = DataRepository.getInstance().getIpAddress();
+        String URL = "http://"+ip+"/bluevault/ChangePass.php";
 
         SharedPreferences sp = getSharedPreferences("UserSession", MODE_PRIVATE);
 

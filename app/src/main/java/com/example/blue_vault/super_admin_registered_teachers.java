@@ -73,7 +73,8 @@ public class super_admin_registered_teachers extends BaseActivity {
 
     private void fetchTeachersFromMySQL() {
         // Pointing to the specific PHP file created above
-        String URL = "http://10.0.2.2/bluevault/TeacherFetch.php";
+        String ip = DataRepository.getInstance().getIpAddress();
+        String URL = "http://"+ip+"/bluevault/TeacherFetch.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
                 response -> {

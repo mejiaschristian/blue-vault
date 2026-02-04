@@ -44,7 +44,8 @@ public class main_login extends AppCompatActivity {
     }
 
     private void loginUser(final String idNumber, String password) {
-        String URL = "http://10.0.2.2/bluevault/BV_Login.php";
+        String ip = DataRepository.getInstance().getIpAddress();
+        String URL = "http://"+ip+"/bluevault/BV_Login.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 response -> {

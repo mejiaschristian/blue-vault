@@ -169,7 +169,8 @@ public class super_admin_available_researches extends BaseActivity {
     }
 
     private void fetchHistoryData() {
-        String URL = "http://10.0.2.2/bluevault/GetUnpublishedAndDeclined.php";
+        String ip = DataRepository.getInstance().getIpAddress();
+        String URL = "http://"+ip+"/bluevault/GetUnpublishedAndDeclined.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
                 response -> {

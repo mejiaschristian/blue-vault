@@ -136,7 +136,8 @@ public class view_research_super_admin extends BaseActivity {
     }
 
     private void updateStatus(ResearchItem research, String status) {
-        String URL = "http://10.0.2.2/bluevault/UpdateResearchStatus.php";
+        String ip = DataRepository.getInstance().getIpAddress();
+        String URL = "http://"+ip+"/bluevault/UpdateResearchStatus.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 response -> {

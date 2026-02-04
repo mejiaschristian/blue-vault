@@ -107,7 +107,8 @@ public class main_dashboard extends BaseActivity {
     }
 
     private void fetchApprovedResearches() {
-        String URL = "http://10.0.2.2/bluevault/GetApprovedResearch.php";
+        String ip = DataRepository.getInstance().getIpAddress();
+        String URL = "http://"+ip+"/bluevault/GetApprovedResearch.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
                 response -> {

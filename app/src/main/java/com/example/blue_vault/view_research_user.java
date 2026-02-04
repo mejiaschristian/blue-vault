@@ -99,7 +99,8 @@ public class view_research_user extends BaseActivity {
     }
 
     private void submitRating(int rsid, String school, float ratingValue, String userId) {
-        String URL = "http://10.0.2.2/bluevault/UpdateRating.php";
+        String ip = DataRepository.getInstance().getIpAddress();
+        String URL = "http://"+ip+"/bluevault/UpdateRating.php";
 
         StringRequest request = new StringRequest(Request.Method.POST, URL,
                 response -> {

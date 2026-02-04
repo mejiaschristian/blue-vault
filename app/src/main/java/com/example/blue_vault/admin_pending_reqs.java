@@ -72,7 +72,8 @@ public class admin_pending_reqs extends BaseActivity {
     }
 
     private void fetchPendingResearches() {
-        String URL = "http://10.0.2.2/bluevault/GetPendingResearch.php";
+        String ip = DataRepository.getInstance().getIpAddress();
+        String URL = "http://"+ip+"/bluevault/GetPendingResearch.php";
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, URL, null,
                 response -> {

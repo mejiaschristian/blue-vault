@@ -124,7 +124,8 @@ public class main_registration extends AppCompatActivity {
     }
 
     private void registerUser(String email, String last, String first, String id, String pass, String school, String course) {
-        String URL = "http://10.0.2.2/bluevault/Regis.php";
+        String ip = DataRepository.getInstance().getIpAddress();
+        String URL = "http://"+ip+"/bluevault/Regis.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 response -> {

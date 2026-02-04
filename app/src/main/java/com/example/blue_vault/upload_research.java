@@ -82,7 +82,8 @@ public class upload_research extends AppCompatActivity {
     }
 
     private void uploadDataToServer(String id, String school, String title, String authors, String resAbstract, String tags, String doi) {
-        String URL = "http://10.0.2.2/bluevault/UploadResearch.php";
+        String ip = DataRepository.getInstance().getIpAddress();
+        String URL = "http://"+ip+"/bluevault/UploadResearch.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 response -> {

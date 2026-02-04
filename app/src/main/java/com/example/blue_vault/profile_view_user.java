@@ -168,7 +168,8 @@ public class profile_view_user extends BaseActivity {
     }
 
     private void fetchUserResearchFromMySQL(String id, String school) {
-        String URL = "http://10.0.2.2/bluevault/GetUserResearch.php?id_number=" + id + "&school=" + school.toLowerCase();
+        String ip = DataRepository.getInstance().getIpAddress();
+        String URL = "http://"+ip+"/bluevault/GetUserResearch.php?id_number=" + id + "&school=" + school.toLowerCase();
 
         Log.d("DEBUG_VOLLEY", "Requesting: " + URL);
 
