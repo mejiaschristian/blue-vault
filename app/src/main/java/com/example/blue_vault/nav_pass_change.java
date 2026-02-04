@@ -44,7 +44,6 @@ public class nav_pass_change extends BaseActivity {
                 Toast.makeText(this, "New password must be at least 8 characters long", Toast.LENGTH_SHORT).show();
             } else {
                 applyPasswordChange(oldPass, newPass, confirmPass);
-                logout();
             }
         });
     }
@@ -71,7 +70,7 @@ public class nav_pass_change extends BaseActivity {
                     String res = response.trim();
                     if (res.equals("success")) {
                         Toast.makeText(this, "Password changed successfully!", Toast.LENGTH_SHORT).show();
-                        finish();
+                        logout();
                     } else if (res.equals("incorrect_old")) {
                         Toast.makeText(this, "The current password you entered is incorrect", Toast.LENGTH_LONG).show();
                     } else if (res.equals("user_not_found")) {
