@@ -98,15 +98,21 @@
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
-        <!-- Use layout_weight="1" to ensure RecyclerView is clickable and fills space -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
-            android:layout_height="604dp"
-            android:layout_marginTop="10dp"
-            android:clipToPadding="false"
-            android:padding="10dp"
-            tools:listitem="@layout/rc_admin_item_research" />
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="604dp"
+                android:layout_marginTop="10dp"
+                android:clipToPadding="false"
+                android:padding="10dp"
+                tools:listitem="@layout/rc_admin_item_research" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </LinearLayout>
 

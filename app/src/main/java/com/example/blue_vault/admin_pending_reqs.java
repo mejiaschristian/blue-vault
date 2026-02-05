@@ -13,6 +13,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonArrayRequest;
@@ -30,6 +31,7 @@ public class admin_pending_reqs extends BaseActivity {
     private List<ResearchItem> filteredResearches = new ArrayList<>();
     private AdminResearchAdapter adapter;
     private AutoCompleteTextView schoolDropdown, courseDropdown;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private String currentSchoolFilter = "ALL";
     private String currentCourseFilter = "ALL";
     private final String[] allCourses = {"ALL", "ABComm", "BSPsych", "BPEd", "BSA", "BSMA", "BSBA-MM", "BSBA-FM", "BSBA-HRM", "BSHM", "BSTM", "BSIT", "BSCS", "BSCE", "BSCpE", "BSArch"};
@@ -55,6 +57,9 @@ public class admin_pending_reqs extends BaseActivity {
             backBtn.setOnClickListener(v -> finish());
         }
 
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(() -> fetchPendingResearches());
+
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -67,8 +72,13 @@ public class admin_pending_reqs extends BaseActivity {
         recyclerView.setAdapter(adapter);
 
         // 5. Fetch Data and Setup Filters
-        fetchPendingResearches();
         setupDropdowns();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fetchPendingResearches();
     }
 
     private void fetchPendingResearches() {
@@ -98,9 +108,18 @@ public class admin_pending_reqs extends BaseActivity {
                         applyFilters(currentSchoolFilter, currentCourseFilter);
                     } catch (JSONException e) {
                         e.printStackTrace();
+                    } finally {
+                        if (swipeRefreshLayout != null) {
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
                     }
                 },
-                error -> Toast.makeText(this, "Server Connection Error", Toast.LENGTH_SHORT).show()
+                error -> {
+                    Toast.makeText(this, "Server Connection Error", Toast.LENGTH_SHORT).show();
+                    if (swipeRefreshLayout != null) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }
         );
         Volley.newRequestQueue(this).add(request);
     }

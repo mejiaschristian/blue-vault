@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.Toast;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonArrayRequest;
@@ -24,6 +25,7 @@ public class admin_registered_students extends BaseActivity {
 
     private StudentAdapter adapter;
     private List<StudentItem> studentList;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,9 @@ public class admin_registered_students extends BaseActivity {
             backBtn.setOnClickListener(v -> onBackPressed());
         }
 
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(() -> fetchStudentsFromServer());
+
         // Setup RecyclerView
         RecyclerView recyclerView = findViewById(R.id.rvStudentList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -49,9 +54,6 @@ public class admin_registered_students extends BaseActivity {
         studentList = new ArrayList<>();
         adapter = new StudentAdapter(studentList);
         recyclerView.setAdapter(adapter);
-
-        // Fetch data from MySQL
-        fetchStudentsFromServer();
 
         // Setup Filter Dropdown
         String[] depts = {"ALL", "SECA", "SASE", "SBMA"};
@@ -67,6 +69,12 @@ public class admin_registered_students extends BaseActivity {
                 adapter.filter(selectedDept);
             });
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fetchStudentsFromServer();
     }
 
     private void fetchStudentsFromServer() {
@@ -99,10 +107,17 @@ public class admin_registered_students extends BaseActivity {
                     } catch (JSONException e) {
                         e.printStackTrace();
                         Toast.makeText(this, "JSON Parse Error", Toast.LENGTH_SHORT).show();
+                    } finally {
+                        if (swipeRefreshLayout != null) {
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
                     }
                 },
                 error -> {
                     Toast.makeText(this, "Server Connection Error", Toast.LENGTH_SHORT).show();
+                    if (swipeRefreshLayout != null) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
                 }
         );
 

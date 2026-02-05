@@ -129,13 +129,20 @@
         </LinearLayout>
 
         <!-- Research List -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
-            android:layout_height="463dp"
-            android:padding="10dp"
-            android:visibility="visible"
-            tools:listitem="@layout/rc_super_admin_available_researches" />
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="463dp"
+                android:padding="10dp"
+                android:visibility="visible"
+                tools:listitem="@layout/rc_super_admin_available_researches" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </LinearLayout>
 

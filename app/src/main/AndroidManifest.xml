@@ -44,7 +44,8 @@
             android:exported="false" />
         <activity
             android:name=".upload_research"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".admin_dashboard"

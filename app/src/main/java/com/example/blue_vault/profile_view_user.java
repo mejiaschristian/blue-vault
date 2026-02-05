@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -40,6 +41,7 @@ public class profile_view_user extends BaseActivity {
     private RecyclerView recyclerView;
     private TextView recyclerLabel;
     private AutoCompleteTextView statusFilterDropdown;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private String currentStatusFilter = "All";
 
     @Override
@@ -60,6 +62,7 @@ public class profile_view_user extends BaseActivity {
         Button navSecurity = findViewById(R.id.nav_security);
         recyclerView = findViewById(R.id.recyclerView);
         statusFilterDropdown = findViewById(R.id.status_filter_dropdown); // Ensure this ID exists in XML
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
 
         // 2. Load data from SharedPreferences
         SharedPreferences sp = getSharedPreferences("UserSession", MODE_PRIVATE);
@@ -104,7 +107,7 @@ public class profile_view_user extends BaseActivity {
 
         // 6. Fetch only this user's research
         if (!id.equals("N/A") && !school.isEmpty()) {
-            fetchUserResearchFromMySQL(id, school);
+            swipeRefreshLayout.setOnRefreshListener(() -> fetchUserResearchFromMySQL(id, school));
         }
 
         // 7. Buttons
@@ -117,6 +120,17 @@ public class profile_view_user extends BaseActivity {
                 intent.putExtra("user_school", school);
                 startActivity(intent);
             });
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences sp = getSharedPreferences("UserSession", MODE_PRIVATE);
+        String id = sp.getString("id", "N/A");
+        String school = sp.getString("school", "");
+        if (!id.equals("N/A") && !school.isEmpty()) {
+            fetchUserResearchFromMySQL(id, school);
         }
     }
 
@@ -206,11 +220,18 @@ public class profile_view_user extends BaseActivity {
                     } catch (JSONException e) {
                         Log.e("DEBUG_VOLLEY", "JSON Error: " + e.getMessage());
                         Toast.makeText(this, "PHP Error detected. Check Logcat for details.", Toast.LENGTH_LONG).show();
+                    } finally {
+                        if (swipeRefreshLayout != null) {
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
                     }
                 },
                 error -> {
                     Log.e("DEBUG_VOLLEY", "Network Error: " + error.toString());
                     Toast.makeText(this, "Network error. Check XAMPP.", Toast.LENGTH_SHORT).show();
+                    if (swipeRefreshLayout != null) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
                 }
         );
 

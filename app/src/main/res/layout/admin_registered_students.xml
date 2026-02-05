@@ -115,14 +115,20 @@
                 android:background="@color/black" />
         </TableLayout>
 
-        <!-- Student List -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvStudentList"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
-            android:layout_height="530dp"
-            android:layout_marginHorizontal="16dp"
-            android:background="#D3D3D3"
-            tools:listitem="@layout/rc_student_item" />
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvStudentList"
+                android:layout_width="match_parent"
+                android:layout_height="530dp"
+                android:layout_marginHorizontal="16dp"
+                android:background="#D3D3D3"
+                tools:listitem="@layout/rc_student_item" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </LinearLayout>
 

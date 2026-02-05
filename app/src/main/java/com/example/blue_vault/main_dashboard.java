@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.google.android.material.textfield.TextInputEditText;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.Request;
 import com.android.volley.toolbox.StringRequest;
@@ -29,6 +30,7 @@ public class main_dashboard extends BaseActivity {
     private ResearchAdapter adapter;
     private AutoCompleteTextView schoolDropdown, courseDropdown;
     private TextInputEditText searchInput;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     private String currentSchoolFilter = "ALL";
     private String currentCourseFilter = "ALL";
@@ -44,6 +46,9 @@ public class main_dashboard extends BaseActivity {
         setContentView(R.layout.main_dashboard);
 
         setupNavigation();
+
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(() -> fetchApprovedResearches());
 
         // Setup RecyclerView
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
@@ -136,9 +141,18 @@ public class main_dashboard extends BaseActivity {
                         Log.d("REFRESH_CHECK", "Dashboard Refreshed");
                     } catch (JSONException e) {
                         Log.e("REFRESH_CHECK", "JSON Error: " + e.getMessage());
+                    } finally {
+                        if (swipeRefreshLayout != null) {
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
                     }
                 },
-                error -> Log.e("REFRESH_CHECK", "Connection Error")
+                error -> {
+                    Log.e("REFRESH_CHECK", "Connection Error");
+                    if (swipeRefreshLayout != null) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }
         );
         Volley.newRequestQueue(this).add(stringRequest);
     }

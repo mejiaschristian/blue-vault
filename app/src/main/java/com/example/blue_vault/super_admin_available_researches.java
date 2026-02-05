@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.android.volley.Request;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -28,6 +29,7 @@ public class super_admin_available_researches extends BaseActivity {
     private SuperAdminResearchAdapter adapter;
     private List<ResearchItem> allResearches = new ArrayList<>(); // Store original data
     private List<ResearchItem> filteredResearches = new ArrayList<>(); // Data shown in UI
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     private AutoCompleteTextView schoolDropdown, courseDropdown, statusDropdown;
     private String currentSchoolFilter = "ALL";
@@ -61,6 +63,9 @@ public class super_admin_available_researches extends BaseActivity {
             navSecurity.setVisibility(VISIBLE);
         }
 
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(() -> fetchHistoryData());
+
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -75,6 +80,11 @@ public class super_admin_available_researches extends BaseActivity {
         recyclerView.setAdapter(adapter);
 
         setupDropdowns();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         fetchHistoryData();
     }
 
@@ -202,9 +212,18 @@ public class super_admin_available_researches extends BaseActivity {
                     } catch (JSONException e) {
                         Log.e("DEBUG_SUPER", "JSON Error: " + e.getMessage());
                         Toast.makeText(this, "Parsing error", Toast.LENGTH_SHORT).show();
+                    } finally {
+                        if (swipeRefreshLayout != null) {
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
                     }
                 },
-                error -> Toast.makeText(this, "Connection Error", Toast.LENGTH_SHORT).show()
+                error -> {
+                    Toast.makeText(this, "Connection Error", Toast.LENGTH_SHORT).show();
+                    if (swipeRefreshLayout != null) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }
         );
 
         Volley.newRequestQueue(this).add(stringRequest);
