@@ -30,21 +30,7 @@ public class DataRepository {
         return instance;
     }
 
-    // You can keep these as fallbacks if needed,
-    // but ideally, these should also be replaced with SharedPreferences or DB calls.
-    public StudentItem getLoggedInUser() {
-        return new StudentItem("User", "0000", "N/A");
-    }
-
-    public String getLoggedInUserEmail() {
-        return "user@example.com";
-    }
-
-    public String getIpAddress() { return "10.28.12.122"; }
-
-    public List<ResearchItem> getAllResearches() {
-        return allResearches;
-    }
+    public String getIpAddress() { return "192.168.137.1"; }
 
 
     // These methods can remain as helper filters if you ever pass
