@@ -113,7 +113,7 @@ public class main_dashboard extends BaseActivity {
 
     private void fetchApprovedResearches() {
         String ip = DataRepository.getInstance().getIpAddress();
-        String URL = "http://"+ip+"/bluevault/GetApprovedResearch.php";
+        String URL = "http://" + ip + "/bluevault/GetApprovedResearch.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
                 response -> {
@@ -122,11 +122,15 @@ public class main_dashboard extends BaseActivity {
                         JSONArray jsonArray = new JSONArray(response);
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject obj = jsonArray.getJSONObject(i);
+
+                            // Use 'department' from backend as 'school' in app
+                            String school = obj.has("department") ? obj.getString("department") : obj.getString("school");
+
                             allResearches.add(new ResearchItem(
                                     obj.getInt("rsid"),
                                     obj.getString("title"),
                                     obj.getString("author"),
-                                    obj.getString("school"),
+                                    school, // mapped department -> school
                                     obj.getString("course"),
                                     obj.getString("date"),
                                     obj.getInt("status"),
@@ -156,6 +160,7 @@ public class main_dashboard extends BaseActivity {
         );
         Volley.newRequestQueue(this).add(stringRequest);
     }
+
 
     private void updateCourseDropdown(String school) {
         String[] courses;

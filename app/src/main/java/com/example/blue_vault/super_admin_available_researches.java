@@ -149,38 +149,31 @@ public class super_admin_available_researches extends BaseActivity {
         filteredResearches.clear();
 
         for (ResearchItem item : allResearches) {
-            // Check School
             boolean matchesSchool = currentSchoolFilter.equals("ALL") ||
                     (item.getSchool() != null && item.getSchool().equalsIgnoreCase(currentSchoolFilter));
 
-            // Check Course
             boolean matchesCourse = currentCourseFilter.equals("ALL") ||
                     (item.getCourse() != null && item.getCourse().equalsIgnoreCase(currentCourseFilter));
 
-            // Check Status (1 = Approved/Published in your logic earlier, 0 = Declined)
-            boolean matchesStatus = currentStatusFilter.equals("ALL");
+            boolean matchesStatus = true;
             if (currentStatusFilter.equalsIgnoreCase("Approved")) {
-                // If Approved/Published (Checking Status 2 for Published or 1 for Approved depending on your context)
-                matchesStatus = (item.getStatus() == 1 || item.getStatus() == 2 || item.getStatus() == 0); // Adjust based on your specific Status ID for Approved
+                matchesStatus = item.getStatus() == 1; // 1 = Approved
             } else if (currentStatusFilter.equalsIgnoreCase("Declined")) {
-                matchesStatus = (item.getStatus() == 1); // If 1 is your Declined status
-            }
-
-            // Note: Update status logic based on your specific ID:
-            // Based on your bindView earlier: 1 = Approved, 0 = Declined
-            if (currentStatusFilter.equals("Approved")) matchesStatus = (item.getStatus() == 1);
-            if (currentStatusFilter.equals("Declined")) matchesStatus = (item.getStatus() == 0);
+                matchesStatus = item.getStatus() == 0; // 0 = Declined
+            } // ALL shows everything
 
             if (matchesSchool && matchesCourse && matchesStatus) {
                 filteredResearches.add(item);
             }
         }
+
         adapter.notifyDataSetChanged();
     }
 
+
     private void fetchHistoryData() {
         String ip = DataRepository.getInstance().getIpAddress();
-        String URL = "http://"+ip+"/bluevault/GetUnpublishedAndDeclined.php";
+        String URL = "http://" + ip + "/bluevault/GetUnpublishedAndDeclined.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
                 response -> {
@@ -192,11 +185,14 @@ public class super_admin_available_researches extends BaseActivity {
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject obj = jsonArray.getJSONObject(i);
 
+                            // Map backend 'department' → 'school' in app
+                            String school = obj.has("department") ? obj.getString("department") : obj.getString("school");
+
                             allResearches.add(new ResearchItem(
                                     obj.getInt("rsid"),
                                     obj.getString("title"),
                                     obj.getString("author"),
-                                    obj.getString("school"),
+                                    school, // mapped department -> school
                                     obj.getString("course"),
                                     obj.getString("date"),
                                     obj.getInt("status"),
@@ -207,8 +203,7 @@ public class super_admin_available_researches extends BaseActivity {
                                     false
                             ));
                         }
-                        // Initially show all data
-                        applyFilters();
+                        applyFilters(); // Apply initial filters
                     } catch (JSONException e) {
                         Log.e("DEBUG_SUPER", "JSON Error: " + e.getMessage());
                         Toast.makeText(this, "Parsing error", Toast.LENGTH_SHORT).show();
@@ -228,4 +223,5 @@ public class super_admin_available_researches extends BaseActivity {
 
         Volley.newRequestQueue(this).add(stringRequest);
     }
+
 }

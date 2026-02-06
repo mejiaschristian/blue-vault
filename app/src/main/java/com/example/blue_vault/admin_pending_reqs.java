@@ -91,11 +91,15 @@ public class admin_pending_reqs extends BaseActivity {
                     try {
                         for (int i = 0; i < response.length(); i++) {
                             JSONObject obj = response.getJSONObject(i);
+
+                            // NOTE: Use 'department' from the backend as 'school' in app
+                            String school = obj.has("department") ? obj.getString("department") : obj.getString("school");
+
                             allResearches.add(new ResearchItem(
                                     obj.getInt("rsid"),
                                     obj.getString("title"),
                                     obj.getString("author"),
-                                    obj.getString("school"),
+                                    school,                   // mapped department -> school
                                     obj.getString("course"),
                                     obj.getString("date"),
                                     obj.getInt("status"),
@@ -123,6 +127,7 @@ public class admin_pending_reqs extends BaseActivity {
         );
         Volley.newRequestQueue(this).add(request);
     }
+
 
     private void setupDropdowns() {
         // Setup School Dropdown

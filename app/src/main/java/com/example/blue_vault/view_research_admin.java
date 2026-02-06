@@ -95,19 +95,16 @@ public class view_research_admin extends BaseActivity {
                 });
             }
 
-            // 4. CLICKABILITY LOGIC: Only allow Approve/Decline for Pending (Status 3)
-            if (research.getStatus() != 3) {
-                if (btnApprove != null) btnApprove.setVisibility(View.GONE);
-                if (btnDecline != null) btnDecline.setVisibility(View.GONE);
-            } else {
-                if (btnApprove != null) {
-                    btnApprove.setOnClickListener(v -> updateStatus(research, "1"));
-                }
-                if (btnDecline != null) {
-                    btnDecline.setOnClickListener(v -> updateStatus(research, "0"));
-                }
+            // 4. CLICKABILITY LOGIC: Setup listeners for Approve and Decline
+            if (btnApprove != null) {
+                btnApprove.setOnClickListener(v -> updateStatus(research, "1"));
             }
+            if (btnDecline != null) {
+                btnDecline.setOnClickListener(v -> updateStatus(research, "0"));
+            }
+
         } else {
+            // This runs if the "RESEARCH_ITEM" Intent extra was missing or null
             Toast.makeText(this, "Error: No data found", Toast.LENGTH_SHORT).show();
             finish();
         }
