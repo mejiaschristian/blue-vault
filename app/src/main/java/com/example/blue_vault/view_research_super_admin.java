@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -39,10 +40,14 @@ public class view_research_super_admin extends BaseActivity {
         Button btnPublish = findViewById(R.id.btnPublish);
         Button backBtn = findViewById(R.id.backBtn3);
 
+        TextView tvRemarksLabel = findViewById(R.id.tvRemarksLabel);
+        TextView tvRemarks = findViewById(R.id.tvRemarks);
+
         SharedPreferences sp = getSharedPreferences("UserSession", MODE_PRIVATE);
         String email = sp.getString("email", "N/A");
         Button navResearches = findViewById(R.id.nav_researches);
         Button navSecurity = findViewById(R.id.nav_security);
+
         // 3. Visibility logic
         if (email.equals("N/A")) {
             navResearches.setVisibility(GONE);
@@ -61,6 +66,16 @@ public class view_research_super_admin extends BaseActivity {
             etCourse.setText(research.getCourse());
             etAbstract.setText(research.getAbstract());
             etTags.setText(research.getTags());
+
+            String remarks = research.getRemarks();
+            if (remarks != null && !remarks.trim().isEmpty()) {
+                tvRemarks.setText(remarks);
+                tvRemarks.setVisibility(View.VISIBLE);
+                tvRemarksLabel.setVisibility(View.VISIBLE);
+            } else {
+                tvRemarks.setVisibility(View.GONE);
+                tvRemarksLabel.setVisibility(View.GONE);
+            }
             
             String doiUrl = research.getDoi();
             tvDoiLink.setText(doiUrl);

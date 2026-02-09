@@ -97,6 +97,7 @@ public class admin_pending_reqs extends BaseActivity {
 
                             allResearches.add(new ResearchItem(
                                     obj.getInt("rsid"),
+                                    obj.getString("idnumber"),
                                     obj.getString("title"),
                                     obj.getString("author"),
                                     school,                   // mapped department -> school
@@ -106,7 +107,7 @@ public class admin_pending_reqs extends BaseActivity {
                                     obj.getString("abstract"),
                                     obj.getString("tags"),
                                     obj.getString("doi"),
-                                    0.0f, false
+                                    0.0f, "", false
                             ));
                         }
                         applyFilters(currentSchoolFilter, currentCourseFilter);

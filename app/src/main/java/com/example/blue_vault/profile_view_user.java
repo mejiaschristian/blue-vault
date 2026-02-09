@@ -184,6 +184,7 @@ public class profile_view_user extends BaseActivity {
 
                             allUserResearches.add(new ResearchItem(
                                     obj.getInt("rsid"),
+                                    obj.getString("idnumber"),
                                     obj.getString("title"),
                                     obj.getString("author"),
                                     obj.getString("school"),
@@ -193,7 +194,7 @@ public class profile_view_user extends BaseActivity {
                                     obj.getString("abstract"),
                                     obj.getString("tags"),
                                     obj.getString("doi"),
-                                    rating,
+                                    rating, obj.getString("remarks"),
                                     isPublished
                             ));
                         }

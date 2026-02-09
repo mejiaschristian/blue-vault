@@ -190,6 +190,7 @@ public class super_admin_available_researches extends BaseActivity {
 
                             allResearches.add(new ResearchItem(
                                     obj.getInt("rsid"),
+                                    obj.getString("idnumber"),
                                     obj.getString("title"),
                                     obj.getString("author"),
                                     school, // mapped department -> school
@@ -199,7 +200,7 @@ public class super_admin_available_researches extends BaseActivity {
                                     obj.getString("abstract"),
                                     obj.getString("tags"),
                                     obj.getString("doi"),
-                                    0.0f,
+                                    0.0f, obj.getString("remarks"),
                                     false
                             ));
                         }

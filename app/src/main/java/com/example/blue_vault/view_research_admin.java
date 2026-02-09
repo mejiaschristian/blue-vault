@@ -102,7 +102,7 @@ public class view_research_admin extends BaseActivity {
                             .setTitle("Confirm Approval")
                             .setMessage("Are you sure you want to APPROVE this research? This action cannot be undone.")
                             .setPositiveButton("Yes, Approve", (dialog, which) -> {
-                                updateStatus(research, "1");
+                                updateStatusWithRemarks(research, "1", "");
                             })
                             .setNegativeButton("Cancel", null)
                             .show();
@@ -110,11 +110,23 @@ public class view_research_admin extends BaseActivity {
             }
             if (btnDecline != null) {
                 btnDecline.setOnClickListener(v -> {
+                    // Create an EditText inside the dialog for remarks
+                    final EditText etRemarks = new EditText(this);
+                    etRemarks.setHint("Enter reason for declining...");
+                    etRemarks.setPadding(50, 20, 50, 20);
+
                     new android.app.AlertDialog.Builder(this)
-                            .setTitle("Confirm Decline")
-                            .setMessage("Are you sure you want to DECLINE this research? ONLY the research coordinator can undo this action.")
-                            .setPositiveButton("Yes, Decline", (dialog, which) -> {
-                                updateStatus(research, "0");
+                            .setTitle("Decline Research")
+                            .setMessage("Please provide a reason for declining this research. This will be visible to the user.")
+                            .setView(etRemarks) // Add the input field to the dialog
+                            .setPositiveButton("Submit Decline", (dialog, which) -> {
+                                String remarks = etRemarks.getText().toString().trim();
+                                if (remarks.isEmpty()) {
+                                    Toast.makeText(this, "Remarks are required to decline", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    // Status "0" for Decline, passing remarks to the method
+                                    updateStatusWithRemarks(research, "0", remarks);
+                                }
                             })
                             .setNegativeButton("Cancel", null)
                             .show();
@@ -128,17 +140,16 @@ public class view_research_admin extends BaseActivity {
         }
     }
 
-    private void updateStatus(ResearchItem research, String status) {
+    private void updateStatusWithRemarks(ResearchItem research, String status, String remarks) {
         String ip = DataRepository.getInstance().getIpAddress();
         String URL = "http://"+ip+"/bluevault/UpdateResearchStatus.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 response -> {
                     if (response.trim().equals("success")) {
-                        Toast.makeText(this, "Status Updated", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(this, admin_pending_reqs.class);
-                        startActivity(intent);
-                        finish(); // Return to list
+                        Toast.makeText(this, "Research Status Updated with Remarks", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(this, admin_pending_reqs.class));
+                        finish();
                     } else {
                         Toast.makeText(this, "Error: " + response, Toast.LENGTH_LONG).show();
                     }
@@ -148,8 +159,8 @@ public class view_research_admin extends BaseActivity {
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
                 params.put("rsid", String.valueOf(research.getRsID()));
-                params.put("school", research.getSchool().toLowerCase());
                 params.put("status", status);
+                params.put("remarks", remarks); // SENDING THE REMARKS TO PHP
                 return params;
             }
         };

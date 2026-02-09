@@ -128,6 +128,7 @@ public class main_dashboard extends BaseActivity {
 
                             allResearches.add(new ResearchItem(
                                     obj.getInt("rsid"),
+                                    obj.getString("idnumber"),
                                     obj.getString("title"),
                                     obj.getString("author"),
                                     school, // mapped department -> school
@@ -138,7 +139,7 @@ public class main_dashboard extends BaseActivity {
                                     obj.getString("tags"),
                                     obj.getString("doi"),
                                     (float) obj.optDouble("rating", 0.0),
-                                    true
+                                    "",true
                             ));
                         }
                         applyFilters(searchInput.getText().toString(), currentSchoolFilter, currentCourseFilter);
