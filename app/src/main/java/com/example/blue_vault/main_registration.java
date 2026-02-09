@@ -104,7 +104,7 @@ public class main_registration extends AppCompatActivity {
                 Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
             } else if (!email.contains("@") || !email.contains(".com")) {
                 Toast.makeText(this, "Invalid Email", Toast.LENGTH_SHORT).show();
-            } else if (id.length() != 12 || id.charAt(4) != '-') {
+            } else if (!id.matches("^\\d{4}-\\d{7}$")) {
                 // Validation for ID format: XXXX-XXXXXXX (12 chars total, '-' at index 4)
                 Toast.makeText(this, "Invalid ID Number (Format should be: 2024-1234567)", Toast.LENGTH_SHORT).show();
             } else if (pass.length() < 8) {

@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +32,6 @@ import java.util.List;
 
 public class profile_view_user extends BaseActivity {
 
-    // Logic: Use two lists. 'allUserResearches' is the master, 'displayedResearches' is for the UI.
     private List<ResearchItem> allUserResearches = new ArrayList<>();
     private List<ResearchItem> displayedResearches = new ArrayList<>();
 
@@ -61,7 +59,7 @@ public class profile_view_user extends BaseActivity {
         Button navResearches = findViewById(R.id.nav_researches);
         Button navSecurity = findViewById(R.id.nav_security);
         recyclerView = findViewById(R.id.recyclerView);
-        statusFilterDropdown = findViewById(R.id.status_filter_dropdown); // Ensure this ID exists in XML
+        statusFilterDropdown = findViewById(R.id.status_filter_dropdown);
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
 
         // 2. Load data from SharedPreferences
@@ -81,7 +79,6 @@ public class profile_view_user extends BaseActivity {
             if (recyclerView != null) recyclerView.setVisibility(GONE);
             if (researchesHeader != null) researchesHeader.setVisibility(GONE);
             if (addResBtn != null) addResBtn.setVisibility(GONE);
-
             navResearches.setVisibility(GONE);
             navSecurity.setVisibility(GONE);
         } else {
@@ -89,7 +86,6 @@ public class profile_view_user extends BaseActivity {
             if (recyclerView != null) recyclerView.setVisibility(VISIBLE);
             if (researchesHeader != null) researchesHeader.setVisibility(VISIBLE);
             if (addResBtn != null) addResBtn.setVisibility(VISIBLE);
-
             navResearches.setVisibility(VISIBLE);
             navSecurity.setVisibility(VISIBLE);
         }
@@ -97,20 +93,17 @@ public class profile_view_user extends BaseActivity {
         // 4. Setup RecyclerView
         if (recyclerView != null) {
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            // Bind adapter to the DISPLAYED list
             adapter = new ResearchAdapter(displayedResearches, true);
             recyclerView.setAdapter(adapter);
         }
 
-        // 5. Setup Filter Dropdown
         setupFilterDropdown();
 
-        // 6. Fetch only this user's research
         if (!id.equals("N/A") && !school.isEmpty()) {
             swipeRefreshLayout.setOnRefreshListener(() -> fetchUserResearchFromMySQL(id, school));
+            fetchUserResearchFromMySQL(id, school); // Initial load
         }
 
-        // 7. Buttons
         Button backBtn = findViewById(R.id.backBtn);
         if (backBtn != null) backBtn.setOnClickListener(v -> onBackPressed());
 
@@ -130,6 +123,7 @@ public class profile_view_user extends BaseActivity {
         String id = sp.getString("id", "N/A");
         String school = sp.getString("school", "");
         if (!id.equals("N/A") && !school.isEmpty()) {
+            // Force a refresh whenever returning to this screen (e.g., after rating)
             fetchUserResearchFromMySQL(id, school);
         }
     }
@@ -137,10 +131,9 @@ public class profile_view_user extends BaseActivity {
     private void setupFilterDropdown() {
         String[] statuses = {"All", "Approved", "Declined", "Pending", "Published"};
         ArrayAdapter<String> filterAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, statuses);
-
         if (statusFilterDropdown != null) {
             statusFilterDropdown.setAdapter(filterAdapter);
-            statusFilterDropdown.setText(statuses[0], false); // Default to "All"
+            statusFilterDropdown.setText(statuses[0], false);
             statusFilterDropdown.setOnItemClickListener((parent, view, position, id) -> {
                 currentStatusFilter = (String) parent.getItemAtPosition(position);
                 applyStatusFilter();
@@ -150,53 +143,44 @@ public class profile_view_user extends BaseActivity {
 
     private void applyStatusFilter() {
         displayedResearches.clear();
-
         for (ResearchItem item : allUserResearches) {
             int status = item.getStatus();
             boolean matches = false;
+            if (currentStatusFilter.equals("All")) matches = true;
+            else if (currentStatusFilter.equals("Approved") && status == 1) matches = true;
+            else if (currentStatusFilter.equals("Declined") && status == 0) matches = true;
+            else if (currentStatusFilter.equals("Published") && status == 2) matches = true;
+            else if (currentStatusFilter.equals("Pending") && status == 3) matches = true;
 
-            if (currentStatusFilter.equals("All")) {
-                matches = true;
-            } else if (currentStatusFilter.equals("Approved") && status == 1) {
-                matches = true;
-            } else if (currentStatusFilter.equals("Declined") && status == 0) {
-                matches = true;
-            } else if (currentStatusFilter.equals("Published") && status == 2) {
-                matches = true;
-            } else if (currentStatusFilter.equals("Pending") && status == 3) {
-                matches = true;
-            }
-
-            if (matches) {
-                displayedResearches.add(item);
-            }
+            if (matches) displayedResearches.add(item);
         }
-
         if (displayedResearches.isEmpty()) {
             recyclerLabel.setText("No " + currentStatusFilter + " researches.");
         } else {
             recyclerLabel.setText("YOUR RESEARCHES:");
         }
-
         adapter.notifyDataSetChanged();
     }
 
     private void fetchUserResearchFromMySQL(String id, String school) {
         String ip = DataRepository.getInstance().getIpAddress();
-        String URL = "http://"+ip+"/bluevault/GetUserResearch.php?id_number=" + id + "&school=" + school.toLowerCase();
-
-        Log.d("DEBUG_VOLLEY", "Requesting: " + URL);
+        // Added a timestamp parameter to bypass potential Volley/Server caching
+        String URL = "http://" + ip + "/bluevault/GetUserResearch.php?id_number=" + id + "&school=" + school + "&t=" + System.currentTimeMillis();
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
                 response -> {
-                    Log.d("DEBUG_VOLLEY", "Raw Server Response: " + response);
-
                     allUserResearches.clear();
                     try {
                         JSONArray jsonArray = new JSONArray(response);
-
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject obj = jsonArray.getJSONObject(i);
+
+                            int itemStatus = obj.optInt("status", 3);
+                            // optDouble handles both numbers and strings returned from PHP (SQL AVG returns strings often)
+                            float rating = (float) obj.optDouble("rating", 0.0);
+
+                            // Status 2 = Published. Stars only show for published items.
+                            boolean isPublished = (itemStatus == 2);
 
                             allUserResearches.add(new ResearchItem(
                                     obj.getInt("rsid"),
@@ -205,41 +189,30 @@ public class profile_view_user extends BaseActivity {
                                     obj.getString("school"),
                                     obj.getString("course"),
                                     obj.getString("date"),
-                                    obj.getInt("status"),
+                                    itemStatus,
                                     obj.getString("abstract"),
                                     obj.getString("tags"),
                                     obj.getString("doi"),
-                                    (float) obj.optDouble("rating"),
-                                    false
+                                    rating,
+                                    isPublished
                             ));
                         }
-
-                        // After loading master list, apply the current filter to the UI
                         applyStatusFilter();
-
                     } catch (JSONException e) {
                         Log.e("DEBUG_VOLLEY", "JSON Error: " + e.getMessage());
-                        Toast.makeText(this, "PHP Error detected. Check Logcat for details.", Toast.LENGTH_LONG).show();
                     } finally {
-                        if (swipeRefreshLayout != null) {
-                            swipeRefreshLayout.setRefreshing(false);
-                        }
+                        if (swipeRefreshLayout != null) swipeRefreshLayout.setRefreshing(false);
                     }
                 },
                 error -> {
-                    Log.e("DEBUG_VOLLEY", "Network Error: " + error.toString());
-                    Toast.makeText(this, "Network error. Check XAMPP.", Toast.LENGTH_SHORT).show();
-                    if (swipeRefreshLayout != null) {
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
+                    if (swipeRefreshLayout != null) swipeRefreshLayout.setRefreshing(false);
+                    Toast.makeText(this, "Network error", Toast.LENGTH_SHORT).show();
                 }
         );
 
-        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
-                10000,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
+        // Set shouldCache to false to ensure we get the latest ratings from the database
+        stringRequest.setShouldCache(false);
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(10000, 1, 1.0f));
         Volley.newRequestQueue(this).add(stringRequest);
     }
 }

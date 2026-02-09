@@ -97,10 +97,28 @@ public class view_research_admin extends BaseActivity {
 
             // 4. CLICKABILITY LOGIC: Setup listeners for Approve and Decline
             if (btnApprove != null) {
-                btnApprove.setOnClickListener(v -> updateStatus(research, "1"));
+                btnApprove.setOnClickListener(v -> {
+                    new android.app.AlertDialog.Builder(this)
+                            .setTitle("Confirm Approval")
+                            .setMessage("Are you sure you want to APPROVE this research? This action cannot be undone.")
+                            .setPositiveButton("Yes, Approve", (dialog, which) -> {
+                                updateStatus(research, "1");
+                            })
+                            .setNegativeButton("Cancel", null)
+                            .show();
+                });
             }
             if (btnDecline != null) {
-                btnDecline.setOnClickListener(v -> updateStatus(research, "0"));
+                btnDecline.setOnClickListener(v -> {
+                    new android.app.AlertDialog.Builder(this)
+                            .setTitle("Confirm Decline")
+                            .setMessage("Are you sure you want to DECLINE this research? ONLY the research coordinator can undo this action.")
+                            .setPositiveButton("Yes, Decline", (dialog, which) -> {
+                                updateStatus(research, "0");
+                            })
+                            .setNegativeButton("Cancel", null)
+                            .show();
+                });
             }
 
         } else {

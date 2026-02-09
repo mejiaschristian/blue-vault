@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
@@ -55,9 +56,14 @@ public class view_research_user extends BaseActivity {
             etAbstract.setText(research.getAbstract());
             etTags.setText(research.getTags());
 
-            // Set the bar to show the user's CURRENT rating (if we had it)
-            // or just the current average as a starting point
+            // FIXED: Ensuring the rating reflects the most recent data passed from the intent
             ratingBarInput.setRating(research.getRating());
+
+            if (research.isPublished()) {
+                ratingBarInput.setVisibility(View.VISIBLE);
+            } else {
+                ratingBarInput.setVisibility(View.GONE);
+            }
 
             // 4. Input Listener (Preventing duplicate counts using IDnumber)
             ratingBarInput.setOnRatingBarChangeListener((bar, rating, fromUser) -> {
@@ -107,7 +113,6 @@ public class view_research_user extends BaseActivity {
                     String cleanResponse = response.trim();
                     if (!cleanResponse.toLowerCase().contains("error")) {
                         Toast.makeText(this, "Rating Saved! New Average: " + cleanResponse, Toast.LENGTH_SHORT).show();
-                        // Note: The main dashboard will refresh automatically via onResume
                     }
                 },
                 error -> Toast.makeText(this, "Network Error", Toast.LENGTH_SHORT).show()) {
@@ -117,7 +122,7 @@ public class view_research_user extends BaseActivity {
                 params.put("rsid", String.valueOf(rsid));
                 params.put("school", school.toLowerCase());
                 params.put("new_rating", String.valueOf(ratingValue));
-                params.put("user_id", userId); // IDnumber from SharedPreferences
+                params.put("user_id", userId);
                 return params;
             }
         };

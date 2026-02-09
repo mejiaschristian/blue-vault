@@ -7,7 +7,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.WindowCompat;
@@ -71,8 +71,17 @@ public class upload_research extends AppCompatActivity {
                 } else if (loggedSchool.isEmpty()) {
                     Toast.makeText(this, "Session error. Please re-login.", Toast.LENGTH_SHORT).show();
                 } else {
-                    // Send data to MySQL
-                    uploadDataToServer(loggedID, loggedSchool, title, authors, resAbstract, tags, doi);
+                    // --- MODIFIED LOGIC: Show confirmation dialog ---
+                    new AlertDialog.Builder(this)
+                            .setTitle("Confirm Submission")
+                            .setMessage("Are you sure all information is correct? Once submitted, this action cannot be undone.")
+                            .setPositiveButton("Yes, Submit", (dialog, which) -> {
+                                // User clicked "Yes", proceed with upload
+                                uploadDataToServer(loggedID, loggedSchool, title, authors, resAbstract, tags, doi);
+                            })
+                            .setNegativeButton("No, Cancel", null) // Do nothing on "No"
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
                 }
             });
         }
