@@ -7,7 +7,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Request;
 import com.android.volley.toolbox.StringRequest;
@@ -16,7 +15,8 @@ import com.android.volley.toolbox.Volley;
 import java.util.HashMap;
 import java.util.Map;
 
-public class main_login extends AppCompatActivity {
+// FIXED: Changed AppCompatActivity to BaseActivity
+public class main_login extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +44,17 @@ public class main_login extends AppCompatActivity {
     }
 
     private void loginUser(final String idNumber, String password) {
+        // FIXED: Now calls the method directly from the inherited BaseActivity
+        showThrobber();
+
         String ip = DataRepository.getInstance().getIpAddress();
         String URL = "http://"+ip+"/bluevault/BV_Login.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 response -> {
+                    // FIXED: Hide throbber when response is received
+                    hideThrobber();
+
                     String result = response.trim();
 
                     // 1. Handle Student (User) Login
@@ -62,7 +68,6 @@ public class main_login extends AppCompatActivity {
                             editor.putString("email", parts[3]);
                             editor.putString("school",parts[4]);
                         } else {
-                            // Fallback if PHP didn't send pipes
                             editor.putString("name", "Student User");
                             editor.putString("id", idNumber);
                             editor.putString("email", "Not Set");
@@ -90,7 +95,11 @@ public class main_login extends AppCompatActivity {
                         Toast.makeText(main_login.this, result, Toast.LENGTH_LONG).show();
                     }
                 },
-                error -> Toast.makeText(main_login.this, "Connection Error: Check XAMPP", Toast.LENGTH_SHORT).show()) {
+                error -> {
+                    // FIXED: Hide throbber if network fails
+                    hideThrobber();
+                    Toast.makeText(main_login.this, "Connection Error: Check XAMPP", Toast.LENGTH_SHORT).show();
+                }) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();

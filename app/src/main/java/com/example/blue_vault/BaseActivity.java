@@ -14,11 +14,29 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-/**
- * Base activity to handle common UI elements like the Navigation Drawer
- * and Edge-to-Edge display across the application.
- */
-public abstract class BaseActivity extends AppCompatActivity {
+import android.app.ProgressDialog; // Note: ProgressDialog is deprecated but simplest for throbbers.
+// For a modern look, use a ProgressBar in a custom AlertDialog.
+
+public class BaseActivity extends AppCompatActivity {
+    private ProgressDialog progressDialog;
+
+    public void showThrobber() {
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage(getString(R.string.loading_message));
+            progressDialog.setCancelable(false); // Prevents user from clicking away
+            progressDialog.setIndeterminate(true);
+        }
+        if (!progressDialog.isShowing()) {
+            progressDialog.show();
+        }
+    }
+
+    public void hideThrobber() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
 
     protected DrawerLayout drawerLayout;
 

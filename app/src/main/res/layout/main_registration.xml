@@ -227,6 +227,27 @@
                     android:textColor="@color/white"
                     android:textSize="14sp" />
 
+                <TextView
+                    android:id="@+id/textView7"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Confirm Password:"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/regConfirmPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#19000000"
+                    android:fontFamily="@font/poppins"
+                    android:inputType="textPassword"
+                    android:padding="12dp"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+
                 <Button
                     android:id="@+id/regBtn"
                     style="@style/Widget.MaterialComponents.Button"

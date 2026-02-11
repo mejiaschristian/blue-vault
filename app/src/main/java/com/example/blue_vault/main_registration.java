@@ -34,6 +34,7 @@ public class main_registration extends AppCompatActivity {
         final EditText etFirstName = findViewById(R.id.regFullName);
         final EditText etIdNum = findViewById(R.id.regIdNum);
         final EditText etPassword = findViewById(R.id.regPassword);
+        final EditText etConfirmPassword = findViewById(R.id.regConfirmPassword);
         final AutoCompleteTextView schoolDropdown = findViewById(R.id.regSchoolDropdown);
         final AutoCompleteTextView courseDropdown = findViewById(R.id.regCourseDropdown);
         Button btnRegister = findViewById(R.id.regBtn);
@@ -96,6 +97,7 @@ public class main_registration extends AppCompatActivity {
             String first = etFirstName.getText().toString().trim();
             String id = etIdNum.getText().toString().trim();
             String pass = etPassword.getText().toString().trim();
+            String confirmPassword = etConfirmPassword.getText().toString().trim();
             String school = schoolDropdown.getText().toString().trim();
             String course = courseDropdown.getText().toString().trim();
 
@@ -109,9 +111,9 @@ public class main_registration extends AppCompatActivity {
                 Toast.makeText(this, "Invalid ID Number (Format should be: 2024-1234567)", Toast.LENGTH_SHORT).show();
             } else if (pass.length() < 8) {
                 Toast.makeText(this, "Password must be at least 8-12 characters long", Toast.LENGTH_SHORT).show();
-            }
-
-            else {
+            } else if (!pass.equals(confirmPassword)) {
+                Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
+            } else {
                 // If all validations pass, proceed to registration
                 registerUser(email, last, first, id, pass, school, course);
             }
