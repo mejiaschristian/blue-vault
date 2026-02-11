@@ -28,17 +28,21 @@ public class main_dashboard extends BaseActivity {
     private List<ResearchItem> allResearches = new ArrayList<>();
     private List<ResearchItem> filteredResearches = new ArrayList<>();
     private ResearchAdapter adapter;
-    private AutoCompleteTextView schoolDropdown, courseDropdown;
+    private AutoCompleteTextView schoolDropdown, courseDropdown, ratingDropdown;
     private TextInputEditText searchInput;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     private String currentSchoolFilter = "ALL";
     private String currentCourseFilter = "ALL";
+    private String currentRatingFilter = "ALL";
 
     private final String[] allCourses = {"ALL", "ABComm", "BSPsych", "BPEd", "BSA", "BSMA", "BSBA-MM", "BSBA-FM", "BSBA-HRM", "BSHM", "BSTM", "BSIT", "BSCS", "BSCE", "BSCpE", "BSArch"};
     private final String[] saseCourses = {"ALL", "ABComm", "BSPsych", "BPEd"};
     private final String[] sbmaCourses = {"ALL", "BSA", "BSMA", "BSBA-MM", "BSBA-FM", "BSBA-HRM", "BSHM", "BSTM"};
     private final String[] secaCourses = {"ALL", "BSIT", "BSCS", "BSCE", "BSCpE", "BSArch"};
+
+    // Rating filter options
+    private final String[] ratingOptions = {"ALL", "5 Stars", "4 Stars", "3 Stars", "2 Stars", "1 Star"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +69,7 @@ public class main_dashboard extends BaseActivity {
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    applyFilters(s.toString(), currentSchoolFilter, currentCourseFilter);
+                    applyFilters(s.toString(), currentSchoolFilter, currentCourseFilter, currentRatingFilter);
                 }
 
                 @Override
@@ -73,12 +77,18 @@ public class main_dashboard extends BaseActivity {
             });
         }
 
-        // Setup School Dropdown
-        String[] schools = {"ALL", "SECA", "SASE", "SBMA"};
-        ArrayAdapter<String> schoolAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, schools);
+        // Setup Dropdowns
+        setupFilterDropdowns();
+    }
+
+    private void setupFilterDropdowns() {
         schoolDropdown = findViewById(R.id.school_dropdown);
         courseDropdown = findViewById(R.id.course_dropdown);
+        ratingDropdown = findViewById(R.id.rating_dropdown);
 
+        // 1. School Filter
+        String[] schools = {"ALL", "SECA", "SASE", "SBMA"};
+        ArrayAdapter<String> schoolAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, schools);
         if (schoolDropdown != null) {
             schoolDropdown.setAdapter(schoolAdapter);
             schoolDropdown.setText(schools[0], false);
@@ -87,24 +97,32 @@ public class main_dashboard extends BaseActivity {
                 updateCourseDropdown(currentSchoolFilter);
                 currentCourseFilter = "ALL";
                 courseDropdown.setText("ALL", false);
-                applyFilters(searchInput.getText().toString(), currentSchoolFilter, currentCourseFilter);
+                applyFilters(searchInput.getText().toString(), currentSchoolFilter, currentCourseFilter, currentRatingFilter);
             });
         }
 
+        // 2. Course Filter
         updateCourseDropdown("ALL");
         if (courseDropdown != null) {
             courseDropdown.setText("ALL", false);
             courseDropdown.setOnItemClickListener((parent, view, position, id) -> {
                 currentCourseFilter = (String) parent.getItemAtPosition(position);
-                applyFilters(searchInput.getText().toString(), currentSchoolFilter, currentCourseFilter);
+                applyFilters(searchInput.getText().toString(), currentSchoolFilter, currentCourseFilter, currentRatingFilter);
+            });
+        }
+
+        // 3. Rating Filter
+        ArrayAdapter<String> ratingAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, ratingOptions);
+        if (ratingDropdown != null) {
+            ratingDropdown.setAdapter(ratingAdapter);
+            ratingDropdown.setText(ratingOptions[0], false);
+            ratingDropdown.setOnItemClickListener((parent, view, position, id) -> {
+                currentRatingFilter = (String) parent.getItemAtPosition(position);
+                applyFilters(searchInput.getText().toString(), currentSchoolFilter, currentCourseFilter, currentRatingFilter);
             });
         }
     }
 
-    /**
-     * onResume runs every time the user navigates back to this screen.
-     * This makes the dashboard refresh immediately to show new ratings or approvals.
-     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -123,15 +141,14 @@ public class main_dashboard extends BaseActivity {
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject obj = jsonArray.getJSONObject(i);
 
-                            // Use 'department' from backend as 'school' in app
                             String school = obj.has("department") ? obj.getString("department") : obj.getString("school");
 
                             allResearches.add(new ResearchItem(
                                     obj.getInt("rsid"),
-                                    obj.getString("idnumber"),
+                                    obj.optString("idnumber", ""),
                                     obj.getString("title"),
                                     obj.getString("author"),
-                                    school, // mapped department -> school
+                                    school,
                                     obj.getString("course"),
                                     obj.getString("date"),
                                     obj.getInt("status"),
@@ -139,11 +156,11 @@ public class main_dashboard extends BaseActivity {
                                     obj.getString("tags"),
                                     obj.getString("doi"),
                                     (float) obj.optDouble("rating", 0.0),
-                                    "",true
+                                    obj.optString("remarks", ""),
+                                    true
                             ));
                         }
-                        applyFilters(searchInput.getText().toString(), currentSchoolFilter, currentCourseFilter);
-                        Log.d("REFRESH_CHECK", "Dashboard Refreshed");
+                        applyFilters(searchInput.getText().toString(), currentSchoolFilter, currentCourseFilter, currentRatingFilter);
                     } catch (JSONException e) {
                         Log.e("REFRESH_CHECK", "JSON Error: " + e.getMessage());
                     } finally {
@@ -153,15 +170,11 @@ public class main_dashboard extends BaseActivity {
                     }
                 },
                 error -> {
-                    Log.e("REFRESH_CHECK", "Connection Error");
-                    if (swipeRefreshLayout != null) {
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
+                    if (swipeRefreshLayout != null) swipeRefreshLayout.setRefreshing(false);
                 }
         );
         Volley.newRequestQueue(this).add(stringRequest);
     }
-
 
     private void updateCourseDropdown(String school) {
         String[] courses;
@@ -177,20 +190,33 @@ public class main_dashboard extends BaseActivity {
         }
     }
 
-    private void applyFilters(String query, String school, String course) {
+    private void applyFilters(String query, String school, String course, String rating) {
         filteredResearches.clear();
         String lowerCaseQuery = query.toLowerCase().trim();
 
         for (ResearchItem item : allResearches) {
+            // Check School & Course
             boolean matchesSchool = school.equals("ALL") || (item.getSchool() != null && item.getSchool().equalsIgnoreCase(school));
             boolean matchesCourse = course.equals("ALL") || (item.getCourse() != null && item.getCourse().equalsIgnoreCase(course));
 
+            // Check Rating Logic
+            boolean matchesRating = rating.equals("ALL");
+            if (!matchesRating) {
+                float itemRating = item.getRating();
+                if (rating.equals("5 Stars")) matchesRating = (itemRating >= 4.5);
+                else if (rating.equals("4 Stars")) matchesRating = (itemRating >= 3.5 && itemRating < 4.5);
+                else if (rating.equals("3 Stars")) matchesRating = (itemRating >= 2.5 && itemRating < 3.5);
+                else if (rating.equals("2 Stars")) matchesRating = (itemRating >= 1.5 && itemRating < 2.5);
+                else if (rating.equals("1 Star")) matchesRating = (itemRating >= 0.5 && itemRating < 1.5);
+            }
+
+            // Check Search Query
             boolean matchesQuery = lowerCaseQuery.isEmpty() ||
                     (item.getTitle() != null && item.getTitle().toLowerCase().contains(lowerCaseQuery)) ||
                     (item.getAuthor() != null && item.getAuthor().toLowerCase().contains(lowerCaseQuery)) ||
                     (item.getTags() != null && item.getTags().toLowerCase().contains(lowerCaseQuery));
 
-            if (matchesSchool && matchesCourse && matchesQuery) {
+            if (matchesSchool && matchesCourse && matchesQuery && matchesRating) {
                 filteredResearches.add(item);
             }
         }

@@ -29,158 +29,158 @@
             app:layout_constraintTop_toBottomOf="@id/goto_menu"
             app:layout_constraintBottom_toBottomOf="parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:orientation="vertical"
-            android:layout_marginTop="20dp"
-            android:padding="20dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:fontFamily="@font/poppins_bold"
-                    android:text="SUBMIT A RESEARCH STUDY"
-                    android:textColor="@color/black"
-                    android:textSize="20sp" />
-
-                <!-- Title -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_bold"
-                    android:text="Title:"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
-
-            <EditText
-                android:id="@+id/etTitle"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="12dp"
-                android:background="@drawable/bg_form_input"
-                android:fontFamily="@font/poppins"
-                android:padding="12dp"
-                android:textSize="14sp" />
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:layout_marginTop="20dp"
+                android:padding="20dp">
 
-                <!-- Authors -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_bold"
-                    android:text="Authors:"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:fontFamily="@font/poppins_bold"
+                        android:text="SUBMIT A RESEARCH STUDY"
+                        android:textColor="@color/black"
+                        android:textSize="20sp" />
 
-            <EditText
-                android:id="@+id/etAuthors"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="12dp"
-                android:background="@drawable/bg_form_input"
-                android:fontFamily="@font/poppins"
-                android:gravity="top"
-                android:minHeight="80dp"
-                android:padding="12dp"
-                android:textSize="14sp" />
+                    <!-- Title -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_bold"
+                        android:text="Title:"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
 
-                <!-- Abstract -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_bold"
-                    android:text="Abstract:"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
-
-            <EditText
-                android:id="@+id/etAbstract"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="12dp"
-                android:background="@drawable/bg_form_input"
-                android:fontFamily="@font/poppins"
-                android:gravity="top"
-                android:minHeight="100dp"
-                android:padding="12dp"
-                android:textSize="14sp" />
-
-                <!-- Tags -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_bold"
-                    android:text="Tags"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
-
-            <EditText
-                android:id="@+id/etTags"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="12dp"
-                android:background="@drawable/bg_form_input"
-                android:fontFamily="@font/poppins"
-                android:padding="12dp"
-                android:textSize="14sp" />
-
-                <!-- DOI -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_bold"
-                    android:text="Link of Research (Google Drive, OneDrive, etc.)"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
-
-            <EditText
-                android:id="@+id/etDoi"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="12dp"
-                android:background="@drawable/bg_form_input"
-                android:fontFamily="@font/poppins"
-                android:padding="12dp"
-                android:textSize="14sp" />
-
-                <!-- Buttons -->
-                <LinearLayout
+                <EditText
+                    android:id="@+id/etTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:gravity="center"
-                    android:orientation="horizontal">
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/bg_form_input"
+                    android:fontFamily="@font/poppins"
+                    android:padding="12dp"
+                    android:textSize="14sp" />
 
-                    <Button
-                        android:id="@+id/backBtn"
-                        android:layout_width="140dp"
+                    <!-- Authors -->
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="16dp"
-                        android:backgroundTint="#D3D3D3"
                         android:fontFamily="@font/poppins_bold"
-                        android:text="CANCEL"
-                        android:textColor="#111827"
-                        app:cornerRadius="20dp" />
+                        android:text="Authors:"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
 
-                    <Button
-                        android:id="@+id/btnSubmit"
-                        android:layout_width="140dp"
+                <EditText
+                    android:id="@+id/etAuthors"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/bg_form_input"
+                    android:fontFamily="@font/poppins"
+                    android:gravity="top"
+                    android:minHeight="80dp"
+                    android:padding="12dp"
+                    android:textSize="14sp" />
+
+                    <!-- Abstract -->
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:backgroundTint="#FFC107"
                         android:fontFamily="@font/poppins_bold"
-                        android:text="SUBMIT"
-                        android:textColor="#111827"
-                        app:cornerRadius="20dp" />
+                        android:text="Abstract:"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
 
-                </LinearLayout>
-        </LinearLayout>
+                <EditText
+                    android:id="@+id/etAbstract"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/bg_form_input"
+                    android:fontFamily="@font/poppins"
+                    android:gravity="top"
+                    android:minHeight="100dp"
+                    android:padding="12dp"
+                    android:textSize="14sp" />
+
+                    <!-- Tags -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_bold"
+                        android:text="Tags"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                <EditText
+                    android:id="@+id/etTags"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/bg_form_input"
+                    android:fontFamily="@font/poppins"
+                    android:padding="12dp"
+                    android:textSize="14sp" />
+
+                    <!-- DOI -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_bold"
+                        android:text="Link of Research (Google Drive, OneDrive, etc.)"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                <EditText
+                    android:id="@+id/etDoi"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/bg_form_input"
+                    android:fontFamily="@font/poppins"
+                    android:padding="12dp"
+                    android:textSize="14sp" />
+
+                    <!-- Buttons -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/backBtn"
+                            android:layout_width="140dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="16dp"
+                            android:backgroundTint="#D3D3D3"
+                            android:fontFamily="@font/poppins_bold"
+                            android:text="CANCEL"
+                            android:textColor="#111827"
+                            app:cornerRadius="20dp" />
+
+                        <Button
+                            android:id="@+id/btnSubmit"
+                            android:layout_width="140dp"
+                            android:layout_height="wrap_content"
+                            android:backgroundTint="#FFC107"
+                            android:fontFamily="@font/poppins_bold"
+                            android:text="SUBMIT"
+                            android:textColor="#111827"
+                            app:cornerRadius="20dp" />
+
+                    </LinearLayout>
+            </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

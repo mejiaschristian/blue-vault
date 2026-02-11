@@ -25,7 +25,6 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <!-- Search Bar Input -->
-
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/search_layout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -54,12 +53,13 @@
                 android:layout_marginBottom="16dp"
                 android:orientation="horizontal">
 
+                <!-- SCHOOL FILTER -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/school_dropdown_layout"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="4dp"
                     android:layout_weight="1"
                     android:hint="SCHOOL"
                     android:textStyle="bold" >
@@ -70,15 +70,17 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins_bold"
                         android:inputType="none"
-                        android:textSize="14sp"
+                        android:textSize="12sp"
                         android:textStyle="bold" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <!-- COURSE FILTER -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/course_dropdown_layout"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
                     android:layout_weight="1"
                     android:hint="COURSE"
                     android:textStyle="bold" >
@@ -89,7 +91,27 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins_bold"
                         android:inputType="none"
-                        android:textSize="14sp"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- STAR RATING FILTER -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/rating_dropdown_layout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="RATING"
+                    android:textStyle="bold" >
+
+                    <AutoCompleteTextView
+                        android:id="@+id/rating_dropdown"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_bold"
+                        android:inputType="none"
+                        android:textSize="12sp"
                         android:textStyle="bold" />
                 </com.google.android.material.textfield.TextInputLayout>
 
