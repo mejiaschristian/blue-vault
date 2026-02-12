@@ -118,11 +118,20 @@ public class view_research_user extends BaseActivity {
                 }
 
                 final String finalUrl = doiUrl;
+                Button viewResBtn = findViewById(R.id.viewResBtn);
                 tvDoiLink.setText(finalUrl);
                 tvDoiLink.setClickable(true);
                 tvDoiLink.setPaintFlags(tvDoiLink.getPaintFlags() | android.graphics.Paint.UNDERLINE_TEXT_FLAG);
 
                 tvDoiLink.setOnClickListener(v -> {
+                    try {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(finalUrl));
+                        startActivity(intent);
+                    } catch (Exception e) {
+                        Toast.makeText(this, "No browser found to open link", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                viewResBtn.setOnClickListener(v -> {
                     try {
                         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(finalUrl));
                         startActivity(intent);
